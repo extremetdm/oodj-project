@@ -1,4 +1,4 @@
-package oodj_project.core.repository;
+package oodj_project.core.validation;
 
 import java.util.List;
 

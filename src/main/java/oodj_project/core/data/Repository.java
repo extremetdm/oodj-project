@@ -1,4 +1,4 @@
-package oodj_project.core.repository;
+package oodj_project.core.data;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,12 +15,13 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
+import oodj_project.core.validation.Validator;
+
 /**
  * Base class for creating an in-memory repository that persists
  * data to a plain text file. 
  * <p>
  * Supports all CRUD operations.
- * 
  * @param <DataT> The type of the record this repository will manage (e.g., User).
  *                Must be a Java {@code Record}.
  */

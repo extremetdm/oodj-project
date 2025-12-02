@@ -1,7 +1,9 @@
-package oodj_project.core.repository;
+package oodj_project.core.validation;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * A utility class for creating common, reusable {@link Validator} instances.
@@ -152,6 +154,37 @@ public final class Rule {
             for (var model: models) {
                 var value = fieldGetter.apply(model);
                 if (value == null || value.isBlank()) {
+                    throw exceptionGenerator.apply(model);
+                }
+            }
+        };
+    }
+
+    public static <DataT, FieldT> Validator<DataT> in(
+        Function<DataT, FieldT> fieldGetter,
+        Supplier<List<FieldT>> haystackGetter,
+        String errorMessage
+    ) {
+        return in(fieldGetter, haystackGetter, toExceptionGenerator(errorMessage));
+    }
+
+    public static <DataT, FieldT> Validator<DataT> in(
+        Function<DataT, FieldT> fieldGetter,
+        Supplier<List<FieldT>> haystackGetter,
+        IllegalStateException exception
+    ) {
+        return in(fieldGetter, haystackGetter, toExceptionGenerator(exception));
+    }
+
+    public static <DataT, FieldT> Validator<DataT> in(
+        Function<DataT, FieldT> fieldGetter,
+        Supplier<List<FieldT>> haystackGetter,
+        Function<DataT, IllegalStateException> exceptionGenerator
+    ) {
+        return models -> {
+            for (var model: models) {
+                var value = fieldGetter.apply(model);
+                if (haystackGetter.get().contains(value)) {
                     throw exceptionGenerator.apply(model);
                 }
             }
