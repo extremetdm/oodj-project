@@ -1,10 +1,13 @@
 package oodj_project;
 
-/**
- * Hello world!
- */
+import oodj_project.core.Context;
+
 public class App {
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        try {
+            Context.instance().initialize();
+        } catch (Exception e) {
+
+        }
     }
 }
