@@ -3,10 +3,9 @@ package oodj_project.features.permission_management;
 import java.io.File;
 import java.io.IOException;
 
-import oodj_project.core.auth.Permission;
-import oodj_project.core.data.IdentifiableRepository;
-import oodj_project.core.validation.Rule;
-import oodj_project.features.role_management.Role;
+import oodj_project.core.data.repository.IdentifiableRepository;
+import oodj_project.core.data.validation.Rule;
+import oodj_project.core.security.Permission;
 import oodj_project.features.role_management.RoleRepository;
 
 public class RolePermissionRepository extends IdentifiableRepository<RolePermission> {
@@ -40,9 +39,5 @@ public class RolePermissionRepository extends IdentifiableRepository<RolePermiss
 
     private static String format(RolePermission rolePermission) {
         return rolePermission.id() + "|" + rolePermission.role().id() + "|" + rolePermission.permission();
-    }
-
-    public boolean can(Role role, Permission permission) {
-        return findFirst(model -> model.role() == role && model.permission() == permission).isPresent();
     }
 }

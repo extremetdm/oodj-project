@@ -3,8 +3,8 @@ package oodj_project.features.role_management;
 import java.io.File;
 import java.io.IOException;
 
-import oodj_project.core.data.IdentifiableRepository;
-import oodj_project.core.validation.Rule;
+import oodj_project.core.data.repository.IdentifiableRepository;
+import oodj_project.core.data.validation.Rule;
 
 public class RoleRepository extends IdentifiableRepository<Role> {
     public RoleRepository(File file) throws IOException {

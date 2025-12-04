@@ -1,4 +1,4 @@
-package oodj_project.core.data;
+package oodj_project.core.data.repository;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,8 +6,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
 
-import oodj_project.core.model.Identifiable;
-import oodj_project.core.validation.Validator;
+import oodj_project.core.data.model.Identifiable;
+import oodj_project.core.data.validation.Validator;
 
 public abstract class IdentifiableRepository<DataT extends Record & Identifiable<DataT>> extends Repository<DataT> {
     /**

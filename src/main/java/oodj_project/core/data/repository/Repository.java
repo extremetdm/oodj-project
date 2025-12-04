@@ -1,4 +1,4 @@
-package oodj_project.core.data;
+package oodj_project.core.data.repository;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,7 +15,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
-import oodj_project.core.validation.Validator;
+import oodj_project.core.data.validation.Validator;
 
 /**
  * Base class for creating an in-memory repository that persists

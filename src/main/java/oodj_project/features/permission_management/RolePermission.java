@@ -1,7 +1,7 @@
 package oodj_project.features.permission_management;
 
-import oodj_project.core.auth.Permission;
-import oodj_project.core.model.Identifiable;
+import oodj_project.core.data.model.Identifiable;
+import oodj_project.core.security.Permission;
 import oodj_project.features.role_management.Role;
 
 public record RolePermission(Integer id, Role role, Permission permission) implements Identifiable<RolePermission> {

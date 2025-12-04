@@ -1,4 +1,4 @@
-package oodj_project.core.validation;
+package oodj_project.core.data.validation;
 
 import java.util.HashSet;
 import java.util.List;
@@ -184,7 +184,7 @@ public final class Rule {
         return models -> {
             for (var model: models) {
                 var value = fieldGetter.apply(model);
-                if (haystackGetter.get().contains(value)) {
+                if (!haystackGetter.get().contains(value)) {
                     throw exceptionGenerator.apply(model);
                 }
             }

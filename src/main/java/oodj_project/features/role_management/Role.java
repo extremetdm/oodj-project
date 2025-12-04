@@ -1,6 +1,6 @@
 package oodj_project.features.role_management;
 
-import oodj_project.core.model.Identifiable;
+import oodj_project.core.data.model.Identifiable;
 
 public record Role(Integer id, String name) implements Identifiable<Role> {
     public Role(String name) {
