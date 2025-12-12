@@ -3,6 +3,8 @@ package oodj_project.features.navigation;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import oodj_project.core.data.Context;
@@ -15,12 +17,15 @@ import oodj_project.features.module_management.ModuleView;
 public enum NavigationItem {
     USER_MANAGEMENT(
         "User Management",
+        new ImageIcon("src/main/resources/icons/user-management.png"),
         Permission.READ_USERS,
         (a,b) -> new JPanel()
         // (context, session) -> 
     ),
     MODULE_MANAGEMENT(
         "Module Management",
+        // new ImageIcon("src/main/resources/icons/user-management.png"),
+        null,
         Permission.READ_MODULES,
         (context, session) -> new ModuleView(
             session,
@@ -29,17 +34,23 @@ public enum NavigationItem {
     );
 
     private final String label;
+    private final Icon icon;
     private final Permission requiredPermission;
     private final ViewGenerator view;
 
-    private NavigationItem(String label, Permission requiredPermission, ViewGenerator view) {
+    private NavigationItem(String label, Icon icon, Permission requiredPermission, ViewGenerator view) {
         this.label = label;
+        this.icon = icon;
         this.requiredPermission = requiredPermission;
         this.view = view;
     }
 
     public String label() {
         return label;
+    }
+
+    public Icon icon() {
+        return icon;
     }
 
     public Permission requiredPermission() {
