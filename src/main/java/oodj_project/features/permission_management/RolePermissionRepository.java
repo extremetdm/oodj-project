@@ -3,34 +3,29 @@ package oodj_project.features.permission_management;
 import java.io.File;
 import java.io.IOException;
 
-import oodj_project.core.data.repository.IdentifiableRepository;
+import oodj_project.core.data.repository.Repository;
 import oodj_project.core.data.validation.Rule;
 import oodj_project.core.security.Permission;
 import oodj_project.features.role_management.RoleRepository;
 
-public class RolePermissionRepository extends IdentifiableRepository<RolePermission> {
+public class RolePermissionRepository extends Repository<RolePermission> {
 
     public RolePermissionRepository(File file, RoleRepository roleRepository) throws IOException {
         super(
             file,
             args -> new RolePermission(
-                Integer.valueOf(args[0]),
-                roleRepository.find(Integer.parseInt(args[1])).orElseThrow(),
-                Permission.valueOf(args[2])
+                roleRepository.find(Integer.parseInt(args[0])).orElseThrow(),
+                Permission.valueOf(args[1])
             ),
             RolePermissionRepository::format,
             Rule.compose(
-                Rule.unique(
-                    RolePermission::id,
-                    model -> new IllegalStateException("Duplicate Role Permission ID: " + model.id())
-                ),
                 Rule.in(
                     RolePermission::role,
-                    roleRepository::get,
+                    () -> roleRepository.get().data(),
                     model -> new IllegalStateException("Invalid Role ID: " + model.role().id())
                 ),
                 Rule.unique(
-                    model -> model.withId(0),
+                    model -> model,
                     "Duplicate Role Permission"
                 )
             )
@@ -38,6 +33,6 @@ public class RolePermissionRepository extends IdentifiableRepository<RolePermiss
     }
 
     private static String format(RolePermission rolePermission) {
-        return rolePermission.id() + "|" + rolePermission.role().id() + "|" + rolePermission.permission();
+        return rolePermission.role().id() + "|" + rolePermission.permission();
     }
 }

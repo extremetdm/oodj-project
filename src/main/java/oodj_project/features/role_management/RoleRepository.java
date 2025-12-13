@@ -29,11 +29,4 @@ public class RoleRepository extends IdentifiableRepository<Role> {
     private static String format(Role role) {
         return role.id() + "|" + role.name();
     }
-
-    public static void main(String[] args) throws IOException {
-        File file = new File("src\\main\\resources\\roles.txt");
-        file.createNewFile();
-        var a = new RoleRepository(file);
-        a.create(new Role("Admin Staff"));
-    }
 }
