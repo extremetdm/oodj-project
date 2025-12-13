@@ -21,11 +21,13 @@ public class ModuleRepository extends IdentifiableRepository<Module> {
 
     private static Module parse(String... args) {
         return new Module(
-            Integer.valueOf(args[0])
+            Integer.valueOf(args[0]),
+            args[1],
+            args[2]
         );
     }
 
     private static String format(Module module) {
-        return module.id() + "";
+        return module.id() + "|" + module.name() + "|" + module.description();
     }
 }

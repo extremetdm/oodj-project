@@ -2,17 +2,18 @@ package oodj_project.features.module_management;
 
 import oodj_project.core.data.model.Identifiable;
 
-public record Module(Integer id) implements Identifiable<Module> {
-    public Module() {
-        this(null);
+public record Module(Integer id, String name, String description) implements Identifiable<Module> {
+    public Module(String name, String description) {
+        this(null, name, description);
     }
 
     public Module {
-
+        if (name == null || name.isBlank())
+            throw new IllegalArgumentException("Name cannot be blank.");
     }
 
     @Override
     public Module withId(int id) {
-        return new Module(id);
+        return new Module(id, name, description);
     }
 }
