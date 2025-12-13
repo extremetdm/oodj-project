@@ -7,8 +7,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.function.Function;
@@ -131,39 +129,37 @@ public abstract class Repository<DataT extends Record> {
      * Retrieves all models from the in-memory repository.
      * @return An unmodifiable {@code List} of all models.
      */
-    public List<DataT> get() {
-        return get(null, null);
+    public PaginatedResult<DataT> get() {
+        return get(null);
     }
 
     /**
-     * Retrieves all models that match the given filter.
-     * @param filterBy A {@code Predicate} to filter the models.
-     * @return A {@code List} of filtered models.
-     */
-    public List<DataT> get(Predicate<DataT> filterBy) {
-        return get(filterBy, null);
-    }
-
-    /**
-     * Retrieves all models, sorted according to the given comparator.
-     * @param sortBy A {@code Comparator} to sort the models.
-     * @return A sorted {@code List} of all models.
-     */
-    public List<DataT> get(Comparator<DataT> sortBy) {
-        return get(null, sortBy);
-    }
-
-    /**
-     * Retrieves all models, optionally filtered and sorted.
-     * @param filterBy A {@code Predicate} to filter the models. Can be {@code null}.
-     * @param sortBy A {@code Comparator} to sort the models. Can be {@code null}.
+     * Retrieves all models, optionally filtered, sorted and paginated.
      * @return A potentially filtered and sorted {@code List} of models.
      */
-    public List<DataT> get(Predicate<DataT> filterBy, Comparator<DataT> sortBy) {
+    public PaginatedResult<DataT> get(Query<DataT> query) {
+
+        int totalItems = models.size();
+        int page = 1;
+        int perPage = totalItems;
+
         var stream = models.stream();
-        if (filterBy != null) stream = stream.filter(filterBy);
-        if (sortBy != null) stream = stream.sorted(sortBy);
-        return stream.toList();
+        if (query != null) {
+            page = query.page();
+            if (query.filter() != null)
+                stream = stream.filter(query.filter());
+
+            if (query.sorter() != null)
+                stream = stream.sorted(query.sorter());
+            
+            if (query.limit() != null) {
+                perPage = query.limit();
+                stream = stream.skip((query.page() - 1) * query.limit())
+                    .limit(query.limit());
+            }
+        }
+
+        return new PaginatedResult<>(stream.toList(), page, perPage, totalItems);
     }
 
     /**
