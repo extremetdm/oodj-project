@@ -1,30 +1,33 @@
 package oodj_project.features.module_management;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Image;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Predicate;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 
 import oodj_project.core.data.repository.Query;
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
 import oodj_project.core.ui.components.DataList;
+import oodj_project.core.ui.components.IconButton;
+import oodj_project.core.ui.components.IconLabelButton;
 import oodj_project.core.ui.components.Paginator;
+import oodj_project.core.ui.components.SearchBar;
+import oodj_project.core.ui.utils.IconManager;
 
 public class ModuleView extends JPanel {
 
@@ -36,6 +39,8 @@ public class ModuleView extends JPanel {
 
     private ModuleFormFactory formFactory;
 
+    private final SearchBar searchBar;
+
     private final DataList<Module> content;
     private final boolean hasActions;
 
@@ -45,16 +50,14 @@ public class ModuleView extends JPanel {
         super(new BorderLayout());
         this.session = session;
         this.controller = controller;
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
 
         hasActions = session.can(Permission.UPDATE_MODULES)
             || session.can(Permission.DELETE_MODULES);
 
+        searchBar = new SearchBar(this::refreshData);
         // Header
-        var title = new JLabel("Module Management");
-        title.setFont(new Font("Swis721 BlkCn BT", Font.BOLD, 50));
-        title.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        add(title, BorderLayout.NORTH);
+        add(createHeader(), BorderLayout.NORTH);
 
         // content
         content = new DataList<>(
@@ -62,9 +65,9 @@ public class ModuleView extends JPanel {
             createTableHeader(),
             this::createTableRow
         );
-
         add(content, BorderLayout.CENTER);
     
+        // footer
         paginator = new Paginator(this::refreshData);
         add(paginator, BorderLayout.SOUTH);
 
@@ -74,15 +77,59 @@ public class ModuleView extends JPanel {
     public final void refreshData() {
         var query = Query.<Module>builder()
             .page(paginator.getCurrentPage())
-            .limit(paginator.getPerPage())
-            .build();
+            .limit(paginator.getPerPage());
 
-        var result = controller.index(query);
+        Predicate<Module> filter = module -> true;
+
+        var searchQuery = searchBar.getQueryText().toLowerCase();
+        if (!searchQuery.isEmpty()) {
+            filter = filter.and(module -> 
+                module.name().toLowerCase().contains(searchQuery) ||
+                module.description().toLowerCase().contains(searchQuery)
+            );
+        }
+
+        var result = controller.index(query.filterBy(filter).build());
 
         content.setData(result.data());
+
         paginator.update(result);
         // content.setData(controller.index(null));
+    }
 
+    private JPanel createHeader() {
+        var header = new JPanel(new BorderLayout());
+        var title = new JLabel("Module Management");
+        title.setFont(new Font("Swis721 BlkCn BT", Font.BOLD, 50));
+        title.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+        header.add(title, BorderLayout.NORTH);
+
+        var panel = new JPanel();
+
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+
+        var addButton = new IconLabelButton("Add", IconManager.getIcon("/icons/add.png", 30, 30));
+        addButton.addActionListener(event -> {
+            formFactory().getCreateForm(this::refreshData);
+        });
+
+        Component[] components = new Component[] {
+            searchBar,
+            new IconLabelButton("Filter", IconManager.getIcon("/icons/filter.png", 30, 30)),
+            new IconLabelButton("Sort", IconManager.getIcon("/icons/sort.png", 30, 30)),
+            addButton,
+        };
+
+        for (int index = 0; index < components.length; index++) {
+            if (index > 0) panel.add(Box.createHorizontalStrut(10));
+            panel.add(components[index]);
+        } 
+
+        panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
+
+        header.add(panel, BorderLayout.SOUTH);
+
+        return header;
     }
 
     private double[] getColumnWeight() {
@@ -97,7 +144,9 @@ public class ModuleView extends JPanel {
         ));
 
         if (hasActions) {
-            components.add(new JLabel("Action"));
+            var actionLabel = new JLabel("Action");
+            actionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            components.add(actionLabel);
         }
 
         return components.toArray(Component[]::new);
@@ -125,10 +174,12 @@ public class ModuleView extends JPanel {
                 actionList.add(createDeleteButton(module));
             }
 
+            actionPanel.add(Box.createHorizontalGlue());
             for (int x = 0; x < actionList.size(); x++) {
                 if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
                 actionPanel.add(actionList.get(x));
             }
+            actionPanel.add(Box.createHorizontalGlue());
 
             components.add(actionPanel);
         }
@@ -146,19 +197,8 @@ public class ModuleView extends JPanel {
     }
 
     private JButton createEditButton(Module module) {
-        var editButton = new JButton(
-            new ImageIcon(
-                new ImageIcon("src/main/resources/icons/edit-4-svgrepo-com.png")
-                    .getImage()
-                    .getScaledInstance(30, 30, Image.SCALE_SMOOTH)
-            )
-        );
-        editButton.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.BLACK),
-                BorderFactory.createEmptyBorder(3,3,3,3)
-            )
-        );
+        var editButton = new IconButton("/icons/edit.png", 30, 30);
+        editButton.setToolTipText("Edit");
         editButton.addActionListener(event -> 
             formFactory().getEditForm(module, this::refreshData)
         );
@@ -175,13 +215,8 @@ public class ModuleView extends JPanel {
     }
 
     private JButton createDeleteButton(Module module) {
-        var deleteButton = new JButton("Delete");
-        deleteButton.setBorder(
-            BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.BLACK),
-                BorderFactory.createEmptyBorder(3,3,3,3)
-            )
-        );
+        var deleteButton = new IconButton("/icons/delete.png", 30, 30);
+        deleteButton.setToolTipText("Delete");
         deleteButton.addActionListener(event -> {
             var action = JOptionPane.showConfirmDialog(
                 this,
