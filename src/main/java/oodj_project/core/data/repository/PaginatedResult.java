@@ -21,6 +21,7 @@ public record PaginatedResult<DataT>(List<DataT> data, int page, int itemsPerPag
     }
 
     public int totalPages() {
+        if (totalItems == 0) return 1;
         return (totalItems + itemsPerPage - 1) / itemsPerPage;
     }
 }

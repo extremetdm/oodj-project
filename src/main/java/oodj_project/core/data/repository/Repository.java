@@ -12,6 +12,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
 
 import oodj_project.core.data.validation.Validator;
 
@@ -139,16 +140,15 @@ public abstract class Repository<DataT extends Record> {
      */
     public PaginatedResult<DataT> get(Query<DataT> query) {
 
-        int totalItems = models.size();
+        int totalItems = (int) createFilteredStream(query).count();
         int page = 1;
         int perPage = totalItems;
 
-        var stream = models.stream();
+        var stream = createFilteredStream(query);
+
         if (query != null) {
             page = query.page();
-            if (query.filter() != null)
-                stream = stream.filter(query.filter());
-
+            
             if (query.sorter() != null)
                 stream = stream.sorted(query.sorter());
             
@@ -160,6 +160,16 @@ public abstract class Repository<DataT extends Record> {
         }
 
         return new PaginatedResult<>(stream.toList(), page, perPage, totalItems);
+    }
+
+    private Stream<DataT> createFilteredStream(Query<DataT> query) {
+        var stream = models.stream();
+        if (query != null) {
+            if (query.filter() != null)
+                stream = stream.filter(query.filter());
+        }
+
+        return stream;
     }
 
     /**
