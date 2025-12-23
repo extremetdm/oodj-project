@@ -34,10 +34,10 @@ public class Form extends JDialog {
 
         actionPanel.add(Box.createHorizontalGlue());
 
-        var backButton = new JButton("Back");
-        backButton.addActionListener(event -> dispose());
+        var cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(event -> dispose());
 
-        actionPanel.add(backButton);
+        actionPanel.add(cancelButton);
         actionPanel.add(Box.createHorizontalStrut(5));
 
         var updateButton = new JButton(builder.confirmText);

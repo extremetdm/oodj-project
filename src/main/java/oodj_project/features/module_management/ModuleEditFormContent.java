@@ -8,18 +8,18 @@ import javax.swing.JTextField;
 
 import oodj_project.core.ui.utils.GridBuilder;
 
-public class ModuleFormContent extends JPanel {
+public class ModuleEditFormContent extends JPanel {
 
     private static final double[] LABEL_TO_FIELD_WIDTH_RATIO = { 1, 3 };
 
     private final JTextField nameField = new JTextField();
     private final JTextField descriptionField = new JTextField();
 
-    public ModuleFormContent() {
+    public ModuleEditFormContent() {
         this(null);
     }
 
-    public ModuleFormContent(Module module) {
+    public ModuleEditFormContent(Module module) {
         super();
 
         var builder = new GridBuilder(this)

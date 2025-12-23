@@ -35,6 +35,9 @@ public class IconButton extends JButton {
 // https://www.svgrepo.com/svg/524551/filter?edit=true #000000
 // https://www.svgrepo.com/svg/527497/sort?edit=true #000000
 
+// https://www.svgrepo.com/svg/528634/sort-from-top-to-bottom?edit=true #000000
+// https://www.svgrepo.com/svg/528629/sort-from-bottom-to-top?edit=true #000000
+
 // https://www.svgrepo.com/svg/513803/add?edit=true #000000
 
 // https://www.svgrepo.com/svg/505875/edit-4?edit=true #0abd16

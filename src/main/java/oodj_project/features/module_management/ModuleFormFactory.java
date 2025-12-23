@@ -1,13 +1,19 @@
 package oodj_project.features.module_management;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.List;
+import java.util.function.Consumer;
 
 import javax.swing.SwingUtilities;
 
 import oodj_project.core.ui.components.Form;
+import oodj_project.core.ui.components.SortFormContent;
+import oodj_project.core.ui.utils.SelectedSortOption;
+import oodj_project.core.ui.utils.SortOption;
 
 public class ModuleFormFactory {
 
@@ -20,7 +26,7 @@ public class ModuleFormFactory {
     }
 
     public Form getCreateForm(Runnable onCreate) {
-        var content = new ModuleFormContent();
+        var content = new ModuleEditFormContent();
 
         var form = Form.builder(parentWindow, content, handleCreate(content, onCreate))
             .windowTitle("Create Module")
@@ -34,7 +40,7 @@ public class ModuleFormFactory {
         return form;
     }
 
-    private ActionListener handleCreate(ModuleFormContent content, Runnable onCreate) {
+    private ActionListener handleCreate(ModuleEditFormContent content, Runnable onCreate) {
         return event -> {
             try {
                 controller.create(content.getFormData());
@@ -50,7 +56,7 @@ public class ModuleFormFactory {
     }
 
     public Form getEditForm(Module module, Runnable onUpdate) {
-        var content = new ModuleFormContent(module);
+        var content = new ModuleEditFormContent(module);
 
         var form = Form.builder(parentWindow, content, handleEdit(module, content, onUpdate))
             .windowTitle("Edit Module")
@@ -64,7 +70,7 @@ public class ModuleFormFactory {
         return form;
     }
 
-    private ActionListener handleEdit(Module module, ModuleFormContent content, Runnable onUpdate) {
+    private ActionListener handleEdit(Module module, ModuleEditFormContent content, Runnable onUpdate) {
         return event -> {
             try {
                 controller.update(module.id(), content.getFormData());
@@ -76,6 +82,37 @@ public class ModuleFormFactory {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
+        };
+    }
+
+    private static final List<SortOption<Module>> SORT_OPTIONS = List.of(
+        new SortOption<>("ID", Module::id),
+        new SortOption<>("Name", Module::name),
+        new SortOption<>("Description", Module::description)
+    );
+
+    public Form getSortForm(List<SelectedSortOption<Module>> selectedSortOptions, Consumer<List<SelectedSortOption<Module>>> onApply) {
+
+        var content = new SortFormContent<>(SORT_OPTIONS, selectedSortOptions);        
+
+        var form = Form.builder(parentWindow, content, applySort(content, onApply))
+            .windowTitle("Sort Module")
+            .formTitle("Add Sort")
+            .confirmText("Apply")
+            .build();
+            
+        form.setMinimumSize(new Dimension(800, 450));
+        form.setVisible(true);
+
+        return form;
+    }
+
+    private ActionListener applySort(SortFormContent<Module> formContent, Consumer<List<SelectedSortOption<Module>>> onApply) {
+        return event -> {        
+            if (onApply != null)
+                onApply.accept(formContent.getSelectedSortOptionList());
+            SwingUtilities.getWindowAncestor((Component) event.getSource())
+                .dispose();
         };
     }
 }
