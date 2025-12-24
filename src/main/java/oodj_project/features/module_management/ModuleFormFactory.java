@@ -8,12 +8,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import oodj_project.core.ui.components.Form;
-import oodj_project.core.ui.components.SortFormContent;
-import oodj_project.core.ui.utils.SelectedSortOption;
-import oodj_project.core.ui.utils.SortOption;
+import oodj_project.core.ui.components.form.Form;
+import oodj_project.core.ui.components.sort_editor.SelectedSortOption;
+import oodj_project.core.ui.components.sort_editor.SortEditorPanel;
+import oodj_project.core.ui.components.sort_editor.SortOption;
 
 public class ModuleFormFactory {
 
@@ -42,15 +43,15 @@ public class ModuleFormFactory {
 
     private ActionListener handleCreate(ModuleEditFormContent content, Runnable onCreate) {
         return event -> {
+            var window = SwingUtilities.getWindowAncestor((Component) event.getSource());
             try {
                 controller.create(content.getFormData());
                 if (onCreate != null)
                     onCreate.run();
-                SwingUtilities.getWindowAncestor((Component) event.getSource())
-                    .dispose();
+                window.dispose();
 
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
+            } catch (IllegalArgumentException|IOException e) {
+                JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating module", JOptionPane.ERROR_MESSAGE);
             }
         };
     }
@@ -72,28 +73,28 @@ public class ModuleFormFactory {
 
     private ActionListener handleEdit(Module module, ModuleEditFormContent content, Runnable onUpdate) {
         return event -> {
+            var window = SwingUtilities.getWindowAncestor((Component) event.getSource());
             try {
                 controller.update(module.id(), content.getFormData());
                 if (onUpdate != null)
                     onUpdate.run();
-                SwingUtilities.getWindowAncestor((Component) event.getSource())
-                    .dispose();
+                window.dispose();
 
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
+            } catch (IllegalArgumentException|IOException e) {
+                JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing module", JOptionPane.ERROR_MESSAGE);
             }
         };
     }
 
     private static final List<SortOption<Module>> SORT_OPTIONS = List.of(
-        new SortOption<>("ID", Module::id),
-        new SortOption<>("Name", Module::name),
-        new SortOption<>("Description", Module::description)
+        SortOption.of("ID", Module::id),
+        SortOption.text("Name", Module::name),
+        SortOption.text("Description", Module::description)
     );
 
     public Form getSortForm(List<SelectedSortOption<Module>> selectedSortOptions, Consumer<List<SelectedSortOption<Module>>> onApply) {
 
-        var content = new SortFormContent<>(SORT_OPTIONS, selectedSortOptions);        
+        var content = new SortEditorPanel<>(SORT_OPTIONS, selectedSortOptions);        
 
         var form = Form.builder(parentWindow, content, applySort(content, onApply))
             .windowTitle("Sort Module")
@@ -107,7 +108,7 @@ public class ModuleFormFactory {
         return form;
     }
 
-    private ActionListener applySort(SortFormContent<Module> formContent, Consumer<List<SelectedSortOption<Module>>> onApply) {
+    private ActionListener applySort(SortEditorPanel<Module> formContent, Consumer<List<SelectedSortOption<Module>>> onApply) {
         return event -> {        
             if (onApply != null)
                 onApply.accept(formContent.getSelectedSortOptionList());

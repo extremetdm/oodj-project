@@ -1,4 +1,4 @@
-package oodj_project.core.ui.components;
+package oodj_project.core.ui.components.sort_editor;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -6,6 +6,8 @@ import java.awt.Dimension;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -14,10 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
+import oodj_project.core.ui.components.buttons.IconButton;
 import oodj_project.core.ui.utils.IconManager;
-import oodj_project.core.ui.utils.SelectedSortOption;
 import oodj_project.core.ui.utils.SelectorRenderer;
-import oodj_project.core.ui.utils.SortOption;
 
 public class SortOptionPanel<DataT> extends JPanel {
 
@@ -40,6 +41,7 @@ public class SortOptionPanel<DataT> extends JPanel {
     public SortOptionPanel(List<SortOption<DataT>> options, Consumer<SortOptionPanel<DataT>> onRemove, SelectedSortOption<DataT> selectedOption) {
         super(new BorderLayout());
         setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
+        setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         DefaultComboBoxModel<SortOption<DataT>> model = new DefaultComboBoxModel<>();
         model.addAll(options);
@@ -66,6 +68,8 @@ public class SortOptionPanel<DataT> extends JPanel {
 
         var buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+
+        buttonPanel.add(Box.createHorizontalStrut(10));
         
         directionSelector.addActionListener(event -> {
             if (descendingSelected) setAscending();
@@ -73,6 +77,8 @@ public class SortOptionPanel<DataT> extends JPanel {
         });
         buttonPanel.add(directionSelector);
         
+        buttonPanel.add(Box.createHorizontalStrut(10));
+
         deleteButton.setToolTipText("Delete");
         deleteButton.addActionListener(event -> {
             onRemove.accept(this);

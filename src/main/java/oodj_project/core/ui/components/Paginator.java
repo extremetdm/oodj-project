@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import oodj_project.core.data.repository.PaginatedResult;
+import oodj_project.core.ui.components.buttons.IconButton;
 import oodj_project.core.ui.utils.Clickable;
 import oodj_project.core.ui.utils.SelectorRenderer;
 

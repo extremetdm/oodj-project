@@ -26,39 +26,38 @@ import oodj_project.core.data.repository.Query;
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
 import oodj_project.core.ui.components.DataList;
-import oodj_project.core.ui.components.IconButton;
-import oodj_project.core.ui.components.IconLabelButton;
 import oodj_project.core.ui.components.Paginator;
 import oodj_project.core.ui.components.SearchBar;
+import oodj_project.core.ui.components.buttons.IconButton;
+import oodj_project.core.ui.components.buttons.IconLabelButton;
+import oodj_project.core.ui.components.sort_editor.SelectedSortOption;
 import oodj_project.core.ui.utils.IconManager;
-import oodj_project.core.ui.utils.SelectedSortOption;
 
 public class ModuleView extends JPanel {
 
-    private static final double[] COLUMN_WEIGHT_WITH_ACITON = new double[] { 1, 4, 16, 3 };
-    private static final double[] COLUMN_WEIGHT_WITHOUT_ACTION = new double[] { 2, 6, 16 };
+    private static final double[]
+        COLUMN_WEIGHT_WITH_ACITON = new double[] { 1, 5, 16, 2 },
+        COLUMN_WEIGHT_WITHOUT_ACTION = new double[] { 1, 7, 16 };
 
-    private static final ImageIcon FILTER_ICON = IconManager.getIcon("/icons/filter.png", 30, 30);
-    
-    private static final ImageIcon SORT_ICON = IconManager.getIcon("/icons/sort.png", 30, 30);
-    
-    private static final ImageIcon ADD_ICON = IconManager.getIcon("/icons/add.png", 30, 30);
-    private static final ImageIcon EDIT_ICON = IconManager.getIcon("/icons/edit.png", 30, 30);
-    private static final ImageIcon DELETE_ICON = IconManager.getIcon("/icons/delete.png", 30, 30);
+    private static final ImageIcon
+        FILTER_ICON = IconManager.getIcon("/icons/filter.png", 30, 30),
+        SORT_ICON = IconManager.getIcon("/icons/sort.png", 30, 30),    
+        ADD_ICON = IconManager.getIcon("/icons/add.png", 30, 30),
+        EDIT_ICON = IconManager.getIcon("/icons/edit.png", 30, 30),
+        DELETE_ICON = IconManager.getIcon("/icons/delete.png", 30, 30);
 
     private final Session session;
     private final ModuleController controller;
 
-    private ModuleFormFactory formFactory;
-
     private final SearchBar searchBar;
-
     private final DataList<Module> content;
+    private final Paginator paginator;
+
     private final boolean hasActions;
 
     private List<SelectedSortOption<Module>> sortOptions = null;
 
-    private final Paginator paginator;
+    private ModuleFormFactory formFactory;
 
     public ModuleView(Session session, ModuleController controller) {
         super(new BorderLayout());
@@ -191,13 +190,13 @@ public class ModuleView extends JPanel {
 
     private Component[] createTableHeader() {
         var components = new ArrayList<>(List.<Component>of(
-            new JLabel("ID"),
-            new JLabel("Name"),
-            new JLabel("Description")
+            DataList.createHeaderText("ID"),
+            DataList.createHeaderText("Name"),
+            DataList.createHeaderText("Description")
         ));
 
         if (hasActions) {
-            var actionLabel = new JLabel("Action");
+            var actionLabel = DataList.createHeaderText("Action");
             actionLabel.setHorizontalAlignment(SwingConstants.CENTER);
             components.add(actionLabel);
         }
@@ -207,9 +206,9 @@ public class ModuleView extends JPanel {
 
     private Component[] createTableRow(Module module) {
         var components = new ArrayList<>(List.<Component>of(
-            new JLabel(module.id().toString()),
-            new JLabel(module.name()),
-            new JLabel(module.description())
+            DataList.createText(module.id().toString()),
+            DataList.createText(module.name()),
+            DataList.createText(module.description())
         ));
 
         if (hasActions) {

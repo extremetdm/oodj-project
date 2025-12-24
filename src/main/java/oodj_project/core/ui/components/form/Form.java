@@ -1,4 +1,4 @@
-package oodj_project.core.ui.components;
+package oodj_project.core.ui.components.form;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -6,12 +6,18 @@ import java.awt.Dialog;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.LayoutFocusTraversalPolicy;
+import javax.swing.text.JTextComponent;
+
+import oodj_project.core.ui.styles.FormTheme;
+
 public class Form extends JDialog {
 
     protected Form(Builder builder) {
@@ -20,17 +26,36 @@ public class Form extends JDialog {
         setLayout(new BorderLayout());
 
         var title = new JLabel(builder.formTitle);
+        title.setFont(FormTheme.TITLE_FONT);
+        title.setBorder(BorderFactory.createEmptyBorder(10, 30, 0, 30));
         
         add(title, BorderLayout.NORTH);
         add(builder.content, BorderLayout.CENTER);
         add(createActionPanel(builder), BorderLayout.SOUTH);
         
         pack();
+
+        setFocusTraversalPolicy(new LayoutFocusTraversalPolicy() {
+            @Override
+            protected boolean accept(Component component) {
+                if (!super.accept(component)) return false;
+
+                System.out.print(component.getClass());
+
+                return switch(component) {
+                    case JTextComponent textComponent -> textComponent.isEditable();
+                    default -> true;
+                };
+            }
+        });
+
+        setFocusTraversalPolicyProvider(true);
     }
 
     private JPanel createActionPanel(Builder builder) {
         var actionPanel = new JPanel();
         actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.X_AXIS));
+        actionPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
 
         actionPanel.add(Box.createHorizontalGlue());
 
@@ -38,7 +63,7 @@ public class Form extends JDialog {
         cancelButton.addActionListener(event -> dispose());
 
         actionPanel.add(cancelButton);
-        actionPanel.add(Box.createHorizontalStrut(5));
+        actionPanel.add(Box.createHorizontalStrut(15));
 
         var updateButton = new JButton(builder.confirmText);
         updateButton.addActionListener(builder.onConfirm);

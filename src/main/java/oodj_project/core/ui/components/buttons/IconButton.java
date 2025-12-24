@@ -1,4 +1,4 @@
-package oodj_project.core.ui.components;
+package oodj_project.core.ui.components.buttons;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;

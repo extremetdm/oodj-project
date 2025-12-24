@@ -1,4 +1,4 @@
-package oodj_project.core.ui.utils;
+package oodj_project.core.ui.components.sort_editor;
 
 import java.util.Comparator;
 

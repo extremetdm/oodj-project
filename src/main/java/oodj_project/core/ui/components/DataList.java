@@ -2,6 +2,7 @@ package oodj_project.core.ui.components;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.Insets;
 import java.util.List;
 import java.util.function.Function;
@@ -10,6 +11,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 
 import oodj_project.core.ui.utils.GridBuilder;
 
@@ -18,6 +20,16 @@ public class DataList<DataT> extends JScrollPane {
     protected final Function<DataT, Component[]> rowCreator;
 
     protected final JPanel contentPanel = new JPanel();
+
+    private static final Border BORDER = BorderFactory.createCompoundBorder(
+        BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY),
+        BorderFactory.createEmptyBorder(0, 10, 0, 10)
+    );
+
+    private static final Font
+        HEADER_FONT = new Font("Arial", Font.BOLD, 20),
+        FONT = new Font("SansSerif", Font.PLAIN, 15);
+
 
     public DataList(
         double[] columnWeights,
@@ -37,9 +49,7 @@ public class DataList<DataT> extends JScrollPane {
             columnHeaders
         );
 
-        columnHeaderPanel.setBorder(
-            BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY)
-        );
+        columnHeaderPanel.setBorder(BORDER);
 
         setColumnHeaderView(columnHeaderPanel);
 
@@ -56,7 +66,7 @@ public class DataList<DataT> extends JScrollPane {
             .setMinWidth(600)
             .setRowStyler((panel, index) -> {
                 // panel.setBackground((index & 1) == 0? Color.WHITE: Color.LIGHT_GRAY);
-                panel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.LIGHT_GRAY));
+                panel.setBorder(BORDER);
             });
         if (data.isEmpty()) {
             builder.add(new JLabel("No results found."));
@@ -68,5 +78,17 @@ public class DataList<DataT> extends JScrollPane {
         
         builder.addGlue()
             .build();
+    }
+
+    public static JLabel createHeaderText(String text) {
+        var label = new JLabel(text);
+        label.setFont(HEADER_FONT);
+        return label;
+    }
+
+    public static JLabel createText(String text) {
+        var label = new JLabel(text);
+        label.setFont(FONT);
+        return label;
     }
 }
