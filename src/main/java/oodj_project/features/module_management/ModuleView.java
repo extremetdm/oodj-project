@@ -30,6 +30,7 @@ import oodj_project.core.ui.components.Paginator;
 import oodj_project.core.ui.components.SearchBar;
 import oodj_project.core.ui.components.buttons.IconButton;
 import oodj_project.core.ui.components.buttons.IconLabelButton;
+import oodj_project.core.ui.components.filter_editor.SelectedFilterOption;
 import oodj_project.core.ui.components.sort_editor.SelectedSortOption;
 import oodj_project.core.ui.utils.IconManager;
 
@@ -56,6 +57,7 @@ public class ModuleView extends JPanel {
     private final boolean hasActions;
 
     private List<SelectedSortOption<Module>> sortOptions = null;
+    private List<SelectedFilterOption<Module, ?, ?>> filterOptions = null;
 
     private ModuleFormFactory formFactory;
 
@@ -95,16 +97,24 @@ public class ModuleView extends JPanel {
                 .reduce((combined, next) -> combined.thenComparing(next))
                 .orElse(null);
 
-        Predicate<Module> filter = model -> true;
+        var filters = new ArrayList<>(filterOptions == null? List.of():
+            filterOptions.stream()
+                .map(option -> (Predicate<Module>) option::test)
+                .toList()
+        );
 
         var searchQuery = searchBar.getQueryText().toLowerCase();
         if (!searchQuery.isEmpty()) {
-            filter = filter.and(module -> 
+            filters.add(module -> 
                 module.id().toString().contains(searchQuery) ||
                 module.name().toLowerCase().contains(searchQuery) ||
                 module.description().toLowerCase().contains(searchQuery)
             );
         }
+
+        var filter = filters.stream()
+            .reduce((combined, next) -> combined.and(next))
+            .orElse(null);
 
         var query = Query.<Module>builder()
             .page(paginator.getCurrentPage())
@@ -158,9 +168,37 @@ public class ModuleView extends JPanel {
             });
         });
 
+        var filterButton = new IconLabelButton("Filter", FILTER_ICON);
+        filterButton.addActionListener(event -> {
+            formFactory().getFilterForm(filterOptions, appliedFilters -> {
+                filterOptions = appliedFilters;
+                if (filterOptions.isEmpty()) {
+                    filterButton.setBackground(null);
+                    filterButton.setForeground(null);
+                    filterButton.setText("Filter");
+                    filterButton.setToolTipText(null);
+                } else {
+                    filterButton.setBackground(new Color(225, 240, 255));
+                    filterButton.setForeground(new Color(50, 100, 200));
+                    filterButton.setText("Filter (" + filterOptions.size() + ")");
+                    String sortSummary = "<html><b>Active Filters:</b><br>" + filterOptions.stream()
+                        .map(filterOption -> String.format(
+                            "- %s %s \"%s\"",
+                            filterOption.option().label(),
+                            filterOption.operation().label(),
+                            filterOption.criteria()
+                        ))
+                        .collect(Collectors.joining("<br>"))
+                        + "</html>";
+                    filterButton.setToolTipText(sortSummary);
+                }
+                refreshData();
+            });
+        });
+
         var components = new ArrayList<>(List.of(
             searchBar,
-            new IconLabelButton("Filter", FILTER_ICON),
+            filterButton,
             sortButton
         ));
 

@@ -1,7 +1,6 @@
 package oodj_project.features.module_management;
 
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -11,6 +10,10 @@ import java.util.function.Consumer;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import oodj_project.core.ui.components.filter_editor.FilterEditorPanel;
+import oodj_project.core.ui.components.filter_editor.FilterOption;
+import oodj_project.core.ui.components.filter_editor.InputStrategy;
+import oodj_project.core.ui.components.filter_editor.SelectedFilterOption;
 import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.sort_editor.SelectedSortOption;
 import oodj_project.core.ui.components.sort_editor.SortEditorPanel;
@@ -35,7 +38,6 @@ public class ModuleFormFactory {
             .confirmText("Create")
             .build();
         
-        // form.setMinimumSize(new Dimension(600, 900));
         form.setVisible(true);
         
         return form;
@@ -65,7 +67,6 @@ public class ModuleFormFactory {
             .confirmText("Update")
             .build();
             
-        // form.setMinimumSize(new Dimension(600, 900));
         form.setVisible(true);
 
         return form;
@@ -92,26 +93,59 @@ public class ModuleFormFactory {
         SortOption.text("Description", Module::description)
     );
 
-    public Form getSortForm(List<SelectedSortOption<Module>> selectedSortOptions, Consumer<List<SelectedSortOption<Module>>> onApply) {
+    public Form getSortForm(
+        List<SelectedSortOption<Module>> selectedSortOptions,
+        Consumer<List<SelectedSortOption<Module>>> onApply
+    ) {
 
         var content = new SortEditorPanel<>(SORT_OPTIONS, selectedSortOptions);        
 
-        var form = Form.builder(parentWindow, content, applySort(content, onApply))
+        var form = Form.builder(
+            parentWindow,
+            content,
+            applyChanges(() -> onApply.accept(content.getList()))
+        )
             .windowTitle("Sort Module")
             .formTitle("Add Sort")
             .confirmText("Apply")
             .build();
             
-        form.setMinimumSize(new Dimension(800, 450));
         form.setVisible(true);
 
         return form;
     }
 
-    private ActionListener applySort(SortEditorPanel<Module> formContent, Consumer<List<SelectedSortOption<Module>>> onApply) {
-        return event -> {        
+    private static final List<FilterOption<Module, ?, ?>> FILTER_OPTIONS = List.of(
+        // FilterOption.compare("ID", Module::id, InputStrategy.textField()),
+        FilterOption.text("Name", Module::name, InputStrategy.textField()),
+        FilterOption.text("Description", Module::description, InputStrategy.textField())
+    );
+
+    public Form getFilterForm(
+        List<SelectedFilterOption<Module, ?, ?>> selectedFilterOptions,
+        Consumer<List<SelectedFilterOption<Module, ?, ?>>> onApply
+    ) {
+        var content = new FilterEditorPanel<>(FILTER_OPTIONS, selectedFilterOptions);
+
+        var form = Form.builder(
+            parentWindow,
+            content, 
+            applyChanges(() -> onApply.accept(content.getList()))
+        )
+            .windowTitle("Filter Module")
+            .formTitle("Add Filter")
+            .confirmText("Apply")
+            .build();
+            
+        form.setVisible(true);
+
+        return form;
+    }
+
+    public ActionListener applyChanges(Runnable onApply) {
+        return event -> {
             if (onApply != null)
-                onApply.accept(formContent.getSelectedSortOptionList());
+                onApply.run();
             SwingUtilities.getWindowAncestor((Component) event.getSource())
                 .dispose();
         };

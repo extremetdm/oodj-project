@@ -29,7 +29,7 @@ public class SortOptionPanel<DataT> extends JPanel {
 
     private static final ImageIcon DELETE_ICON = IconManager.getIcon("/icons/delete.png", 30, 30);
 
-    private final IconButton directionSelector = new IconButton(ASCENDING_ICON);;
+    private final IconButton directionSelector = new IconButton(ASCENDING_ICON);
     private final IconButton deleteButton = new IconButton(DELETE_ICON);
 
     private boolean descendingSelected = false;

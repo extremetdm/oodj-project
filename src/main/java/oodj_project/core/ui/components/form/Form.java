@@ -40,8 +40,6 @@ public class Form extends JDialog {
             protected boolean accept(Component component) {
                 if (!super.accept(component)) return false;
 
-                System.out.print(component.getClass());
-
                 return switch(component) {
                     case JTextComponent textComponent -> textComponent.isEditable();
                     default -> true;
