@@ -1,4 +1,4 @@
-package oodj_project.core.ui.components;
+package oodj_project.core.ui.components.management_view;
 
 import java.awt.Color;
 import java.awt.Component;

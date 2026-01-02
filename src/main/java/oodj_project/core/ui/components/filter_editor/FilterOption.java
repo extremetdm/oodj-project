@@ -8,13 +8,24 @@ public record FilterOption<DataT, FieldT, ComponentT extends Component>(
     String label,
     Function<DataT, FieldT> fieldExtractor,
     List<FilterOperator<FieldT>> operations,
-    InputStrategy<ComponentT, FieldT> inputStrategy
+    InputStrategy<ComponentT, FieldT> inputStrategy,
+    Function<FieldT, String> fieldDescriptor
 ) {
+    public FilterOption(
+        String label,
+        Function<DataT, FieldT> fieldExtractor,
+        List<FilterOperator<FieldT>> operations,
+        InputStrategy<ComponentT, FieldT> inputStrategy
+    ) {
+        this(label, fieldExtractor, operations, inputStrategy, FieldT::toString);
+    }
+
     public FilterOption {
         if (label == null) throw new IllegalArgumentException("Label cannot be null.");
         if (fieldExtractor == null) throw new IllegalArgumentException("Field extractor cannot be null.");
         if (operations == null || operations.isEmpty()) throw new IllegalArgumentException("Operation list cannot be empty.");
         if (inputStrategy == null) throw new IllegalArgumentException("Input strategy cannot be null.");
+        if (fieldDescriptor == null) throw new IllegalArgumentException("Field descriptor cannot be null.");
     }
 
     public static <DataT, ComponentT extends Component>
@@ -49,13 +60,15 @@ public record FilterOption<DataT, FieldT, ComponentT extends Component>(
     FilterOption<DataT, FieldT, ComponentT> sameAs(
         String label,
         Function<DataT, FieldT> fieldExtractor,
-        InputStrategy<ComponentT, FieldT> inputStrategy
+        InputStrategy<ComponentT, FieldT> inputStrategy,
+        Function<FieldT, String> fieldDescriptor
     ) {
         return new FilterOption<>(
             label,
             fieldExtractor,
             List.of(FilterOperator.getEqualOperator()),
-            inputStrategy
+            inputStrategy,
+            fieldDescriptor
         );
     }
 }

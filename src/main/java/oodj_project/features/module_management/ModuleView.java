@@ -1,48 +1,36 @@
 package oodj_project.features.module_management;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
-import oodj_project.core.data.repository.Query;
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
-import oodj_project.core.ui.components.DataList;
-import oodj_project.core.ui.components.Paginator;
-import oodj_project.core.ui.components.SearchBar;
 import oodj_project.core.ui.components.buttons.IconButton;
 import oodj_project.core.ui.components.buttons.IconLabelButton;
-import oodj_project.core.ui.components.filter_editor.SelectedFilterOption;
-import oodj_project.core.ui.components.sort_editor.SelectedSortOption;
+import oodj_project.core.ui.components.management_view.DataList;
+import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.utils.IconManager;
 
-public class ModuleView extends JPanel {
+public class ModuleView extends ManagementView<Module> {
 
     private static final double[]
         COLUMN_WEIGHT_WITH_ACITON = new double[] { 1, 5, 16, 2 },
         COLUMN_WEIGHT_WITHOUT_ACTION = new double[] { 1, 7, 16 };
 
     private static final ImageIcon
-        FILTER_ICON = IconManager.getIcon("/icons/filter.png", 30, 30),
-        SORT_ICON = IconManager.getIcon("/icons/sort.png", 30, 30),    
         ADD_ICON = IconManager.getIcon("/icons/add.png", 30, 30),
         EDIT_ICON = IconManager.getIcon("/icons/edit.png", 30, 30),
         DELETE_ICON = IconManager.getIcon("/icons/delete.png", 30, 30);
@@ -50,180 +38,58 @@ public class ModuleView extends JPanel {
     private final Session session;
     private final ModuleController controller;
 
-    private final SearchBar searchBar;
-    private final DataList<Module> content;
-    private final Paginator paginator;
+    private final ModuleFormFactory formFactory;
 
     private final boolean hasActions;
 
-    private List<SelectedSortOption<Module>> sortOptions = null;
-    private List<SelectedFilterOption<Module, ?, ?>> filterOptions = null;
-
-    private ModuleFormFactory formFactory;
+    private final DataList<Module> dataTable;
 
     public ModuleView(Session session, ModuleController controller) {
-        super(new BorderLayout());
+        super(
+            "Module Management",
+            controller::index,
+            ModuleView::buildSearchLogic
+        );
+
         this.session = session;
         this.controller = controller;
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
 
         hasActions = session.can(Permission.UPDATE_MODULES)
             || session.can(Permission.DELETE_MODULES);
 
-        searchBar = new SearchBar(this::refreshData);
-        // Header
-        add(createHeader(), BorderLayout.NORTH);
-
-        // content
-        content = new DataList<>(
-            getColumnWeight(),
-            createTableHeader(),
-            this::createTableRow
-        );
-        add(content, BorderLayout.CENTER);
-    
-        // footer
-        paginator = new Paginator(this::refreshData);
-        add(paginator, BorderLayout.SOUTH);
-
-        refreshData();
-    }
-
-    public final void refreshData() {
-
-        var sorter = sortOptions == null? null:
-            sortOptions.stream()
-                .map(SelectedSortOption::comparator)
-                .reduce((combined, next) -> combined.thenComparing(next))
-                .orElse(null);
-
-        var filters = new ArrayList<>(filterOptions == null? List.of():
-            filterOptions.stream()
-                .map(option -> (Predicate<Module>) option::test)
-                .toList()
-        );
-
-        var searchQuery = searchBar.getQueryText().toLowerCase();
-        if (!searchQuery.isEmpty()) {
-            filters.add(module -> 
-                module.id().toString().contains(searchQuery) ||
-                module.name().toLowerCase().contains(searchQuery) ||
-                module.description().toLowerCase().contains(searchQuery)
-            );
-        }
-
-        var filter = filters.stream()
-            .reduce((combined, next) -> combined.and(next))
-            .orElse(null);
-
-        var query = Query.<Module>builder()
-            .page(paginator.getCurrentPage())
-            .limit(paginator.getPerPage())
-            .sortBy(sorter)
-            .filterBy(filter)
-            .build();
-
-        var result = controller.index(query);
-
-        content.setData(result.data());
-
-        paginator.update(result);
-    }
-
-    private JPanel createHeader() {
-        var header = new JPanel(new BorderLayout());
-        var title = new JLabel("Module Management");
-        title.setFont(new Font("Swis721 BlkCn BT", Font.BOLD, 50));
-        title.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        header.add(title, BorderLayout.NORTH);
-
-        var panel = new JPanel();
-
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-
-        var sortButton = new IconLabelButton("Sort", SORT_ICON);
-        sortButton.addActionListener(event -> {
-            formFactory().getSortForm(sortOptions, appliedSortOption -> {
-                sortOptions = appliedSortOption;
-                if (sortOptions.isEmpty()) {
-                    sortButton.setBackground(null);
-                    sortButton.setForeground(null);
-                    sortButton.setText("Sort");
-                    sortButton.setToolTipText(null);
-                } else {
-                    sortButton.setBackground(new Color(225, 240, 255));
-                    sortButton.setForeground(new Color(50, 100, 200));
-                    sortButton.setText("Sort (" + sortOptions.size() + ")");
-                    String sortSummary = "<html><b>Active Sorts:</b><br>" + sortOptions.stream()
-                        .map(sortOption -> String.format(
-                            "- %s (%s)",
-                            sortOption.option().label(),
-                            sortOption.isDescending()? "Descending": "Ascending"
-                        ))
-                        .collect(Collectors.joining("<br>"))
-                        + "</html>";
-                    sortButton.setToolTipText(sortSummary);
-                }
-                refreshData();
-            });
-        });
-
-        var filterButton = new IconLabelButton("Filter", FILTER_ICON);
-        filterButton.addActionListener(event -> {
-            formFactory().getFilterForm(filterOptions, appliedFilters -> {
-                filterOptions = appliedFilters;
-                if (filterOptions.isEmpty()) {
-                    filterButton.setBackground(null);
-                    filterButton.setForeground(null);
-                    filterButton.setText("Filter");
-                    filterButton.setToolTipText(null);
-                } else {
-                    filterButton.setBackground(new Color(225, 240, 255));
-                    filterButton.setForeground(new Color(50, 100, 200));
-                    filterButton.setText("Filter (" + filterOptions.size() + ")");
-                    String sortSummary = "<html><b>Active Filters:</b><br>" + filterOptions.stream()
-                        .map(filterOption -> String.format(
-                            "- %s %s \"%s\"",
-                            filterOption.option().label(),
-                            filterOption.operation().label(),
-                            filterOption.criteria()
-                        ))
-                        .collect(Collectors.joining("<br>"))
-                        + "</html>";
-                    filterButton.setToolTipText(sortSummary);
-                }
-                refreshData();
-            });
-        });
-
-        var components = new ArrayList<>(List.of(
-            searchBar,
-            filterButton,
-            sortButton
-        ));
+        formFactory = new ModuleFormFactory(this, controller);
 
         if (session.can(Permission.CREATE_MODULES)) {
             var addButton = new IconLabelButton("Add", ADD_ICON);
             addButton.addActionListener(event -> {
-                formFactory().getCreateForm(this::refreshData);
+                formFactory.getCreateForm(this::refreshData);
             });
-            components.add(addButton);
+            toolbarComponents.add(addButton);
         }
 
-        for (int index = 0; index < components.size(); index++) {
-            if (index > 0) panel.add(Box.createHorizontalStrut(10));
-            panel.add(components.get(index));
-        } 
+        var columnWeight = hasActions?
+            COLUMN_WEIGHT_WITH_ACITON:
+            COLUMN_WEIGHT_WITHOUT_ACTION;
 
-        panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
+        dataTable = new DataList<>(
+            columnWeight,
+            createTableHeader(),
+            getTableRowGenerator()
+        );
 
-        header.add(panel, BorderLayout.SOUTH);
-
-        return header;
+        init();
     }
 
-    private double[] getColumnWeight() {
-        return hasActions? COLUMN_WEIGHT_WITH_ACITON: COLUMN_WEIGHT_WITHOUT_ACTION;
+    private static Predicate<Module> buildSearchLogic(String searchQuery) {
+        return module -> 
+            module.id().toString().contains(searchQuery) ||
+            module.name().toLowerCase().contains(searchQuery) ||
+            module.description().toLowerCase().contains(searchQuery);
+    }
+
+    @Override
+    protected DataList<Module> getContent() {
+        return dataTable;
     }
 
     private Component[] createTableHeader() {
@@ -242,55 +108,48 @@ public class ModuleView extends JPanel {
         return components.toArray(Component[]::new);
     }
 
-    private Component[] createTableRow(Module module) {
-        var components = new ArrayList<>(List.<Component>of(
-            DataList.createText(module.id().toString()),
-            DataList.createText(module.name()),
-            DataList.createText(module.description())
-        ));
+    private Function<Module, Component[]> getTableRowGenerator() {
+        return module -> {
+            var components = new ArrayList<>(List.<Component>of(
+                DataList.createText(module.id().toString()),
+                DataList.createText(module.name()),
+                DataList.createText(module.description())
+            ));
 
-        if (hasActions) {
-            var actionPanel = new JPanel();
-            actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.X_AXIS));
-            actionPanel.setOpaque(false);
+            if (hasActions) {
+                var actionPanel = new JPanel();
+                actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.X_AXIS));
+                actionPanel.setOpaque(false);
 
-            ArrayList<Component> actionList = new ArrayList<>();
-            
-            if (session.can(Permission.UPDATE_MODULES)) {    
-                actionList.add(createEditButton(module));
+                ArrayList<Component> actionList = new ArrayList<>();
+                
+                if (session.can(Permission.UPDATE_MODULES)) {    
+                    actionList.add(createEditButton(module));
+                }
+
+                if (session.can(Permission.DELETE_MODULES)) {
+                    actionList.add(createDeleteButton(module));
+                }
+
+                actionPanel.add(Box.createHorizontalGlue());
+                for (int x = 0; x < actionList.size(); x++) {
+                    if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
+                    actionPanel.add(actionList.get(x));
+                }
+                actionPanel.add(Box.createHorizontalGlue());
+
+                components.add(actionPanel);
             }
 
-            if (session.can(Permission.DELETE_MODULES)) {
-                actionList.add(createDeleteButton(module));
-            }
-
-            actionPanel.add(Box.createHorizontalGlue());
-            for (int x = 0; x < actionList.size(); x++) {
-                if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
-                actionPanel.add(actionList.get(x));
-            }
-            actionPanel.add(Box.createHorizontalGlue());
-
-            components.add(actionPanel);
-        }
-
-        return components.toArray(Component[]::new);
-    }
-
-    private ModuleFormFactory formFactory() {
-        if (formFactory == null)
-            formFactory = new ModuleFormFactory(
-                SwingUtilities.getWindowAncestor(this),
-                controller
-            );
-        return formFactory;
+            return components.toArray(Component[]::new);
+        };
     }
 
     private JButton createEditButton(Module module) {
         var editButton = new IconButton(EDIT_ICON);
-        editButton.setToolTipText("Edit");
+        editButton.setToolTipText("Edit Module");
         editButton.addActionListener(event -> 
-            formFactory().getEditForm(module, this::refreshData)
+            formFactory.getEditForm(module, this::refreshData)
         );
         return editButton;
 
@@ -306,10 +165,10 @@ public class ModuleView extends JPanel {
 
     private JButton createDeleteButton(Module module) {
         var deleteButton = new IconButton(DELETE_ICON);
-        deleteButton.setToolTipText("Delete");
+        deleteButton.setToolTipText("Delete Module");
         deleteButton.addActionListener(event -> {
             var action = JOptionPane.showConfirmDialog(
-                this,
+                (Component) event.getSource(),
                 "Are you sure you want to delete the module \"" + module.name() + "\"?",
                 "Confirm delete module",
                 JOptionPane.YES_NO_OPTION
@@ -330,5 +189,10 @@ public class ModuleView extends JPanel {
             }
         });
         return deleteButton;
+    }
+
+    @Override
+    protected ModuleFormFactory getFormFactory() {
+        return formFactory;
     }
 }

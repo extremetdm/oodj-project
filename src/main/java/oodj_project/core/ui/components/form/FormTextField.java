@@ -26,6 +26,7 @@ public class FormTextField extends JTextField {
         if (isEditable) {
             setBorder(FormTheme.INPUT_BORDER);
             setFont(FormTheme.INPUT_FONT);
+            setBackground(FormTheme.BACKGROUND_COLOR);
         } else {
             setBorder(FormTheme.FLAT_BORDER);
             setEditable(false);

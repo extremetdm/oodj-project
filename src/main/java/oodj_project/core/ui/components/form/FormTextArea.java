@@ -34,6 +34,7 @@ public class FormTextArea extends JScrollPane {
         textArea.setWrapStyleWord(true);
         textArea.setBorder(FormTheme.PADDING);
         textArea.setFont(FormTheme.INPUT_FONT);
+        textArea.setBackground(FormTheme.BACKGROUND_COLOR);
     }
 
     public String getText() {

@@ -1,38 +1,54 @@
 package oodj_project.features.module_management;
 
 import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import oodj_project.core.ui.components.filter_editor.FilterEditorPanel;
 import oodj_project.core.ui.components.filter_editor.FilterOption;
 import oodj_project.core.ui.components.filter_editor.InputStrategy;
-import oodj_project.core.ui.components.filter_editor.SelectedFilterOption;
 import oodj_project.core.ui.components.form.Form;
-import oodj_project.core.ui.components.sort_editor.SelectedSortOption;
-import oodj_project.core.ui.components.sort_editor.SortEditorPanel;
+import oodj_project.core.ui.components.management_view.FormFactory;
 import oodj_project.core.ui.components.sort_editor.SortOption;
 
-public class ModuleFormFactory {
+public class ModuleFormFactory extends FormFactory<Module> {
 
-    private final Window parentWindow;
+    private static final List<SortOption<Module>> SORT_OPTIONS = List.of(
+        SortOption.of("ID", Module::id),
+        SortOption.text("Name", Module::name),
+        SortOption.text("Description", Module::description)
+    );
+
+    private static final List<FilterOption<Module, ?, ?>> FILTER_OPTIONS = List.of(
+        FilterOption.compare("ID", Module::id, InputStrategy.idField()),
+        FilterOption.text("Name", Module::name, InputStrategy.textField()),
+        FilterOption.text("Description", Module::description, InputStrategy.textField())
+    );
+
     private final ModuleController controller;
 
-    public ModuleFormFactory(Window parentWindow, ModuleController controller) {
-        this.parentWindow = parentWindow;
+    public ModuleFormFactory(Component component, ModuleController controller) {
+        super(component, SORT_OPTIONS, FILTER_OPTIONS);
         this.controller = controller;
+    }
+
+    @Override
+    protected String getSortWindowTitle() {
+        return "Sort Module";
+    }
+
+    @Override
+    protected String getFilterWindowTitle() {
+        return "Filter Module";
     }
 
     public Form getCreateForm(Runnable onCreate) {
         var content = new ModuleEditFormContent();
 
-        var form = Form.builder(parentWindow, content, handleCreate(content, onCreate))
+        var form = Form.builder(getParentWindow(), content, handleCreate(content, onCreate))
             .windowTitle("Create Module")
             .formTitle("Create Module")
             .confirmText("Create")
@@ -61,7 +77,7 @@ public class ModuleFormFactory {
     public Form getEditForm(Module module, Runnable onUpdate) {
         var content = new ModuleEditFormContent(module);
 
-        var form = Form.builder(parentWindow, content, handleEdit(module, content, onUpdate))
+        var form = Form.builder(getParentWindow(), content, handleEdit(module, content, onUpdate))
             .windowTitle("Edit Module")
             .formTitle("Edit Module")
             .confirmText("Update")
@@ -84,70 +100,6 @@ public class ModuleFormFactory {
             } catch (IllegalArgumentException|IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing module", JOptionPane.ERROR_MESSAGE);
             }
-        };
-    }
-
-    private static final List<SortOption<Module>> SORT_OPTIONS = List.of(
-        SortOption.of("ID", Module::id),
-        SortOption.text("Name", Module::name),
-        SortOption.text("Description", Module::description)
-    );
-
-    public Form getSortForm(
-        List<SelectedSortOption<Module>> selectedSortOptions,
-        Consumer<List<SelectedSortOption<Module>>> onApply
-    ) {
-
-        var content = new SortEditorPanel<>(SORT_OPTIONS, selectedSortOptions);        
-
-        var form = Form.builder(
-            parentWindow,
-            content,
-            applyChanges(() -> onApply.accept(content.getList()))
-        )
-            .windowTitle("Sort Module")
-            .formTitle("Add Sort")
-            .confirmText("Apply")
-            .build();
-            
-        form.setVisible(true);
-
-        return form;
-    }
-
-    private static final List<FilterOption<Module, ?, ?>> FILTER_OPTIONS = List.of(
-        // FilterOption.compare("ID", Module::id, InputStrategy.textField()),
-        FilterOption.text("Name", Module::name, InputStrategy.textField()),
-        FilterOption.text("Description", Module::description, InputStrategy.textField())
-    );
-
-    public Form getFilterForm(
-        List<SelectedFilterOption<Module, ?, ?>> selectedFilterOptions,
-        Consumer<List<SelectedFilterOption<Module, ?, ?>>> onApply
-    ) {
-        var content = new FilterEditorPanel<>(FILTER_OPTIONS, selectedFilterOptions);
-
-        var form = Form.builder(
-            parentWindow,
-            content, 
-            applyChanges(() -> onApply.accept(content.getList()))
-        )
-            .windowTitle("Filter Module")
-            .formTitle("Add Filter")
-            .confirmText("Apply")
-            .build();
-            
-        form.setVisible(true);
-
-        return form;
-    }
-
-    public ActionListener applyChanges(Runnable onApply) {
-        return event -> {
-            if (onApply != null)
-                onApply.run();
-            SwingUtilities.getWindowAncestor((Component) event.getSource())
-                .dispose();
         };
     }
 }

@@ -25,4 +25,7 @@ public class FormTheme {
         OUTLINE = BorderFactory.createLineBorder(Color.GRAY, OUTLINE_SIZE),
         INPUT_BORDER = BorderFactory.createCompoundBorder(OUTLINE, PADDING),
         FLAT_BORDER = BorderFactory.createEmptyBorder(INSET_Y, INSET_X, INSET_Y, INSET_X);
+
+    public static final Color
+        BACKGROUND_COLOR = Color.WHITE;
 }

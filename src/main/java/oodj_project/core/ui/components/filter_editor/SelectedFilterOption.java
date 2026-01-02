@@ -12,6 +12,10 @@ public record SelectedFilterOption<DataT, FieldT, ComponentT extends Component>(
         if (operation == null) throw new IllegalArgumentException("Filter operation cannot be null.");
     }
 
+    public String criteriaLabel() {
+        return option.fieldDescriptor().apply(criteria);
+    }
+
     public boolean test(DataT data) {
         return operation.operation()
             .test(option.fieldExtractor().apply(data), criteria);
