@@ -91,7 +91,7 @@ public abstract class ManagementView<DataT> extends JPanel {
 
         var searchQuery = searchBar.getQueryText();
         if (!searchQuery.isEmpty()) {
-            filter.and(searchLogicGenerator.apply(searchQuery));
+            filter = filter.and(searchLogicGenerator.apply(searchQuery));
         }
 
         var query = Query.<DataT>builder()
