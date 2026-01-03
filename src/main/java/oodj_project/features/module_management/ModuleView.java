@@ -174,7 +174,7 @@ public class ModuleView extends ManagementView<Module> {
         deleteButton.setToolTipText("Delete Module");
         deleteButton.addActionListener(event -> {
             var action = JOptionPane.showConfirmDialog(
-                (Component) event.getSource(),
+                this,
                 "Are you sure you want to delete the module \"" + module.name() + "\"?",
                 "Confirm delete module",
                 JOptionPane.YES_NO_OPTION
