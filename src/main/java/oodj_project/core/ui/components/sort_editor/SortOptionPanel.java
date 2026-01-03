@@ -1,7 +1,6 @@
 package oodj_project.core.ui.components.sort_editor;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.util.List;
 import java.util.function.Consumer;
@@ -9,20 +8,16 @@ import java.util.function.Consumer;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 
 import oodj_project.core.ui.components.buttons.IconButton;
+import oodj_project.core.ui.components.form.FormComboBox;
 import oodj_project.core.ui.utils.IconManager;
-import oodj_project.core.ui.utils.SelectorRenderer;
 
 public class SortOptionPanel<DataT> extends JPanel {
 
-    private final JComboBox<SortOption<DataT>> optionSelector;
+    private final FormComboBox<SortOption<DataT>> optionSelector;
 
     private static final ImageIcon ASCENDING_ICON = IconManager.getIcon("/icons/sort-asc.png", 30, 30);
     private static final ImageIcon DESCENDING_ICON = IconManager.getIcon("/icons/sort-desc.png", 30, 30);
@@ -43,26 +38,7 @@ public class SortOptionPanel<DataT> extends JPanel {
         setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        DefaultComboBoxModel<SortOption<DataT>> model = new DefaultComboBoxModel<>();
-        model.addAll(options);
-
-        optionSelector = new JComboBox<>(model);
-        optionSelector.setRenderer(new SelectorRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList<?> list,
-                Object value, 
-                int index,
-                boolean isSelected,
-                boolean cellHasFocus
-            ) {
-                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof SortOption) {
-                    label.setText(((SortOption<?>) value).label());
-                }
-                return label;
-            }
-        });
+        optionSelector = new FormComboBox<>(SortOption::label, options);
 
         add(optionSelector, BorderLayout.CENTER);
 

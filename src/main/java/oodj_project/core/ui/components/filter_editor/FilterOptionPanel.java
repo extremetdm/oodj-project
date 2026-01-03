@@ -10,20 +10,17 @@ import java.util.function.Consumer;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 
 import oodj_project.core.ui.components.buttons.IconButton;
+import oodj_project.core.ui.components.form.FormComboBox;
 import oodj_project.core.ui.components.form.FormTextField;
 import oodj_project.core.ui.utils.IconManager;
-import oodj_project.core.ui.utils.SelectorRenderer;
 
 public class FilterOptionPanel<DataT> extends JPanel {
 
-    private final JComboBox<FilterOption<DataT, ?, ?>> optionSelector;
-    private final JComboBox<FilterOperator<?>> operationSelector;
+    private final FormComboBox<FilterOption<DataT, ?, ?>> optionSelector;
+    private final FormComboBox<FilterOperator<?>> operationSelector;
 
     private static final ImageIcon DELETE_ICON = IconManager.getIcon("/icons/delete.png", 30, 30);
 
@@ -41,46 +38,11 @@ public class FilterOptionPanel<DataT> extends JPanel {
         super(new BorderLayout());
         setMaximumSize(new Dimension(Integer.MAX_VALUE, getPreferredSize().height));
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-        DefaultComboBoxModel<FilterOption<DataT, ?, ?>> optionModel = new DefaultComboBoxModel<>();
-        optionModel.addAll(options);
         
-        optionSelector = new JComboBox<>(optionModel);
-        optionSelector.setRenderer(new SelectorRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList<?> list,
-                Object value, 
-                int index,
-                boolean isSelected,
-                boolean cellHasFocus
-            ) {
-                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof FilterOption) {
-                    label.setText(((FilterOption<?, ?, ?>) value).label());
-                }
-                return label;
-            }
-        });
+        optionSelector = new FormComboBox<>(FilterOption::label, options);
         
         DefaultComboBoxModel<FilterOperator<?>> operationModel = new DefaultComboBoxModel<>();
-        operationSelector = new JComboBox<>(operationModel);
-        operationSelector.setRenderer(new SelectorRenderer() {
-            @Override
-            public Component getListCellRendererComponent(
-                JList<?> list,
-                Object value, 
-                int index,
-                boolean isSelected,
-                boolean cellHasFocus
-            ) {
-                JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                if (value instanceof FilterOperator) {
-                    label.setText(((FilterOperator<?>) value).label());
-                }
-                return label;
-            }
-        });
+        operationSelector = new FormComboBox<>(FilterOperator::label, operationModel);
 
         add(inputPanel, BorderLayout.CENTER);
 

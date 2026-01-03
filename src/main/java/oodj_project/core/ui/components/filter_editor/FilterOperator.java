@@ -9,7 +9,7 @@ public record FilterOperator<FieldT>(
     String briefLabel
 ) {
     public FilterOperator(String label, BiPredicate<FieldT, FieldT> operation) {
-        this(label, operation, label);
+        this(label, operation, label.toLowerCase());
     }
 
     public FilterOperator {
