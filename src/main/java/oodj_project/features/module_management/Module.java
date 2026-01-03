@@ -1,6 +1,7 @@
 package oodj_project.features.module_management;
 
 import oodj_project.core.data.model.Identifiable;
+import oodj_project.core.data.model.Model;
 
 public record Module(Integer id, String name, String description) implements Identifiable<Module> {
     public Module(String name, String description) {
@@ -10,6 +11,8 @@ public record Module(Integer id, String name, String description) implements Ide
     public Module {
         if (name == null || name.isBlank())
             throw new IllegalArgumentException("Name cannot be blank.");
+        name = Model.normalize(name);
+        description = Model.normalize(description);
     }
 
     @Override

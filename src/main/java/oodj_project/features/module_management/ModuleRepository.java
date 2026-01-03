@@ -30,11 +30,7 @@ public class ModuleRepository extends IdentifiableRepository<Module> {
             throw new IllegalArgumentException("ID must be a number.");
         }
 
-        return new Module(
-            id,
-            args[1],
-            args.length == 2? "": args[2]
-        );
+        return new Module(id, args[1], args[2]);
     }
 
     private static String[] format(Module module) {
