@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import oodj_project.core.data.validation.Validator;
@@ -25,6 +27,8 @@ import oodj_project.core.data.validation.Validator;
  *                Must be a Java {@code Record}.
  */
 public abstract class Repository<DataT extends Record> {
+    public static final String DELIMITER = "|";
+
     protected final ArrayList<DataT> models = new ArrayList<>();
     protected final File sourceFile;
 
@@ -32,7 +36,7 @@ public abstract class Repository<DataT extends Record> {
     protected final LineParser<DataT> lineParser;
     
     /** Function that converts {@code DataT} record object into a file line. */
-    protected final Function<DataT, String> lineFormatter;
+    protected final Function<DataT, String[]> lineFormatter;
 
     /** Optional dataset integrity validator. */
     protected final Validator<DataT> validator;
@@ -49,7 +53,7 @@ public abstract class Repository<DataT extends Record> {
     protected Repository(
         File sourceFile,
         LineParser<DataT> lineParser,
-        Function<DataT, String> lineFormatter
+        Function<DataT, String[]> lineFormatter
     ) throws IOException {
         this(sourceFile, lineParser, lineFormatter, null);
     }
@@ -66,7 +70,7 @@ public abstract class Repository<DataT extends Record> {
     protected Repository(
         File sourceFile,
         LineParser<DataT> lineParser,
-        Function<DataT, String> lineFormatter,
+        Function<DataT, String[]> lineFormatter,
         Validator<DataT> validator
     ) throws IOException, IllegalStateException {
         this.sourceFile = sourceFile;
@@ -87,7 +91,7 @@ public abstract class Repository<DataT extends Record> {
             int lineNumber = 1;
             while ((line = reader.readLine()) != null) {
                 try {
-                    models.add(lineParser.parse(line.split("[|]", -1)));
+                    models.add(lineParser.parse(line.split(Pattern.quote(DELIMITER), -1)));
                 } catch (IllegalArgumentException e) {
                     System.err.println("Failed to parse data at line " + lineNumber + ": " + line);
                     System.err.println("Reason: " + e.getMessage());
@@ -117,7 +121,10 @@ public abstract class Repository<DataT extends Record> {
         validate();
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(sourceFile))) {
             for (var model : models) {
-                writer.write(lineFormatter.apply(model));
+                writer.write(
+                    Stream.of(lineFormatter.apply(model))
+                        .collect(Collectors.joining(DELIMITER))
+                );
                 writer.newLine();
             }
         }

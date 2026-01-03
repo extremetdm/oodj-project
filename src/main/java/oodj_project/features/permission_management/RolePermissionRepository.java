@@ -32,7 +32,10 @@ public class RolePermissionRepository extends Repository<RolePermission> {
         );
     }
 
-    private static String format(RolePermission rolePermission) {
-        return rolePermission.role().id() + "|" + rolePermission.permission();
+    private static String[] format(RolePermission rolePermission) {
+        return new String[] {
+            rolePermission.role().id().toString(),
+            rolePermission.permission().name()
+        };
     }
 }

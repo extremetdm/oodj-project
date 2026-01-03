@@ -26,7 +26,10 @@ public class RoleRepository extends IdentifiableRepository<Role> {
         );
     }
 
-    private static String format(Role role) {
-        return role.id() + "|" + role.name();
+    private static String[] format(Role role) {
+        return new String[] {
+            role.id().toString(),
+            role.name()
+        };
     }
 }

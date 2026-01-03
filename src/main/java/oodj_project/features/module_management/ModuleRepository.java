@@ -20,14 +20,28 @@ public class ModuleRepository extends IdentifiableRepository<Module> {
     }
 
     private static Module parse(String... args) {
+        if (args.length != 3) throw new IllegalArgumentException("Incorrect number of fields given.");
+        
+        Integer id;
+
+        try {
+            id = Integer.valueOf(args[0]);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("ID must be a number.");
+        }
+
         return new Module(
-            Integer.valueOf(args[0]),
+            id,
             args[1],
-            args[2]
+            args.length == 2? "": args[2]
         );
     }
 
-    private static String format(Module module) {
-        return module.id() + "|" + module.name() + "|" + module.description();
+    private static String[] format(Module module) {
+        return new String[] {
+            module.id().toString(),
+            module.name(), 
+            module.description()
+        };
     }
 }

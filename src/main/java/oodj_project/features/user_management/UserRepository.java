@@ -25,7 +25,12 @@ public class UserRepository extends IdentifiableRepository<User> {
         );
     }
 
-    public static String format(User user) {
-        return user.id() + "|" + user.name() + "|" + user.password() + "|" + user.role().id();
+    public static String[] format(User user) {
+        return new String[] {
+            user.id().toString(),
+            user.name(),
+            user.password(),
+            user.role().id().toString()
+        };
     }
 }
