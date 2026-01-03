@@ -29,7 +29,7 @@ public abstract class Repository<DataT extends Record> {
     protected final File sourceFile;
 
     /** Function that converts file lines into the {@code DataT} record object. */
-    protected final Function<String[], DataT> lineParser;
+    protected final LineParser<DataT> lineParser;
     
     /** Function that converts {@code DataT} record object into a file line. */
     protected final Function<DataT, String> lineFormatter;
@@ -48,7 +48,7 @@ public abstract class Repository<DataT extends Record> {
      */
     protected Repository(
         File sourceFile,
-        Function<String[], DataT> lineParser,
+        LineParser<DataT> lineParser,
         Function<DataT, String> lineFormatter
     ) throws IOException {
         this(sourceFile, lineParser, lineFormatter, null);
@@ -65,7 +65,7 @@ public abstract class Repository<DataT extends Record> {
      */
     protected Repository(
         File sourceFile,
-        Function<String[], DataT> lineParser,
+        LineParser<DataT> lineParser,
         Function<DataT, String> lineFormatter,
         Validator<DataT> validator
     ) throws IOException, IllegalStateException {
@@ -84,8 +84,15 @@ public abstract class Repository<DataT extends Record> {
     private void read() throws IOException {
         try (var reader = new BufferedReader(new FileReader(sourceFile))) {
             String line;
+            int lineNumber = 1;
             while ((line = reader.readLine()) != null) {
-                models.add(lineParser.apply(line.split("[|]")));
+                try {
+                    models.add(lineParser.parse(line.split("[|]", -1)));
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Failed to parse data at line " + lineNumber + ": " + line);
+                    System.err.println("Reason: " + e.getMessage());
+                }
+                lineNumber++;
             }
         }
     }

@@ -13,14 +13,14 @@ public abstract class IdentifiableRepository<DataT extends Record & Identifiable
     /**
      * @see #Repository(File, Function, Function)
      */
-    protected IdentifiableRepository(File sourceFile, Function<String[], DataT> lineParser, Function<DataT, String> lineFormatter) throws IOException {
+    protected IdentifiableRepository(File sourceFile, LineParser<DataT> lineParser, Function<DataT, String> lineFormatter) throws IOException {
         super(sourceFile, lineParser, lineFormatter);
     }
 
     /**
      * @see #Repository(File, Function, Function, Validator)
      */
-    protected IdentifiableRepository(File sourceFile, Function<String[], DataT> lineParser, Function<DataT, String> lineFormatter, Validator<DataT> validator) throws IOException, IllegalStateException {
+    protected IdentifiableRepository(File sourceFile, LineParser<DataT> lineParser, Function<DataT, String> lineFormatter, Validator<DataT> validator) throws IOException, IllegalStateException {
         super(sourceFile, lineParser, lineFormatter, validator);
     }
 
