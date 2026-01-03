@@ -110,10 +110,16 @@ public class ModuleView extends ManagementView<Module> {
 
     private Function<Module, Component[]> getTableRowGenerator() {
         return module -> {
+            boolean hasDescription = !module.description().isBlank();
+
+            var description = hasDescription?
+                module.description():
+                "(no description provided)";
+
             var components = new ArrayList<>(List.<Component>of(
                 DataList.createText(module.id().toString()),
                 DataList.createText(module.name()),
-                DataList.createText(module.description())
+                DataList.createText(description, !hasDescription)
             ));
 
             if (hasActions) {

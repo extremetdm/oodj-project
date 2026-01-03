@@ -30,7 +30,6 @@ public class DataList<DataT> extends JScrollPane {
         HEADER_FONT = new Font("Arial", Font.BOLD, 20),
         FONT = new Font("SansSerif", Font.PLAIN, 15);
 
-
     public DataList(
         double[] columnWeights,
         Component[] columnHeaders,
@@ -87,8 +86,12 @@ public class DataList<DataT> extends JScrollPane {
     }
 
     public static JLabel createText(String text) {
+        return createText(text, false);
+    }
+
+    public static JLabel createText(String text, boolean isItalic) {
         var label = new JLabel(text);
-        label.setFont(FONT);
+        label.setFont(isItalic? FONT.deriveFont(Font.ITALIC): FONT);
         return label;
     }
 }
