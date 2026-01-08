@@ -1,1 +1,1 @@
-1|||2
+1|username|Name|password|MALE|2|example@email.com|2321313|0

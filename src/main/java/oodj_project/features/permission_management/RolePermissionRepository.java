@@ -6,6 +6,7 @@ import java.io.IOException;
 import oodj_project.core.data.repository.Repository;
 import oodj_project.core.data.validation.Rule;
 import oodj_project.core.security.Permission;
+import oodj_project.features.role_management.Role;
 import oodj_project.features.role_management.RoleRepository;
 
 public class RolePermissionRepository extends Repository<RolePermission> {
@@ -37,5 +38,12 @@ public class RolePermissionRepository extends Repository<RolePermission> {
             rolePermission.role().id().toString(),
             rolePermission.permission().name()
         };
+    }
+
+    public boolean roleHasPermission(Role role, Permission permission) {
+        return findFirst(
+            model -> model.role() == role
+                && model.permission() == permission
+        )   .isPresent();
     }
 }
