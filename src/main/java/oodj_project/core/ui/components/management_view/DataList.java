@@ -30,13 +30,25 @@ public class DataList<DataT> extends JScrollPane {
         HEADER_FONT = new Font("Arial", Font.BOLD, 20),
         FONT = new Font("SansSerif", Font.PLAIN, 15);
 
+    private final int rowHeight;
+
     public DataList(
         double[] columnWeights,
         Component[] columnHeaders,
         Function<DataT, Component[]> rowCreator
     ) {
+        this(columnWeights, columnHeaders, rowCreator, 50);
+    }
+
+    public DataList(
+        double[] columnWeights,
+        Component[] columnHeaders,
+        Function<DataT, Component[]> rowCreator,
+        int rowHeight
+    ) {
         this.columnWeights = columnWeights;
         this.rowCreator = rowCreator;
+        this.rowHeight = rowHeight;
 
         setViewportView(contentPanel);
         // setBorder(BorderFactory.createEmptyBorder());
@@ -60,7 +72,7 @@ public class DataList<DataT> extends JScrollPane {
     public final void setData(List<DataT> data) {
         var builder = new GridBuilder(contentPanel)
             .setColumnWeights(columnWeights)
-            .setRowHeight(50)
+            .setRowHeight(rowHeight)
             .setInsets(new Insets(0, 5, 0, 5))
             .setMinWidth(600)
             .setRowStyler((panel, index) -> {
@@ -68,7 +80,7 @@ public class DataList<DataT> extends JScrollPane {
                 panel.setBorder(BORDER);
             });
         if (data.isEmpty()) {
-            builder.add(new JLabel("No results found."));
+            builder.add(createHeaderText("No results found."));
         } else {
             for (var model: data) {
                 builder.addRow(rowCreator.apply(model));

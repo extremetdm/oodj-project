@@ -23,7 +23,7 @@ public class ModuleFormFactory extends FormFactory<Module> {
     );
 
     private static final List<FilterOption<Module, ?, ?>> FILTER_OPTIONS = List.of(
-        FilterOption.compare("ID", Module::id, InputStrategy.idField()),
+        FilterOption.compare("ID", Module::id, InputStrategy.positiveIntegerField()),
         FilterOption.text("Name", Module::name, InputStrategy.textField()),
         FilterOption.text("Description", Module::description, InputStrategy.textField())
     );

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import javax.swing.Box;
@@ -74,7 +73,7 @@ public class ModuleView extends ManagementView<Module> {
         dataTable = new DataList<>(
             columnWeight,
             createTableHeader(),
-            getTableRowGenerator()
+            this::createTableRow
         );
 
         init();
@@ -108,47 +107,45 @@ public class ModuleView extends ManagementView<Module> {
         return components.toArray(Component[]::new);
     }
 
-    private Function<Module, Component[]> getTableRowGenerator() {
-        return module -> {
-            boolean hasDescription = !module.description().isBlank();
+    private Component[] createTableRow(Module module) {
+        boolean hasDescription = !module.description().isBlank();
 
-            var description = hasDescription?
-                module.description():
-                "(no description provided)";
+        var description = hasDescription?
+            module.description():
+            "<html><i>(no description provided)<i><html>";
 
-            var components = new ArrayList<>(List.<Component>of(
-                DataList.createText(module.id().toString()),
-                DataList.createText(module.name()),
-                DataList.createText(description, !hasDescription)
-            ));
+        var components = new ArrayList<>(List.<Component>of(
+            DataList.createText(module.id().toString()),
+            DataList.createText(module.name()),
+            DataList.createText(description)
+        ));
 
-            if (hasActions) {
-                var actionPanel = new JPanel();
-                actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.X_AXIS));
-                actionPanel.setOpaque(false);
+        if (hasActions) {
+            var actionPanel = new JPanel();
+            actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.X_AXIS));
+            actionPanel.setOpaque(false);
 
-                ArrayList<Component> actionList = new ArrayList<>();
-                
-                if (session.can(Permission.UPDATE_MODULES)) {    
-                    actionList.add(createEditButton(module));
-                }
-
-                if (session.can(Permission.DELETE_MODULES)) {
-                    actionList.add(createDeleteButton(module));
-                }
-
-                actionPanel.add(Box.createHorizontalGlue());
-                for (int x = 0; x < actionList.size(); x++) {
-                    if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
-                    actionPanel.add(actionList.get(x));
-                }
-                actionPanel.add(Box.createHorizontalGlue());
-
-                components.add(actionPanel);
+            ArrayList<Component> actionList = new ArrayList<>();
+            
+            if (session.can(Permission.UPDATE_MODULES)) {    
+                actionList.add(createEditButton(module));
             }
 
-            return components.toArray(Component[]::new);
-        };
+            if (session.can(Permission.DELETE_MODULES)) {
+                actionList.add(createDeleteButton(module));
+            }
+
+            actionPanel.add(Box.createHorizontalGlue());
+            for (int x = 0; x < actionList.size(); x++) {
+                if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
+                actionPanel.add(actionList.get(x));
+            }
+            actionPanel.add(Box.createHorizontalGlue());
+
+            components.add(actionPanel);
+        }
+
+        return components.toArray(Component[]::new);
     }
 
     private JButton createEditButton(Module module) {
