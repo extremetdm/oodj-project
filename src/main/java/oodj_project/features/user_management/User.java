@@ -31,7 +31,7 @@ public record User(
     }
 
     public User {
-        Model.normalize(name);
+        name = Model.normalize(name);
         // new Date
     }
 

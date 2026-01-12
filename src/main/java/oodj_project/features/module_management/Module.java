@@ -4,13 +4,13 @@ import oodj_project.core.data.model.Identifiable;
 import oodj_project.core.data.model.Model;
 
 public record Module(Integer id, String name, String description) implements Identifiable<Module> {
+    
     public Module(String name, String description) {
         this(null, name, description);
     }
 
     public Module {
-        if (name == null || name.isBlank())
-            throw new IllegalArgumentException("Name cannot be blank.");
+        Model.require(name, "Name");
         name = Model.normalize(name);
         description = Model.normalize(description);
     }

@@ -1,6 +1,7 @@
 package oodj_project.features.role_management;
 
 import oodj_project.core.data.model.Identifiable;
+import oodj_project.core.data.model.Model;
 
 public record Role(Integer id, String name) implements Identifiable<Role> {
     public Role(String name) {
@@ -8,8 +9,8 @@ public record Role(Integer id, String name) implements Identifiable<Role> {
     }
 
     public Role {
-        if (name == null || name.isBlank()) throw new IllegalArgumentException("Name cannot be blank.");
-        name = name.strip();   
+        Model.require(name, "Name");
+        name = Model.normalize(name);   
     }
 
     @Override
