@@ -1,4 +1,4 @@
-package oodj_project.core.ui.utils;
+package oodj_project.core.ui.layout;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -11,7 +11,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-public class GridBuilder {
+public class RigidGridBuilder {
     private final JPanel mainPanel;
     
     private Insets insets = new Insets(5, 5, 5, 5);
@@ -22,55 +22,55 @@ public class GridBuilder {
     private int rowIndex = 0;
     private BiConsumer<JPanel, Integer> rowStyler;
    
-    public GridBuilder() {
+    public RigidGridBuilder() {
         this(new JPanel());
     }
     
-    public GridBuilder(JPanel mainPanel) {
+    public RigidGridBuilder(JPanel mainPanel) {
         this.mainPanel = mainPanel;
         mainPanel.removeAll();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
     }
 
-    public GridBuilder setMinWidth(int width) {
+    public RigidGridBuilder setMinWidth(int width) {
         minWidth = width;
         return this;
     }
 
-    public GridBuilder setInsets(Insets insets) {
+    public RigidGridBuilder setInsets(Insets insets) {
         this.insets = insets;
         return this;
     }
 
-    public GridBuilder setColumnWeights(double... columnWeights) {
+    public RigidGridBuilder setColumnWeights(double... columnWeights) {
         defaultColumnWeights = columnWeights;
         return this;
     }
 
-    public GridBuilder setRowHeight(int rowHeight) {
+    public RigidGridBuilder setRowHeight(int rowHeight) {
         defaultRowHeight = rowHeight;
         return this;
     }
 
-    public GridBuilder setRowStyler(BiConsumer<JPanel, Integer> rowStyler) {
+    public RigidGridBuilder setRowStyler(BiConsumer<JPanel, Integer> rowStyler) {
         this.rowStyler = rowStyler;
         return this;
     }
 
-    public GridBuilder addRow(Component... components) {
+    public RigidGridBuilder addRow(Component... components) {
         return addRow(defaultRowHeight, defaultColumnWeights, components);
     }
 
-    public GridBuilder addRow(int rowHeight, Component... components) {
+    public RigidGridBuilder addRow(int rowHeight, Component... components) {
         return addRow(rowHeight, defaultColumnWeights, components);
     }
 
-    public GridBuilder addRow(double[] columnWeight, Component... components) {
+    public RigidGridBuilder addRow(double[] columnWeight, Component... components) {
         return addRow(defaultRowHeight, columnWeight, components);
     }
 
-    public GridBuilder addRow(int rowHeight, double[] columnWeight, Component... components) {
-        var rowPanel = GridBuilder.createRow(rowHeight, columnWeight, insets, components);
+    public RigidGridBuilder addRow(int rowHeight, double[] columnWeight, Component... components) {
+        var rowPanel = RigidGridBuilder.createRow(rowHeight, columnWeight, insets, components);
         if (rowStyler != null)
             rowStyler.accept(rowPanel, rowIndex);
         mainPanel.add(rowPanel);
@@ -106,17 +106,17 @@ public class GridBuilder {
         return rowPanel;
     }
 
-    public GridBuilder addGlue() {
+    public RigidGridBuilder addGlue() {
         mainPanel.add(Box.createVerticalGlue());
         return this;
     }
 
-    public GridBuilder addGap(int height) {
+    public RigidGridBuilder addGap(int height) {
         mainPanel.add(Box.createVerticalStrut(height));
         return this;
     }
 
-    public GridBuilder add(Component component) {
+    public RigidGridBuilder add(Component component) {
         mainPanel.add(component);
         return this;
     }

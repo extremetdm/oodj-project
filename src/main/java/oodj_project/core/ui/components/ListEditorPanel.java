@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 
 import oodj_project.core.ui.components.buttons.IconLabelButton;
-import oodj_project.core.ui.utils.GridBuilder;
+import oodj_project.core.ui.layout.RigidGridBuilder;
 import oodj_project.core.ui.utils.IconManager;
 
 public class ListEditorPanel<RowT extends Component, ResultT> extends JPanel {
@@ -77,7 +77,7 @@ public class ListEditorPanel<RowT extends Component, ResultT> extends JPanel {
     }
 
     private void updateListDisplay() {
-        var builder = new GridBuilder(contentPanel)
+        var builder = new RigidGridBuilder(contentPanel)
             .setMinWidth(100);
         rowList.forEach(builder::add);
         builder.addGlue()

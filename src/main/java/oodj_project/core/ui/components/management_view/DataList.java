@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.Border;
 
-import oodj_project.core.ui.utils.GridBuilder;
+import oodj_project.core.ui.layout.RigidGridBuilder;
 
 public class DataList<DataT> extends JScrollPane {
     protected final double[] columnWeights;
@@ -53,7 +53,7 @@ public class DataList<DataT> extends JScrollPane {
         setViewportView(contentPanel);
         // setBorder(BorderFactory.createEmptyBorder());
 
-        var columnHeaderPanel = GridBuilder.createRow(
+        var columnHeaderPanel = RigidGridBuilder.createRow(
             50,
             columnWeights, 
             new Insets(5, 5, 5, 5),
@@ -70,7 +70,7 @@ public class DataList<DataT> extends JScrollPane {
     }
 
     public final void setData(List<DataT> data) {
-        var builder = new GridBuilder(contentPanel)
+        var builder = new RigidGridBuilder(contentPanel)
             .setColumnWeights(columnWeights)
             .setRowHeight(rowHeight)
             .setInsets(new Insets(0, 5, 0, 5))
