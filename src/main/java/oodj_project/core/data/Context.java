@@ -7,9 +7,12 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 import oodj_project.core.data.repository.Repository;
+import oodj_project.features.class_management.ClassRepository;
+import oodj_project.features.enrollment_management.EnrollmentRepository;
 import oodj_project.features.module_management.ModuleRepository;
 import oodj_project.features.permission_management.RolePermissionRepository;
 import oodj_project.features.role_management.RoleRepository;
+// import oodj_project.features.team_management.TeamMemberRepository;
 import oodj_project.features.user_management.UserRepository;
 
 public class Context {
@@ -59,6 +62,38 @@ public class Context {
             checkFile("modules.txt")
         );
         register(modules);
+
+        var classes = new ClassRepository(
+            checkFile("classes.txt"),
+            modules,
+            users
+        );
+        register(classes);
+
+        var enrollments = new EnrollmentRepository(
+            checkFile("enrollments.txt"),
+            users,
+            classes
+        );
+        register(enrollments);
+
+        // var teamMembers = new TeamMemberRepository(
+        //     checkFile("team_member.txt"),
+        //     users
+        // );
+        // register(teamMembers);
+
+
+        // classes.create(new ClassGroup(
+        //     modules.findFirst(a -> true).get(),
+        //     10,
+        //     null
+        // ));
+
+        // enrollments.create(new Enrollment(
+        //     users.findFirst(a -> true).get(),
+        //     classes.findFirst(a -> true).get()
+        // ));
     }
 
     private File checkFile(String filePath) throws IOException {

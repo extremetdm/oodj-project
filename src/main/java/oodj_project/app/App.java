@@ -13,7 +13,7 @@ public class App {
                 context.initialize();
 
                 var session = new Session(context);
-                System.out.println(session.login("username", "password"));
+                session.login("username", "password");
 
                 var frame = new MainFrame(context, session);
 

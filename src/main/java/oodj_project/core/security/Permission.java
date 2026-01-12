@@ -10,4 +10,6 @@ public enum Permission {
     READ_MODULES,
     UPDATE_MODULES,
     DELETE_MODULES,
+
+    READ_ENROLLMENT_REPORT,
 }

@@ -1,7 +1,6 @@
 package oodj_project.core.data.repository;
 
 import java.util.Date;
-import java.util.function.Function;
 
 import oodj_project.core.data.model.Identifiable;
 

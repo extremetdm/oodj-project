@@ -184,7 +184,7 @@ public final class Rule {
         return models -> {
             for (var model: models) {
                 var value = fieldGetter.apply(model);
-                if (!haystackGetter.get().contains(value)) {
+                if (value != null && !haystackGetter.get().contains(value)) {
                     throw exceptionGenerator.apply(model);
                 }
             }

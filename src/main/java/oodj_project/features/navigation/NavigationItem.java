@@ -10,6 +10,10 @@ import javax.swing.JPanel;
 import oodj_project.core.data.Context;
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
+import oodj_project.features.class_enrollment_report.EnrollmentReportController;
+import oodj_project.features.class_enrollment_report.EnrollmentReportView;
+import oodj_project.features.class_management.ClassRepository;
+import oodj_project.features.enrollment_management.EnrollmentRepository;
 import oodj_project.features.module_management.ModuleController;
 import oodj_project.features.module_management.ModuleRepository;
 import oodj_project.features.module_management.ModuleView;
@@ -30,6 +34,18 @@ public enum NavigationItem {
         (context, session) -> new ModuleView(
             session,
             new ModuleController(context.get(ModuleRepository.class))
+        )
+    ),
+    ENROLLMENT_REPORT(
+        "Enrollment Report",
+        null,
+        Permission.READ_ENROLLMENT_REPORT,
+        (context, session) -> new EnrollmentReportView(
+            session,
+            new EnrollmentReportController(
+                context.get(EnrollmentRepository.class),
+                context.get(ClassRepository.class)
+            )
         )
     );
 

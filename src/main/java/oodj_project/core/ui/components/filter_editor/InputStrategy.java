@@ -5,7 +5,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import oodj_project.core.ui.components.form.FormSpinner;

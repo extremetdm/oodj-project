@@ -8,9 +8,9 @@ import javax.swing.JPanel;
 
 import oodj_project.core.data.Context;
 import oodj_project.core.security.Session;
-import oodj_project.features.navigation.Navigator;
 import oodj_project.features.navigation.NavigationItem;
 import oodj_project.features.navigation.NavigationMenu;
+import oodj_project.features.navigation.Navigator;
 
 public class MainFrame extends JFrame {
     public MainFrame(Context context, Session session) {
