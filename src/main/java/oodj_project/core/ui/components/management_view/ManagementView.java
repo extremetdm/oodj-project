@@ -56,8 +56,8 @@ public abstract class ManagementView<DataT> extends JPanel {
 
         this.title = title;
 
-        searchBar = new SearchBar(this::refreshData);
         paginator = new Paginator(this::refreshData);
+        searchBar = new SearchBar(paginator::goToFirstPage);
 
         toolbarComponents = new ArrayList<>(List.of(
             searchBar,
@@ -156,7 +156,7 @@ public abstract class ManagementView<DataT> extends JPanel {
                         + "</html>";
                     sortButton.setToolTipText(sortSummary);
                 }
-                refreshData();
+                paginator.goToFirstPage();
             });
         });
 
@@ -188,7 +188,7 @@ public abstract class ManagementView<DataT> extends JPanel {
                         + "</html>";
                     filterButton.setToolTipText(sortSummary);
                 }
-                refreshData();
+                paginator.goToFirstPage();
             });
         });
 
