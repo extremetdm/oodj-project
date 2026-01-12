@@ -40,6 +40,7 @@ public class FilterOptionPanel<DataT> extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         
         optionSelector = new FormComboBox<>(FilterOption::label, options);
+        // optionSelector.setEnabled(options.size() > 1);
         
         DefaultComboBoxModel<FilterOperator<?>> operationModel = new DefaultComboBoxModel<>();
         operationSelector = new FormComboBox<>(FilterOperator::label, operationModel);
@@ -66,18 +67,16 @@ public class FilterOptionPanel<DataT> extends JPanel {
             } else {
                 operationModel.addAll(option.operations());
                 operationSelector.setEnabled(true);
+                // operationSelector.setEnabled(option.operations().size() > 1);
                 operationSelector.setSelectedIndex(0);
+                
+                var operation = getSelectedOperation(option);
+
+                setCriteriaField(operation == null?
+                    createDummyCriteriaField():
+                    option.inputStrategy().createComponent()
+                );
             }
-        });
-
-        operationSelector.addActionListener(event -> {
-            var option = getSelectedOption();
-            var operation = getSelectedOperation(option);
-
-            setCriteriaField(operation == null?
-                createDummyCriteriaField():
-                option.inputStrategy().createComponent()
-            );
         });
 
         if (selectedOption != null) {
