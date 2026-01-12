@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.Date;
 
 import oodj_project.core.data.repository.IdentifiableRepository;
+import oodj_project.core.data.repository.LineFormatter;
+import oodj_project.core.data.repository.LineParser;
 import oodj_project.core.data.validation.Rule;
 import oodj_project.features.role_management.RoleRepository;
 
@@ -31,17 +33,35 @@ public class UserRepository extends IdentifiableRepository<User> {
         );
     }
 
+    public static LineParser<User> getParser(RoleRepository roleRepository) {
+        return args -> {
+            LineParser.checkArgCount(args, 9);
+            int i = 0;
+            return new User(
+                LineParser.parseInt(args[i++], "ID"),
+                args[i++],
+                args[i++],
+                args[i++],
+                LineParser.parseEnum(args[i++], "Gender", Gender.class),
+                LineParser.parseField(args[i++], "Role", roleRepository),
+                args[i++],
+                args[i++],
+                LineParser.parseDate(args[i++], "Date of birth")
+            );
+        };
+    }
+
     public static String[] format(User user) {
         return new String[] {
-            user.id().toString(),
+            LineFormatter.formatField(user),
             user.username(),
             user.name(),
             user.password(),
             user.gender().name(),
-            user.role().id().toString(),
+            LineFormatter.formatField(user.role()),
             user.email(),
             user.phoneNumber(),
-            Long.toString(user.dateOfBirth().getTime())
+            LineFormatter.formatDate(user.dateOfBirth())
         };
     }
 }

@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import oodj_project.core.data.repository.IdentifiableRepository;
+import oodj_project.core.data.repository.LineFormatter;
+import oodj_project.core.data.repository.LineParser;
 import oodj_project.core.data.validation.Rule;
 
 public class ModuleRepository extends IdentifiableRepository<Module> {
@@ -20,22 +22,18 @@ public class ModuleRepository extends IdentifiableRepository<Module> {
     }
 
     private static Module parse(String... args) {
-        if (args.length != 3) throw new IllegalArgumentException("Incorrect number of fields given.");
-        
-        Integer id;
-
-        try {
-            id = Integer.valueOf(args[0]);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("ID must be a number.");
-        }
-
-        return new Module(id, args[1], args[2]);
+        LineParser.checkArgCount(args, 3);
+        int i = 0;
+        return new Module(
+            LineParser.parseInt(args[i++], "ID"),
+            args[i++],
+            args[i++]
+        );
     }
 
     private static String[] format(Module module) {
         return new String[] {
-            module.id().toString(),
+            LineFormatter.formatField(module),
             module.name(), 
             module.description()
         };

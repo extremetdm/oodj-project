@@ -4,23 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Function;
 
 import oodj_project.core.data.model.Identifiable;
 import oodj_project.core.data.validation.Validator;
 
 public abstract class IdentifiableRepository<DataT extends Record & Identifiable<DataT>> extends Repository<DataT> {
     /**
-     * @see #Repository(File, Function, Function)
+     * @see #Repository(File, LineParser, LineFormatter)
      */
-    protected IdentifiableRepository(File sourceFile, LineParser<DataT> lineParser, Function<DataT, String[]> lineFormatter) throws IOException {
+    protected IdentifiableRepository(File sourceFile, LineParser<DataT> lineParser, LineFormatter<DataT> lineFormatter) throws IOException {
         super(sourceFile, lineParser, lineFormatter);
     }
 
     /**
-     * @see #Repository(File, Function, Function, Validator)
+     * @see #Repository(File, LineParser, LineFormatter, Validator)
      */
-    protected IdentifiableRepository(File sourceFile, LineParser<DataT> lineParser, Function<DataT, String[]> lineFormatter, Validator<DataT> validator) throws IOException, IllegalStateException {
+    protected IdentifiableRepository(File sourceFile, LineParser<DataT> lineParser, LineFormatter<DataT> lineFormatter, Validator<DataT> validator) throws IOException, IllegalStateException {
         super(sourceFile, lineParser, lineFormatter, validator);
     }
 

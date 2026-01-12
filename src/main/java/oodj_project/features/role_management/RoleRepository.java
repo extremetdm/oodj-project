@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 
 import oodj_project.core.data.repository.IdentifiableRepository;
+import oodj_project.core.data.repository.LineFormatter;
+import oodj_project.core.data.repository.LineParser;
 import oodj_project.core.data.validation.Rule;
 
 public class RoleRepository extends IdentifiableRepository<Role> {
@@ -20,15 +22,17 @@ public class RoleRepository extends IdentifiableRepository<Role> {
     }
 
     private static Role parse(String... args) {
+        LineParser.checkArgCount(args, 2);
+        int i = 0;
         return new Role(
-            Integer.valueOf(args[0]),
-            args[1]
+            LineParser.parseInt(args[i++], "ID"),
+            args[i++]
         );
     }
 
     private static String[] format(Role role) {
         return new String[] {
-            role.id().toString(),
+            LineFormatter.formatField(role),
             role.name()
         };
     }

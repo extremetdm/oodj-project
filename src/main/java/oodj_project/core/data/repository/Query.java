@@ -1,7 +1,9 @@
 package oodj_project.core.data.repository;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class Query<DataT> {
     private int page = 1;
@@ -23,6 +25,32 @@ public class Query<DataT> {
 
     public Comparator<DataT> sorter() {
         return sorter;
+    }
+
+    public PaginatedResult<DataT> apply(Collection<DataT> data) {
+        int totalItems = (int) createFilteredStream(data).count(),
+            perPage = totalItems;
+
+        var stream = createFilteredStream(data);
+        
+        if (sorter != null)
+            stream = stream.sorted(sorter);
+        
+        if (limit != null) {
+            perPage = limit;
+            stream = stream.skip((page - 1) * limit)
+                .limit(limit);
+        }
+
+        return new PaginatedResult<>(stream.toList(), page, perPage, totalItems);
+    }
+
+    private Stream<DataT> createFilteredStream(Collection<DataT> data) {
+        var stream = data.stream();
+        if (filter != null) {
+            stream = stream.filter(filter);
+        }
+        return stream;
     }
 
     public static class Builder<DataT> {

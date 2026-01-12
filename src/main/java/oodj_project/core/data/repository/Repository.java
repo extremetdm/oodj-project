@@ -7,9 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
@@ -36,7 +36,7 @@ public abstract class Repository<DataT extends Record> {
     protected final LineParser<DataT> lineParser;
     
     /** Function that converts {@code DataT} record object into a file line. */
-    protected final Function<DataT, String[]> lineFormatter;
+    protected final LineFormatter<DataT> lineFormatter;
 
     /** Optional dataset integrity validator. */
     protected final Validator<DataT> validator;
@@ -48,12 +48,12 @@ public abstract class Repository<DataT extends Record> {
      * @param lineFormatter Function that converts {@code DataT} record object into a file line.
      * @throws IOException            If an I/O error occurs while reading the file.
      * @throws IllegalStateException  If there is data integrity violation.
-     * @see #Repository(File, Function, Function, Validator)
+     * @see #Repository(File, LineParser, LineFormatter, Validator)
      */
     protected Repository(
         File sourceFile,
         LineParser<DataT> lineParser,
-        Function<DataT, String[]> lineFormatter
+        LineFormatter<DataT> lineFormatter
     ) throws IOException {
         this(sourceFile, lineParser, lineFormatter, null);
     }
@@ -70,7 +70,7 @@ public abstract class Repository<DataT extends Record> {
     protected Repository(
         File sourceFile,
         LineParser<DataT> lineParser,
-        Function<DataT, String[]> lineFormatter,
+        LineFormatter<DataT> lineFormatter,
         Validator<DataT> validator
     ) throws IOException, IllegalStateException {
         this.sourceFile = sourceFile;
@@ -122,7 +122,7 @@ public abstract class Repository<DataT extends Record> {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(sourceFile))) {
             for (var model : models) {
                 writer.write(
-                    Stream.of(lineFormatter.apply(model))
+                    Stream.of(lineFormatter.format(model))
                         .collect(Collectors.joining(DELIMITER))
                 );
                 writer.newLine();
@@ -140,12 +140,14 @@ public abstract class Repository<DataT extends Record> {
         save();
     }
 
+
+
     /**
      * Retrieves all models from the in-memory repository.
      * @return An unmodifiable {@code List} of all models.
      */
-    public PaginatedResult<DataT> get() {
-        return get(null);
+    public List<DataT> all() {
+        return List.copyOf(models);
     }
 
     /**
@@ -153,37 +155,12 @@ public abstract class Repository<DataT extends Record> {
      * @return A potentially filtered and sorted {@code List} of models.
      */
     public PaginatedResult<DataT> get(Query<DataT> query) {
-
-        int totalItems = (int) createFilteredStream(query).count();
-        int page = 1;
-        int perPage = totalItems;
-
-        var stream = createFilteredStream(query);
-
         if (query != null) {
-            page = query.page();
-            
-            if (query.sorter() != null)
-                stream = stream.sorted(query.sorter());
-            
-            if (query.limit() != null) {
-                perPage = query.limit();
-                stream = stream.skip((query.page() - 1) * query.limit())
-                    .limit(query.limit());
-            }
+            return query.apply(models);
         }
 
-        return new PaginatedResult<>(stream.toList(), page, perPage, totalItems);
-    }
-
-    private Stream<DataT> createFilteredStream(Query<DataT> query) {
-        var stream = models.stream();
-        if (query != null) {
-            if (query.filter() != null)
-                stream = stream.filter(query.filter());
-        }
-
-        return stream;
+        int totalItems = models.size();
+        return new PaginatedResult<>(List.copyOf(models), 1, totalItems, totalItems);
     }
 
     /**
