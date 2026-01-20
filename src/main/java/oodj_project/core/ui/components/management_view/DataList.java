@@ -80,7 +80,9 @@ public class DataList<DataT> extends JScrollPane {
                 panel.setBorder(BORDER);
             });
         if (data.isEmpty()) {
-            builder.add(createHeaderText("No results found."));
+            var noResultLabel = createHeaderText("No results found.");
+            noResultLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+            builder.add(noResultLabel);
         } else {
             for (var model: data) {
                 builder.addRow(rowCreator.apply(model));

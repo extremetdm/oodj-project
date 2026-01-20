@@ -1,10 +1,11 @@
 package oodj_project.core.ui.components.buttons;
 
+import java.awt.Cursor;
+
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
-import oodj_project.core.ui.utils.Clickable;
 import oodj_project.core.ui.utils.IconManager;
 
 public class IconButton extends JButton {
@@ -14,7 +15,7 @@ public class IconButton extends JButton {
 
     public IconButton(Icon icon) {
         super(icon);
-        addMouseListener(Clickable.INSTANCE);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         setBorder(
             BorderFactory.createEmptyBorder(0, 0, 0, 0)

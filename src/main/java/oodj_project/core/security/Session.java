@@ -31,6 +31,10 @@ public class Session {
         return currentUser != null;
     }
 
+    public User currentUser() {
+        return currentUser;
+    }
+
     public boolean can(Permission permission) {
         if (!isLoggedIn()) return false;
         return context.get(RolePermissionRepository.class)

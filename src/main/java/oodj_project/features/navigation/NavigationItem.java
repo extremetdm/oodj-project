@@ -43,6 +43,7 @@ public enum NavigationItem {
         (context, session) -> new EnrollmentReportView(
             session,
             new EnrollmentReportController(
+                session,
                 context.get(EnrollmentRepository.class),
                 context.get(ClassRepository.class)
             )

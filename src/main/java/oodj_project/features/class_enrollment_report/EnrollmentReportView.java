@@ -17,7 +17,7 @@ import oodj_project.features.user_management.User;
 
 public class EnrollmentReportView extends ManagementView<EnrollmentReport> {
 
-    private static final double[] COLUMN_WEIGHT = new double[] { 2, 5, 5, 6, 6 };
+    private static final double[] COLUMN_WEIGHT = { 2, 5, 5, 6, 6 };
 
     private final EnrollmentReportFormFactory formFactory;
     private final DataList<EnrollmentReport> dataTable;
@@ -40,10 +40,13 @@ public class EnrollmentReportView extends ManagementView<EnrollmentReport> {
         return report -> {
             var classGroup = report.classGroup();
             var module = classGroup.module();
+            var lecturer = classGroup.lecturer();
 
             return classGroup.id().toString().contains(searchQuery) ||
                 module.id().toString().contains(searchQuery) ||
-                module.name().toLowerCase().contains(searchQuery);
+                module.name().toLowerCase().contains(searchQuery) ||
+                lecturer.id().toString().contains(searchQuery) || 
+                lecturer.name().toLowerCase().contains(searchQuery);
         };
     }
 

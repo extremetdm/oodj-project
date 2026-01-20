@@ -26,8 +26,8 @@ import oodj_project.core.ui.utils.IconManager;
 public class ModuleView extends ManagementView<Module> {
 
     private static final double[]
-        COLUMN_WEIGHT_WITH_ACITON = new double[] { 1, 5, 16, 2 },
-        COLUMN_WEIGHT_WITHOUT_ACTION = new double[] { 1, 7, 16 };
+        COLUMN_WEIGHT_WITH_ACITON = { 1, 5, 16, 2 },
+        COLUMN_WEIGHT_WITHOUT_ACTION = { 1, 7, 16 };
 
     private static final ImageIcon
         ADD_ICON = IconManager.getIcon("/icons/add.png", 30, 30),

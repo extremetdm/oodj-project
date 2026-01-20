@@ -1,13 +1,12 @@
 package oodj_project.core.ui.components.buttons;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
-
-import oodj_project.core.ui.utils.Clickable;
 
 public class IconLabelButton extends JButton {
     public IconLabelButton(String label, Icon icon) {
@@ -17,6 +16,6 @@ public class IconLabelButton extends JButton {
             BorderFactory.createLineBorder(Color.GRAY),
             BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
-        addMouseListener(Clickable.INSTANCE);
+        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 }

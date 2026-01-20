@@ -2,6 +2,7 @@ package oodj_project.core.ui.components.management_view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 
 import javax.swing.BorderFactory;
@@ -10,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import oodj_project.core.ui.utils.Clickable;
 import oodj_project.core.ui.utils.IconManager;
 
 public class SearchBar extends JPanel {
@@ -31,7 +31,7 @@ public class SearchBar extends JPanel {
             BorderFactory.createLineBorder(Color.GRAY),
             BorderFactory.createEmptyBorder(0, 10, 0, 10)
         ));
-        searchButton.addMouseListener(Clickable.INSTANCE);
+        searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         searchButton.addActionListener(event -> onSearch.run());
 
         searchField.setOpaque(false);

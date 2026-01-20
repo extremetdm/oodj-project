@@ -1,5 +1,6 @@
 package oodj_project.core.ui.components.management_view;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 
@@ -14,7 +15,6 @@ import javax.swing.JPanel;
 
 import oodj_project.core.data.repository.PaginatedResult;
 import oodj_project.core.ui.components.buttons.IconButton;
-import oodj_project.core.ui.utils.Clickable;
 import oodj_project.core.ui.utils.SelectorRenderer;
 
 public class Paginator extends JPanel {
@@ -53,7 +53,7 @@ public class Paginator extends JPanel {
         perPageSelector.setPreferredSize(SELECTOR_SIZE);
         perPageSelector.setMaximumSize(SELECTOR_SIZE);
         perPageSelector.setRenderer(new SelectorRenderer());
-        perPageSelector.addMouseListener(Clickable.INSTANCE);
+        perPageSelector.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         perPageSelector.addActionListener(event -> {
             pageSelector.setSelectedItem(1);
         });
@@ -82,7 +82,7 @@ public class Paginator extends JPanel {
         pageSelector.setPreferredSize(SELECTOR_SIZE);
         pageSelector.setMaximumSize(SELECTOR_SIZE);
         pageSelector.setRenderer(new SelectorRenderer());
-        pageSelector.addMouseListener(Clickable.INSTANCE);
+        pageSelector.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         pageSelector.addActionListener(event -> {
             onUpdate.run();
             updateButtonState();

@@ -24,4 +24,10 @@ public record PaginatedResult<DataT>(List<DataT> data, int page, int itemsPerPag
         if (totalItems == 0) return 1;
         return (totalItems + itemsPerPage - 1) / itemsPerPage;
     }
+
+    public static <DataT> 
+    PaginatedResult<DataT> singlePage(List<DataT> data) {
+        int totalItems = data.size();
+        return new PaginatedResult<>(data, 1, totalItems, totalItems);
+    }
 }
