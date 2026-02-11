@@ -1,1 +1,3 @@
-1|username|Name|password|MALE|2|example@email.com|2321313|0
+1|leader|leader|leader|MALE|2|example-leader@email.com|2321313|12
+2|admin|admin|admin|MALE|1|example-admin@email.com|2321321|-27000000
+3|lecturer|lecturer|lecturer|FEMALE|3|example-lecturer@email.com|13123123|1232

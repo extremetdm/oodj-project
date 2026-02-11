@@ -6,6 +6,11 @@ public enum Permission {
     UPDATE_USERS,
     DELETE_USERS,
 
+    CREATE_GRADES,
+    READ_GRADES,
+    UPDATE_GRADES,
+    DELETE_GRADES,
+
     CREATE_MODULES,
     READ_MODULES,
     UPDATE_MODULES,
@@ -18,6 +23,9 @@ public enum Permission {
 
     TEACH_CLASSES,
     ASSIGN_TEACHER,
+    
+    READ_TEAM_MANAGEMENT,
+    ASSIGN_SUPERVISOR,
 
     READ_ENROLLMENT_REPORT,
 

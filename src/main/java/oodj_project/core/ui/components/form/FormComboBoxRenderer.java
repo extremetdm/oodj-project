@@ -40,7 +40,7 @@ public class FormComboBoxRenderer<FieldT> extends DefaultListCellRenderer {
             // }
         // }
 
-        label.setText(fieldDescriptor.apply((FieldT) value));
+        label.setText(value == null? "": fieldDescriptor.apply((FieldT) value));
 
         return label;
     }

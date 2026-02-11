@@ -42,24 +42,29 @@ public class FlexibleGridBuilder {
     }
 
     public FlexibleGridBuilder add(Component... components) {
-        return add(1, null, components);
+        return add(null, null, components);
     }
 
-    public FlexibleGridBuilder add(int gridWidth, Component... components) {
-        return add(gridWidth, null, components);
+    public FlexibleGridBuilder add(int gridWidths[], Component... components) {
+        return add(gridWidths, null, components);
     }
 
-    public FlexibleGridBuilder add(double[] columnWeight, Component... components) {
-        return add(1, columnWeight, components);
+    public FlexibleGridBuilder add(double[] columnWeights, Component... components) {
+        return add(null, columnWeights, components);
     }
 
-    public FlexibleGridBuilder add(int gridWidth, double[] columnWeight, Component... components) {
-        if (columnWeight == null) {
-            columnWeight = new double[] {1};
+    public FlexibleGridBuilder add(int gridWidths[], double[] columnWeights, Component... components) {
+        if (gridWidths == null) {
+            gridWidths = new int[] {1};
         }
-        int columnWeightCycle = columnWeight.length;
+        if (columnWeights == null) {
+            columnWeights = new double[] {1};
+        }
+        int columnWeightCycle = columnWeights.length;
+        int gridWidthCycle = gridWidths.length;
         for (int x = 0; x < components.length; x++) {
-            constraints.weightx = columnWeight[x % columnWeightCycle];
+            constraints.weightx = columnWeights[x % columnWeightCycle];
+            var gridWidth = gridWidths[x % gridWidthCycle];
             constraints.gridwidth = gridWidth;
             if (constraints.gridx + gridWidth > rowWidth) {
                 constraints.gridx = 0;

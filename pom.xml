@@ -25,6 +25,16 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.netbeans.external</groupId>
+        <artifactId>AbsoluteLayout</artifactId>
+        <version>RELEASE180</version>
+      </dependency>
+      <dependency>
+        <groupId>com.toedter</groupId>
+        <artifactId>jcalendar</artifactId>
+        <version>1.4</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -39,6 +49,16 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-params</artifactId>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.netbeans.external</groupId>
+      <artifactId>AbsoluteLayout</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.toedter</groupId>
+      <artifactId>jcalendar</artifactId>
     </dependency>
   </dependencies>
 

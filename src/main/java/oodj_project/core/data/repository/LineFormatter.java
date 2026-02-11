@@ -1,5 +1,7 @@
 package oodj_project.core.data.repository;
 
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Optional;
 
@@ -20,5 +22,12 @@ public interface LineFormatter<DataT> {
     public static String formatDate(Date date) {
         if (date == null) return "null";
         return Long.toString(date.getTime());
+    }
+
+    public static String formatDate(Date date, String pattern) {
+        if (date == null) return "null";
+        return date.toInstant()
+            .atZone(ZoneOffset.UTC)
+            .format(DateTimeFormatter.ofPattern(pattern));   
     }
 }

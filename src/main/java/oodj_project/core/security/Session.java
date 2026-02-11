@@ -1,9 +1,9 @@
 package oodj_project.core.security;
 
 import oodj_project.core.data.Context;
-import oodj_project.features.permission_management.RolePermissionRepository;
-import oodj_project.features.user_management.User;
-import oodj_project.features.user_management.UserRepository;
+import oodj_project.features.dashboard.permission_management.RolePermissionRepository;
+import oodj_project.features.dashboard.user_management.User;
+import oodj_project.features.dashboard.user_management.UserRepository;
 
 public class Session {
     private final Context context;

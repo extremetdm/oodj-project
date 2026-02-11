@@ -117,7 +117,7 @@ public final class Rule {
     }
 
     /**
-     * Convenience overload that accepts a static exception instance.
+     * Convenience overload that accepts a static exception instance.na
      * @see #notBlank(Function, Function)
      */
     public static <DataT> Validator<DataT> notBlank(

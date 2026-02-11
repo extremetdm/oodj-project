@@ -1,4 +1,4 @@
 1|Admin Staff
-2|Academic Leaders
+2|Academic Leader
 3|Lecturer
-4|Students
+4|Student

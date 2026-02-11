@@ -6,19 +6,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import oodj_project.core.data.repository.Repository;
-import oodj_project.features.class_management.ClassRepository;
-import oodj_project.features.enrollment_management.EnrollmentRepository;
-import oodj_project.features.module_management.ModuleRepository;
-import oodj_project.features.permission_management.RolePermissionRepository;
-import oodj_project.features.role_management.RoleRepository;
-// import oodj_project.features.team_management.TeamMemberRepository;
-import oodj_project.features.user_management.UserRepository;
+import oodj_project.features.dashboard.class_management.ClassRepository;
+import oodj_project.features.dashboard.enrollment_management.EnrollmentRepository;
+import oodj_project.features.dashboard.grading_system_management.GradeRepository;
+import oodj_project.features.dashboard.module_management.ModuleRepository;
+import oodj_project.features.dashboard.permission_management.RolePermissionRepository;
+import oodj_project.features.dashboard.role_management.RoleRepository;
+import oodj_project.features.dashboard.team_management.TeamMemberRepository;
+import oodj_project.features.dashboard.user_management.UserPermissionService;
+import oodj_project.features.dashboard.user_management.UserRepository;
+import oodj_project.features.services.EmailService;
 
 public class Context {
     private final File dataDir = new File("data");
     private static final Context INSTANCE = new Context();
-    private final Map<Class<?>, Repository<?>> repositories = new HashMap<>();
+    private final Map<Class<?>, Object> services = new HashMap<>();
 
     public static Context instance() {
         return INSTANCE;
@@ -26,14 +28,14 @@ public class Context {
 
     private Context() {}
 
-    public <RepositoryT> RepositoryT get(Class<RepositoryT> repositoryClass) {
-        var instance = repositories.get(repositoryClass);
+    public <ServiceT> ServiceT get(Class<ServiceT> repositoryClass) {
+        var instance = services.get(repositoryClass);
         if (instance == null) throw new NoSuchElementException("Repository not registered.");
         return repositoryClass.cast(instance);
     }
 
-    private void register(Repository<?> repository) {
-        repositories.put(repository.getClass(), repository);        
+    private void register(Object repository) {
+        services.put(repository.getClass(), repository);        
     }
 
     public void initialize() throws IOException {
@@ -58,6 +60,11 @@ public class Context {
         );
         register(users);
 
+        var grades = new GradeRepository(
+            checkFile("grades.txt")
+        );
+        register(grades);
+
         var modules = new ModuleRepository(
             checkFile("modules.txt")
         );
@@ -77,12 +84,13 @@ public class Context {
         );
         register(enrollments);
 
-        // var teamMembers = new TeamMemberRepository(
-        //     checkFile("team_member.txt"),
-        //     users
-        // );
-        // register(teamMembers);
+        var teamMembers = new TeamMemberRepository(
+            checkFile("team-members.txt"),
+            users
+        );
+        register(teamMembers);
 
+        // teamMembers.create(new TeamMember(users.findFirst(a -> true).get(), users.findFirst(a -> true).get()));
 
         // classes.create(new ClassGroup(
         //     modules.findFirst(a -> true).get(),
@@ -94,6 +102,18 @@ public class Context {
         //     users.findFirst(a -> true).get(),
         //     classes.findFirst(a -> true).get()
         // ));
+
+        var emailService = new EmailService(
+            "https://api.emailjs.com/api/v1.0/email/send",
+            "service_oodjafs",
+            "template_9h24en8",
+            "template_w0czcsa",
+            "7f6GWPVgA3ok7tUsF"
+        );
+        register(emailService);
+
+        var userPermissionService = new UserPermissionService(users, rolePermissions);
+        register(userPermissionService);
     }
 
     private File checkFile(String filePath) throws IOException {
