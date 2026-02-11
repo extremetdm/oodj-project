@@ -92,7 +92,7 @@ public class ClassEditFormContent extends JPanel {
 
             if (!canAssignLecturer) {
                 var lecturerName = classGroup.lecturer() == null?
-                    "<html><i>(unassigned)</i></html>":
+                    "(unassigned)":
                     classGroup.lecturer().name();
                 lecturerFieldComponent = new FormTextField(lecturerName, false);
             }
