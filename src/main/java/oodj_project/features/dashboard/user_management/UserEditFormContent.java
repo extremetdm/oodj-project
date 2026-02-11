@@ -29,7 +29,7 @@ public class UserEditFormContent extends JPanel {
 
     private final FormComboBox<Role> roleField;
     private final FormComboBox<Gender> genderField = new FormComboBox<>(Gender::name, Gender.values());
-    private final FormComboBox<User> supervisorField;
+    // private final FormComboBox<User> supervisorField;
 
     private final JDateChooser dateOfBirthField = new JDateChooser();
 
@@ -52,11 +52,11 @@ public class UserEditFormContent extends JPanel {
         var builder = new FlexibleGridBuilder(this, 2)
             .setInsets(new Insets(5, 5, 5, 5));
 
-        var supervisorLabel = new FormLabel("Academic Leader");
-        supervisorField = new FormComboBox<>(
-            supervisor -> supervisor.name(),
-            supervisors
-        );
+        // var supervisorLabel = new FormLabel("Academic Leader");
+        // supervisorField = new FormComboBox<>(
+        //     supervisor -> supervisor.name(),
+        //     supervisors
+        // );
 
         roleField = new FormComboBox<>(
             role -> role.name(),
@@ -66,8 +66,8 @@ public class UserEditFormContent extends JPanel {
         roleField.addActionListener(evt -> {
             var role = roleField.getSelectedItem();
             var visibility = isLecturer(permissionChecker, role);
-            supervisorLabel.setVisible(visibility);
-            supervisorField.setVisible(visibility);
+            // supervisorLabel.setVisible(visibility);
+            // supervisorField.setVisible(visibility);
             builder.build();
         });
 
@@ -90,9 +90,9 @@ public class UserEditFormContent extends JPanel {
 
             dateOfBirthField.setDate(user.dateOfBirth());
 
-            if (isLecturer(permissionChecker, user.role())) {
-                supervisorField.setSelectedItem(null);
-            }
+            // if (isLecturer(permissionChecker, user.role())) {
+            //     supervisorField.setSelectedItem(null);
+            // }
         }
 
         builder.add(
@@ -122,9 +122,9 @@ public class UserEditFormContent extends JPanel {
             new FormLabel("Phone"),
             phoneField,
             new FormLabel("Date of birth"),
-            dateOfBirthField,
-            supervisorLabel,
-            supervisorField
+            dateOfBirthField
+            // supervisorLabel,
+            // supervisorField
         )   
             .addStrutGlue(600)
             .build();

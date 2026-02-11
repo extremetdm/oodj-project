@@ -40,7 +40,7 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
         UserController userController
     ) {
         super(
-            "MemberAssignment Management",
+            "Team Management",
             relationController::index,
             TeamMemberView::buildSearchLogic
         );

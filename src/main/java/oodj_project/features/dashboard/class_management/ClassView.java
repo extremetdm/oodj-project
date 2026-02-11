@@ -151,7 +151,7 @@ public class ClassView extends ManagementView<ClassGroup> {
 
     private Component createLecturerSection(User lecturer) {
         if (lecturer == null)
-            return DataList.createText("<html><i>(unassigned)</i></html>");
+            return DataList.createText("(unassigned)");
 
         return new UserGrid(lecturer);
     }
