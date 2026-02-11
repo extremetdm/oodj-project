@@ -1,12 +1,14 @@
 package oodj_project.core.ui.components.filter_editor;
 
 import java.awt.Component;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.swing.SpinnerNumberModel;
 
+import oodj_project.core.ui.components.form.FormComboBox;
 import oodj_project.core.ui.components.form.FormSpinner;
 import oodj_project.core.ui.components.form.FormTextField;
 
@@ -79,6 +81,15 @@ public interface InputStrategy<ComponentT extends Component, FieldT> {
             () -> new FormSpinner<Double>(new SpinnerNumberModel(0, 0, 1, 0.001), "##0.0%"),
             FormSpinner::getValue,
             FormSpinner::setValue
+        );
+    }
+
+    public static <FieldT> InputStrategy<FormComboBox<FieldT>, FieldT>
+    selectField(Function<FieldT, String> fieldDescriptor, List<FieldT> options) {
+        return of(
+            () -> new FormComboBox<>(fieldDescriptor, options),
+            FormComboBox::getSelectedItem,
+            FormComboBox::setSelectedItem
         );
     }
 }
