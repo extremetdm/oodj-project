@@ -1,5 +1,9 @@
 package oodj_project.features.login;
 
+import oodj_project.core.data.Context;
+import oodj_project.features.dashboard.user_management.User;
+import oodj_project.features.dashboard.user_management.UserController;
+import oodj_project.features.dashboard.user_management.UserRepository;
 import oodj_project.core.security.Session;
 
 import java.awt.Font;
@@ -22,12 +26,15 @@ public class LoginView extends JFrame {
     private final JPasswordField passwordField;
 
     private final Session session;
+    private final Context context;
     private final Runnable onSuccess;
 
     public LoginView(
             Session session,
+            Context context,
             Runnable onSuccess) {
         this.session = session;
+        this.context = context;
         this.onSuccess = onSuccess;
         setLayout(new GridBagLayout());
 
@@ -88,6 +95,19 @@ public class LoginView extends JFrame {
         gbc.gridwidth = 2;
         add(loginButton, gbc);
 
+        JButton forgotPasswordButton = new JButton("Forgot Password?");
+        forgotPasswordButton.setFont(new Font("Arial", Font.PLAIN, 12));
+        forgotPasswordButton.setBorderPainted(false);
+        forgotPasswordButton.setContentAreaFilled(false);
+        forgotPasswordButton.setFocusPainted(false);
+        forgotPasswordButton.setOpaque(false);
+        forgotPasswordButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        gbc.gridy = 5;
+        add(forgotPasswordButton, gbc);
+
+        forgotPasswordButton.addActionListener(e -> performForgotPassword());
+
         loginButton.addActionListener(evt -> performLogin());
 
         pack();
@@ -111,5 +131,39 @@ public class LoginView extends JFrame {
 
         onSuccess.run();
         dispose();
+    }
+
+    private void performForgotPassword() {
+        String input = JOptionPane.showInputDialog(this, "Enter your Username or Email:", "Reset Password",
+                JOptionPane.QUESTION_MESSAGE);
+        if (input == null || input.trim().isEmpty()) {
+            return;
+        }
+
+        try {
+            var userRepository = context.get(UserRepository.class);
+            User user = userRepository
+                    .findFirst(u -> u.username().equalsIgnoreCase(input) || u.email().equalsIgnoreCase(input))
+                    .orElse(null);
+
+            if (user == null) {
+                JOptionPane.showMessageDialog(this, "User not found!", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            var userController = new UserController(
+                    userRepository,
+                    context.get(oodj_project.features.dashboard.user_management.UserPermissionService.class),
+                    context.get(oodj_project.features.services.EmailService.class));
+
+            userController.resetPassword(user);
+            JOptionPane.showMessageDialog(this, "A new password has been sent to your email.", "Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred: " + e.getMessage(), "Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

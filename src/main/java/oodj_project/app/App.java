@@ -25,7 +25,7 @@ public class App {
     }
 
     private static LoginView showLogin(Session session, Context context) {
-        return new LoginView(session, () -> showMainFrame(session, context));
+        return new LoginView(session, context, () -> showMainFrame(session, context));
     }
 
     private static MainFrame showMainFrame(Session session, Context context) {
