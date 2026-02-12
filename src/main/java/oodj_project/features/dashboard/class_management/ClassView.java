@@ -126,7 +126,7 @@ public class ClassView extends ManagementView<ClassGroup> {
     private Component[] createTableRow(ClassGroup classGroup) {
         var components = new ArrayList<>(List.<Component>of(
                 DataList.createText(classGroup.id().toString()),
-                new ModuleGrid(classGroup.module()),
+                DataList.createText(classGroup.module().name()),
                 createLecturerSection(classGroup.lecturer()),
                 DataList.createText(String.valueOf(classGroup.maxCapacity())),
                 createPeriodSection(classGroup.startDate(), classGroup.endDate())));
