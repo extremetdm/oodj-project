@@ -13,7 +13,7 @@ import oodj_project.features.navigation.NavigationMenu;
 import oodj_project.features.navigation.Navigator;
 
 public class MainFrame extends JFrame {
-    public MainFrame(Context context, Session session) {
+    public MainFrame(Context context, Session session, Runnable onLogout) {
         super("Assessment Feedback System");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -22,7 +22,11 @@ public class MainFrame extends JFrame {
 
         var navigator = new Navigator(context, session, contentLayout, contentPanel);
         
-        var menu = new NavigationMenu(session, navigator);
+        var menu = new NavigationMenu(session, navigator, () -> {
+            dispose();
+            session.logout();
+            onLogout.run();
+        });
 
         var availableContent = NavigationItem.visibleFor(session);
         if (!availableContent.isEmpty()) navigator.goTo(availableContent.get(0));

@@ -63,13 +63,13 @@ public class UserEditFormContent extends JPanel {
             roles
         );
         // Enable/Disable Leader Box based on Role
-        roleField.addActionListener(evt -> {
-            var role = roleField.getSelectedItem();
-            var visibility = isLecturer(permissionChecker, role);
-            // supervisorLabel.setVisible(visibility);
-            // supervisorField.setVisible(visibility);
-            builder.build();
-        });
+        // roleField.addActionListener(evt -> {
+        //     var role = roleField.getSelectedItem();
+        //     var visibility = isLecturer(permissionChecker, role);
+        //     supervisorLabel.setVisible(visibility);
+        //     supervisorField.setVisible(visibility);
+        //     builder.build();
+        // });
 
         dateOfBirthField.setDateFormatString("yyyy-MM-dd");
         

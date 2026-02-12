@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import oodj_project.features.dashboard.assessment_grading.AssessmentResultRepository;
+import oodj_project.features.dashboard.assessment_grading.GradeBookService;
+import oodj_project.features.dashboard.assessment_management.AssessmentRepository;
 import oodj_project.features.dashboard.class_management.ClassRepository;
 import oodj_project.features.dashboard.enrollment_management.EnrollmentRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
@@ -90,6 +93,19 @@ public class Context {
         );
         register(teamMembers);
 
+        var assessments = new AssessmentRepository(
+            checkFile("assessments.txt"),
+            classes
+        );
+        register(assessments);
+
+        var results = new AssessmentResultRepository(
+            checkFile("assessment-results"),
+            assessments,
+            users
+        );
+        register(results);
+
         // teamMembers.create(new TeamMember(users.findFirst(a -> true).get(), users.findFirst(a -> true).get()));
 
         // classes.create(new ClassGroup(
@@ -114,6 +130,9 @@ public class Context {
 
         var userPermissionService = new UserPermissionService(users, rolePermissions);
         register(userPermissionService);
+
+        var gradeBookService = new GradeBookService(results, assessments, enrollments);
+        register(gradeBookService);
     }
 
     private File checkFile(String filePath) throws IOException {

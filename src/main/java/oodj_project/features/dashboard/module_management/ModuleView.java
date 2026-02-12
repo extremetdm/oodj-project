@@ -28,12 +28,11 @@ public class ModuleView extends ManagementView<Module> {
         COLUMN_WEIGHT_WITH_ACTION = { 1, 5, 16, 2 },
         COLUMN_WEIGHT_WITHOUT_ACTION = { 1, 7, 16 };
 
-    private final Session session;
     private final ModuleController controller;
 
     private final ModuleFormFactory formFactory;
 
-    private final boolean hasActions;
+    private final boolean hasActions, canUpdate, canDelete;
 
     private final DataList<Module> dataTable;
 
@@ -44,11 +43,12 @@ public class ModuleView extends ManagementView<Module> {
             ModuleView::buildSearchLogic
         );
 
-        this.session = session;
         this.controller = controller;
 
-        hasActions = session.can(Permission.UPDATE_MODULES)
-            || session.can(Permission.DELETE_MODULES);
+        canUpdate = session.can(Permission.UPDATE_MODULES);
+        canDelete = session.can(Permission.DELETE_MODULES);
+
+        hasActions = canUpdate || canDelete;
 
         formFactory = new ModuleFormFactory(this, controller);
 
@@ -128,11 +128,11 @@ public class ModuleView extends ManagementView<Module> {
 
         ArrayList<Component> actionList = new ArrayList<>();
         
-        if (session.can(Permission.UPDATE_MODULES)) {    
+        if (canUpdate) {    
             actionList.add(createEditButton(module));
         }
 
-        if (session.can(Permission.DELETE_MODULES)) {
+        if (canDelete) {
             actionList.add(createDeleteButton(module));
         }
 

@@ -7,5 +7,5 @@ import oodj_project.core.security.Session;
 
 @FunctionalInterface
 public interface ViewGenerator {
-    public JPanel create(Context context, Session session);
+    public JPanel create(Context context, Session session, Navigator navigator);
 }

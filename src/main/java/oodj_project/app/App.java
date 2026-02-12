@@ -29,6 +29,6 @@ public class App {
     }
 
     private static MainFrame showMainFrame(Session session, Context context) {
-        return new MainFrame(context, session);
+        return new MainFrame(context, session, () -> showLogin(session, context));
     }
 }

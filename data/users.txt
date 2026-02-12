@@ -1,4 +1,4 @@
-1|leader|leader|leader|MALE|2|example-leader@email.com|2321313|12
-2|admin|admin|admin|MALE|1|example-admin@email.com|2321321|-27000000
-3|lecturer|lecturer|lecturer|FEMALE|3|example-lecturer@email.com|13123123|1232
-4|ZH|ZH|FYCrCSLGjg|MALE|2|youngziheng@gmail.com|01133486003|1118799324577
+1|s|leader|s|MALE|2|example-leader@email.com|2321313|12
+2|a|admin|a|MALE|1|example-admin@email.com|2321321|-27000000
+3|l|lecturer|l|FEMALE|3|example-lecturer@email.com|13123123|1232
+4|s|student|s|MALE|4|youngziheng@gmail.com|01133486003|1118799324577

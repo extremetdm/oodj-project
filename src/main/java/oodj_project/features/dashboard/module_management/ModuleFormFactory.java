@@ -27,6 +27,7 @@ public class ModuleFormFactory extends FormFactory<Module> {
         FilterOption.text("Name", Module::name, InputStrategy.textField()),
         FilterOption.text("Description", Module::description, InputStrategy.textField())
     );
+    
 
     private final ModuleController controller;
 

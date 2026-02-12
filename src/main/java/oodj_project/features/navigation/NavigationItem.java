@@ -10,6 +10,13 @@ import javax.swing.JPanel;
 import oodj_project.core.data.Context;
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
+import oodj_project.features.dashboard.assessment_grading.AssessmentResultController;
+import oodj_project.features.dashboard.assessment_grading.AssessmentResultRepository;
+import oodj_project.features.dashboard.assessment_grading.AssessmentResultView;
+import oodj_project.features.dashboard.assessment_grading.GradeBookService;
+import oodj_project.features.dashboard.assessment_management.AssessmentController;
+import oodj_project.features.dashboard.assessment_management.AssessmentRepository;
+import oodj_project.features.dashboard.assessment_management.AssessmentView;
 import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReportController;
 import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReportView;
 import oodj_project.features.dashboard.class_management.ClassController;
@@ -42,7 +49,7 @@ public enum NavigationItem {
         "User Management",
         new ImageIcon("src/main/resources/icons/user-management.png"),
         Permission.READ_USERS,
-        (context, session) -> new UserView(
+        (context, session, navigator) -> new UserView(
             session,
             new UserController(
                 context.get(UserRepository.class), 
@@ -57,7 +64,7 @@ public enum NavigationItem {
         "Grading System Management",
         null,
         Permission.READ_GRADES,
-        (context, session) -> new GradeView(
+        (context, session, navigator) -> new GradeView(
             session,
             new GradeController(context.get(GradeRepository.class))
         )
@@ -66,9 +73,9 @@ public enum NavigationItem {
         "Class Management",
         null,
         Permission.READ_CLASSES,
-        (context, session) -> new ClassView(
+        (context, session, navigator) -> new ClassView(
             session,
-            new ClassController(context.get(ClassRepository.class)),
+            new ClassController(session, context.get(ClassRepository.class)),
             new ModuleController(context.get(ModuleRepository.class)),
             new TeamMemberController(
                 session,
@@ -82,7 +89,7 @@ public enum NavigationItem {
         // new ImageIcon("src/main/resources/icons/user-management.png"),
         null,
         Permission.READ_MODULES,
-        (context, session) -> new ModuleView(
+        (context, session, navigator) -> new ModuleView(
             session,
             new ModuleController(context.get(ModuleRepository.class))
         )
@@ -91,7 +98,7 @@ public enum NavigationItem {
         "Team Management",
         null,
         Permission.READ_TEAM_MANAGEMENT,
-        (context, session) -> new TeamMemberView(
+        (context, session, navigator) -> new TeamMemberView(
             session,
             new TeamMemberController(
                 session,
@@ -105,11 +112,35 @@ public enum NavigationItem {
             )
         )
     ),
+    ASSESSMENT_MANAGEMENT(
+        "Assessment Management",
+        null,
+        Permission.READ_ASSESSMENTS,
+        (context, session, navigator) -> new AssessmentView(
+            session,
+            new AssessmentController(context.get(AssessmentRepository.class)),
+            new ClassController(session, context.get(ClassRepository.class))
+        )
+    ),
+    ASSESSMENT_RESULTS(
+        "Assessment Grading",
+        null,
+        Permission.READ_ASSESSMENT_RESULTS,
+        (context, session, navigator) -> new AssessmentResultView(
+            session,
+            new AssessmentResultController(
+                session, 
+                context.get(AssessmentResultRepository.class),
+                context.get(ClassRepository.class),
+                context.get(GradeBookService.class)
+            )
+        )
+    ),
     LECTURER_WORKLOAD_REPORT(
         "Lecturer Workload Report",
         null,
         Permission.READ_LECTURER_WORKLOAD,
-        (context, session) -> new LecturerWorkloadView(
+        (context, session, navigator) -> new LecturerWorkloadView(
             session,
             new LecturerWorkloadController(
                 session,
@@ -123,7 +154,7 @@ public enum NavigationItem {
         "Enrollment Report",
         null,
         Permission.READ_ENROLLMENT_REPORT,
-        (context, session) -> new EnrollmentReportView(
+        (context, session, navigator) -> new EnrollmentReportView(
             session,
             new EnrollmentReportController(
                 context.get(EnrollmentRepository.class),
@@ -155,8 +186,8 @@ public enum NavigationItem {
         return requiredPermission;
     }
 
-    public JPanel createView(Context context, Session session) {
-        return view.create(context, session);
+    public JPanel createView(Context context, Session session, Navigator navigator) {
+        return view.create(context, session, navigator);
     }
     
     public static List<NavigationItem> visibleFor(Session session) {
