@@ -17,14 +17,19 @@ import oodj_project.core.ui.components.sort_editor.SortOption;
 public class GradeFormFactory extends FormFactory<Grade> {
 
     private static final List<SortOption<Grade>> SORT_OPTIONS = List.of(
-        SortOption.text("Name", Grade::name)
-        // SortOption.text("Description", Module::description)
+            SortOption.text("Name", Grade::name)
+    // SortOption.text("Description", Module::description)
     );
 
     private static final List<FilterOption<Grade, ?, ?>> FILTER_OPTIONS = List.of(
-        FilterOption.text("Name", Grade::name, InputStrategy.textField())
-        // FilterOption.text("Description", Module::description, InputStrategy.textField())
-    );
+            FilterOption.text("Name", Grade::name, InputStrategy.textField()),
+            FilterOption.sameAs(
+                    "Classification",
+                    Grade::classification,
+                    InputStrategy.selectField(
+                            Grade.Classification::name,
+                            List.of(Grade.Classification.values())),
+                    Grade.Classification::name));
 
     private final GradeController controller;
 
@@ -47,13 +52,13 @@ public class GradeFormFactory extends FormFactory<Grade> {
         var content = new GradeEditFormContent();
 
         var form = Form.builder(getParentWindow(), content, handleCreate(content, onCreate))
-            .windowTitle("Create Grade")
-            .formTitle("Create Grade")
-            .confirmText("Create")
-            .build();
-        
+                .windowTitle("Create Grade")
+                .formTitle("Create Grade")
+                .confirmText("Create")
+                .build();
+
         form.setVisible(true);
-        
+
         return form;
     }
 
@@ -66,8 +71,9 @@ public class GradeFormFactory extends FormFactory<Grade> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
-                JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating grade", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalArgumentException | IOException e) {
+                JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating grade",
+                        JOptionPane.ERROR_MESSAGE);
             }
         };
     }
@@ -76,11 +82,11 @@ public class GradeFormFactory extends FormFactory<Grade> {
         var content = new GradeEditFormContent(grade);
 
         var form = Form.builder(getParentWindow(), content, handleEdit(grade, content, onUpdate))
-            .windowTitle("Edit Grade")
-            .formTitle("Edit Grade")
-            .confirmText("Update")
-            .build();
-            
+                .windowTitle("Edit Grade")
+                .formTitle("Edit Grade")
+                .confirmText("Update")
+                .build();
+
         form.setVisible(true);
 
         return form;
@@ -95,7 +101,7 @@ public class GradeFormFactory extends FormFactory<Grade> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing grade", JOptionPane.ERROR_MESSAGE);
             }
         };

@@ -41,8 +41,12 @@ public class FormComboBox<FieldT> extends JComboBox<FieldT> {
         setFont(FormTheme.INPUT_FONT);
 
         var content = getAccessibleContext().getAccessibleChild(0);
-        if (content instanceof BasicComboPopup) {
-            ((BasicComboPopup) content).getList().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        switch (content) {
+            case BasicComboPopup comboPopup -> {
+                comboPopup.getList().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+            default -> {}
         }
 
         setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

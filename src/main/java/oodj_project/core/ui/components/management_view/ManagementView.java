@@ -23,8 +23,9 @@ import oodj_project.core.ui.components.buttons.IconLabelButton;
 import oodj_project.core.ui.components.filter_editor.SelectedFilterOption;
 import oodj_project.core.ui.components.sort_editor.SelectedSortOption;
 import oodj_project.core.ui.utils.IconManager;
+import oodj_project.features.navigation.Navigable;
 
-public abstract class ManagementView<DataT> extends JPanel {
+public abstract class ManagementView<DataT> extends JPanel implements Navigable {
 
     private static final ImageIcon
         FILTER_ICON = IconManager.getIcon("/icons/filter.png", 30, 30),
@@ -202,5 +203,26 @@ public abstract class ManagementView<DataT> extends JPanel {
             .replace(">", "&gt;")
             .replace("\"", "&quot;")
             .replace("'", "&#39;");
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void onNavigate(Object payload) {
+        if (payload instanceof State) {
+            var state = (State<DataT>) payload;
+            sortOptions = state.sortOptions;
+            filterOptions = state.filterOptions;
+            paginator.goToFirstPage();
+        }
+    }
+
+    public record State<DataT>(
+        List<SelectedSortOption<DataT>> sortOptions,
+        List<SelectedFilterOption<DataT, ?, ?>> filterOptions
+    ) {
+        public State {
+            if (sortOptions == null) sortOptions = List.of();
+            if (filterOptions == null) filterOptions = List.of();
+        }
     }
 }

@@ -14,31 +14,30 @@ import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.management_view.FormFactory;
 import oodj_project.core.ui.components.sort_editor.SortOption;
 import oodj_project.features.dashboard.permission_management.RolePermissionController;
+import oodj_project.features.dashboard.role_management.Role;
 import oodj_project.features.dashboard.role_management.RoleController;
 
 public class UserFormFactory extends FormFactory<User> {
-    
-    private static final List<SortOption<User>> SORT_OPTIONS = List.of(
-        SortOption.of("User ID", User::id)
-        // SortOption.of("Lecturer name", workload -> workload.lecturer().name())
-    );
 
-    private static final List<FilterOption<User, ?, ?>> FILTER_OPTIONS = List.of(
-        FilterOption.compare("User ID", User::id, InputStrategy.nonNegativeIntegerField())
-        // FilterOption.text("Lecturer name", workload -> workload.lecturer().name(), InputStrategy.textField())
-    );
+    private static final List<SortOption<User>> SORT_OPTIONS = List.of(
+            SortOption.of("User ID", User::id));
 
     private final UserController userController;
     private final RoleController roleController;
     private final RolePermissionController permissionController;
-    
+
     public UserFormFactory(
-        Component component,
-        UserController userController,
-        RoleController roleController,
-        RolePermissionController permissionController
-    ) {
-        super(component, SORT_OPTIONS, FILTER_OPTIONS);
+            Component component,
+            UserController userController,
+            RoleController roleController,
+            RolePermissionController permissionController) {
+        super(component, SORT_OPTIONS, List.of(
+                FilterOption.compare("User ID", User::id, InputStrategy.nonNegativeIntegerField()),
+                FilterOption.sameAs(
+                        "Role",
+                        User::role,
+                        InputStrategy.selectField(Role::name, roleController.index()),
+                        Role::name)));
         this.userController = userController;
         this.roleController = roleController;
         this.permissionController = permissionController;
@@ -56,19 +55,18 @@ public class UserFormFactory extends FormFactory<User> {
 
     public Form getCreateForm(Runnable onCreate) {
         var content = new UserEditFormContent(
-            roleController.index(),
-            userController.getSupervisors(),
-            permissionController::roleHasPermission
-        );
+                roleController.index(),
+                userController.getSupervisors(),
+                permissionController::roleHasPermission);
 
         var form = Form.builder(getParentWindow(), content, handleCreate(content, onCreate))
-            .windowTitle("Create User")
-            .formTitle("Create User")
-            .confirmText("Create")
-            .build();
-        
+                .windowTitle("Create User")
+                .formTitle("Create User")
+                .confirmText("Create")
+                .build();
+
         form.setVisible(true);
-        
+
         return form;
     }
 
@@ -81,7 +79,7 @@ public class UserFormFactory extends FormFactory<User> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating user", JOptionPane.ERROR_MESSAGE);
             }
         };
@@ -89,18 +87,17 @@ public class UserFormFactory extends FormFactory<User> {
 
     public Form getEditForm(User user, Runnable onUpdate) {
         var content = new UserEditFormContent(
-            roleController.index(),
-            userController.getSupervisors(),
-            permissionController::roleHasPermission,
-            user
-        );
+                roleController.index(),
+                userController.getSupervisors(),
+                permissionController::roleHasPermission,
+                user);
 
         var form = Form.builder(getParentWindow(), content, handleEdit(user, content, onUpdate))
-            .windowTitle("Edit User")
-            .formTitle("Edit User")
-            .confirmText("Update")
-            .build();
-            
+                .windowTitle("Edit User")
+                .formTitle("Edit User")
+                .confirmText("Update")
+                .build();
+
         form.setVisible(true);
 
         return form;
@@ -115,7 +112,7 @@ public class UserFormFactory extends FormFactory<User> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing user", JOptionPane.ERROR_MESSAGE);
             }
         };

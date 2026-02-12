@@ -33,9 +33,8 @@ import oodj_project.features.dashboard.user_management.UserGrid;
 
 public class ClassView extends ManagementView<ClassGroup> {
 
-    private static final double[]
-        COLUMN_WEIGHT_WITH_ACTION = { 1, 6, 6, 4, 5, 2 },
-        COLUMN_WEIGHT_WITHOUT_ACTION = { 1, 7, 7, 4, 5 };
+    private static final double[] COLUMN_WEIGHT_WITH_ACTION = { 1, 6, 6, 4, 5, 2 },
+            COLUMN_WEIGHT_WITHOUT_ACTION = { 1, 7, 7, 4, 5 };
 
     private final ClassController controller;
 
@@ -46,33 +45,30 @@ public class ClassView extends ManagementView<ClassGroup> {
     private final DataList<ClassGroup> dataTable;
 
     public ClassView(
-        Session session,
-        ClassController classController,
-        ModuleController moduleController,
-        TeamMemberController teamMemberController
-    ) {
+            Session session,
+            ClassController classController,
+            ModuleController moduleController,
+            TeamMemberController teamMemberController) {
         super(
-            "Class Management",
-            classController::index,
-            ClassView::buildSearchLogic
-        );
+                "Class Management",
+                classController::index,
+                ClassView::buildSearchLogic);
 
         controller = classController;
 
         canUpdate = session.can(Permission.UPDATE_CLASSES)
-            || session.can(Permission.ASSIGN_TEACHER);
-        
+                || session.can(Permission.ASSIGN_TEACHER);
+
         canDelete = session.can(Permission.DELETE_CLASSES);
 
         hasActions = canUpdate || canDelete;
 
         formFactory = new ClassFormFactory(
-            this,
-            session,
-            classController,
-            moduleController,
-            teamMemberController
-        );
+                this,
+                session,
+                classController,
+                moduleController,
+                teamMemberController);
 
         if (session.can(Permission.CREATE_CLASSES)) {
             var addButton = new IconLabelButton("Add", Icons.ADD);
@@ -82,15 +78,12 @@ public class ClassView extends ManagementView<ClassGroup> {
             toolbarComponents.add(addButton);
         }
 
-        var columnWeight = hasActions?
-            COLUMN_WEIGHT_WITH_ACTION:
-            COLUMN_WEIGHT_WITHOUT_ACTION;
+        var columnWeight = hasActions ? COLUMN_WEIGHT_WITH_ACTION : COLUMN_WEIGHT_WITHOUT_ACTION;
 
         dataTable = new DataList<>(
-            columnWeight,
-            createTableHeader(),
-            this::createTableRow
-        );
+                columnWeight,
+                createTableHeader(),
+                this::createTableRow);
 
         init();
     }
@@ -101,12 +94,10 @@ public class ClassView extends ManagementView<ClassGroup> {
             var lecturer = classGroup.lecturer();
 
             return classGroup.id().toString().contains(searchQuery)
-                || module.id().toString().contains(searchQuery)
-                || module.name().toLowerCase().contains(searchQuery)
-                || (lecturer != null && (
-                    lecturer.id().toString().contains(searchQuery)
-                        || lecturer.name().toLowerCase().contains(searchQuery)
-                ));
+                    || module.id().toString().contains(searchQuery)
+                    || module.name().toLowerCase().contains(searchQuery)
+                    || (lecturer != null && (lecturer.id().toString().contains(searchQuery)
+                            || lecturer.name().toLowerCase().contains(searchQuery)));
         };
     }
 
@@ -117,12 +108,11 @@ public class ClassView extends ManagementView<ClassGroup> {
 
     private Component[] createTableHeader() {
         var components = new ArrayList<>(List.<Component>of(
-            DataList.createHeaderText("ID"),
-            DataList.createHeaderText("Module"),
-            DataList.createHeaderText("Lecturer"),
-            DataList.createHeaderText("Max capacity"),
-            DataList.createHeaderText("Period")
-        ));
+                DataList.createHeaderText("ID"),
+                DataList.createHeaderText("Module"),
+                DataList.createHeaderText("Lecturer"),
+                DataList.createHeaderText("Max capacity"),
+                DataList.createHeaderText("Period")));
 
         if (hasActions) {
             var actionLabel = DataList.createHeaderText("Action");
@@ -135,12 +125,11 @@ public class ClassView extends ManagementView<ClassGroup> {
 
     private Component[] createTableRow(ClassGroup classGroup) {
         var components = new ArrayList<>(List.<Component>of(
-            DataList.createText(classGroup.id().toString()),
-            new ModuleGrid(classGroup.module()),
-            createLecturerSection(classGroup.lecturer()),
-            DataList.createText(String.valueOf(classGroup.maxCapacity())),
-            createPeriodSection(classGroup.startDate(), classGroup.endDate())
-        ));
+                DataList.createText(classGroup.id().toString()),
+                new ModuleGrid(classGroup.module()),
+                createLecturerSection(classGroup.lecturer()),
+                DataList.createText(String.valueOf(classGroup.maxCapacity())),
+                createPeriodSection(classGroup.startDate(), classGroup.endDate())));
 
         if (hasActions) {
             components.add(createActionMenu(classGroup));
@@ -163,15 +152,14 @@ public class ClassView extends ManagementView<ClassGroup> {
         endDateLabel.setHorizontalAlignment(SwingConstants.RIGHT);
 
         return new FlexibleGridBuilder(2)
-            .setInsets(new Insets(0, 5, 0, 5))
-            .add(
-                new double[] { 0, 1 },
-                startDateLabel,
-                DataList.createText(LineFormatter.formatDate(startDate, "yyyy-MM-dd")),
-                endDateLabel,
-                DataList.createText(LineFormatter.formatDate(endDate, "yyyy-MM-dd"))
-            )
-            .build();
+                .setInsets(new Insets(0, 5, 0, 5))
+                .add(
+                        new double[] { 0, 1 },
+                        startDateLabel,
+                        DataList.createText(LineFormatter.formatDate(startDate, "yyyy-MM-dd")),
+                        endDateLabel,
+                        DataList.createText(LineFormatter.formatDate(endDate, "yyyy-MM-dd")))
+                .build();
     }
 
     private JPanel createActionMenu(ClassGroup classGroup) {
@@ -180,26 +168,27 @@ public class ClassView extends ManagementView<ClassGroup> {
         actionPanel.setOpaque(false);
 
         ArrayList<Component> actionList = new ArrayList<>();
-        
-        if (canUpdate) actionList.add(createEditButton(classGroup));
-        if (canDelete) actionList.add(createDeleteButton(classGroup));
+
+        if (canUpdate)
+            actionList.add(createEditButton(classGroup));
+        if (canDelete)
+            actionList.add(createDeleteButton(classGroup));
 
         actionPanel.add(Box.createHorizontalGlue());
         for (int x = 0; x < actionList.size(); x++) {
-            if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
+            if (x > 0)
+                actionPanel.add(Box.createHorizontalStrut(5));
             actionPanel.add(actionList.get(x));
         }
         actionPanel.add(Box.createHorizontalGlue());
-        
+
         return actionPanel;
     }
 
     private JButton createEditButton(ClassGroup classGroup) {
         var editButton = new IconButton(Icons.EDIT);
         editButton.setToolTipText("Edit Class");
-        editButton.addActionListener(event -> 
-            formFactory.getEditForm(classGroup, this::refreshData)
-        );
+        editButton.addActionListener(event -> formFactory.getEditForm(classGroup, this::refreshData));
         return editButton;
     }
 
@@ -208,16 +197,15 @@ public class ClassView extends ManagementView<ClassGroup> {
         deleteButton.setToolTipText("Delete Class");
         deleteButton.addActionListener(event -> {
             var action = JOptionPane.showConfirmDialog(
-                this,
-                "Are you sure you want to delete the class \"" + classGroup.id() + "\"?",
-                "Confirm delete classGroup",
-                JOptionPane.YES_NO_OPTION
-            );
+                    this,
+                    "Are you sure you want to delete the class \"" + classGroup.id() + "\"?",
+                    "Confirm delete classGroup",
+                    JOptionPane.YES_NO_OPTION);
 
             if (action == JOptionPane.YES_OPTION) {
                 try {
                     controller.delete(classGroup);
-                    refreshData();                
+                    refreshData();
                 } catch (IOException | NoSuchElementException e) {
                     String message = switch (e) {
                         case IOException _ -> "Failed to save changes.";

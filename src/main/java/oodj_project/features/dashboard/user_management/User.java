@@ -7,17 +7,7 @@ import oodj_project.core.data.model.Model;
 import oodj_project.features.dashboard.role_management.Role;
 
 public record User(
-    Integer id,
-    String username,
-    String name,
-    String password,
-    Gender gender,
-    Role role,
-    String email,
-    String phoneNumber,
-    Date dateOfBirth
-) implements Identifiable<User> {
-    public User(
+        Integer id,
         String username,
         String name,
         String password,
@@ -25,8 +15,16 @@ public record User(
         Role role,
         String email,
         String phoneNumber,
-        Date dateOfBirth
-    ) {
+        Date dateOfBirth) implements Identifiable<User> {
+    public User(
+            String username,
+            String name,
+            String password,
+            Gender gender,
+            Role role,
+            String email,
+            String phoneNumber,
+            Date dateOfBirth) {
         this(null, username, name, password, gender, role, email, phoneNumber, dateOfBirth);
     }
 
@@ -34,8 +32,12 @@ public record User(
         Model.require(username, "Username");
         Model.require(name, "Full name");
         Model.require(email, "Email");
+        Model.checkEmail(email);
         Model.require(phoneNumber, "Phone number");
+        Model.checkPhoneNumber(phoneNumber);
+        Model.require(role, "Role");
         Model.require(dateOfBirth, "Date of birth");
+        Model.checkDatePast(dateOfBirth);
         username = Model.normalize(username);
         name = Model.normalize(name);
         email = Model.normalize(email);
