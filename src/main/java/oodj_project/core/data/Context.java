@@ -10,7 +10,7 @@ import oodj_project.features.dashboard.assessment_grading.AssessmentResultReposi
 import oodj_project.features.dashboard.assessment_grading.GradeBookService;
 import oodj_project.features.dashboard.assessment_management.AssessmentRepository;
 import oodj_project.features.dashboard.class_management.ClassRepository;
-import oodj_project.features.dashboard.enrollment_management.EnrollmentRepository;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
 import oodj_project.features.dashboard.module_management.ModuleRepository;
 import oodj_project.features.dashboard.permission_management.RolePermissionRepository;

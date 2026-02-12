@@ -15,4 +15,18 @@ public record SortOption<DataT>(String label, Comparator<DataT> comparator) {
     public static <DataT> SortOption<DataT> text(String label, Function<DataT, String> textExtractor) {
         return new SortOption<>(label, Comparator.comparing(textExtractor, String.CASE_INSENSITIVE_ORDER));
     }
+
+    public <ParentDataT> SortOption<ParentDataT> derive(
+        Function<ParentDataT, DataT> dataExtractor
+    ) {
+        return derive(null, dataExtractor);
+    }
+
+    public <ParentDataT> SortOption<ParentDataT> derive(
+        String label,
+        Function<ParentDataT, DataT> dataExtractor
+    ) {
+        var newLabel = label == null? this.label: label;
+        return new SortOption<>(newLabel, Comparator.comparing(dataExtractor, this.comparator));
+    }
 }

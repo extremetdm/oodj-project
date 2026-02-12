@@ -1,4 +1,4 @@
-package oodj_project.features.dashboard.enrollment_management;
+package oodj_project.features.dashboard.class_enrollment;
 
 import java.awt.Insets;
 
@@ -10,6 +10,7 @@ import oodj_project.core.ui.components.form.FormLabel;
 import oodj_project.core.ui.components.form.FormTextField;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.features.dashboard.class_management.ClassGroup;
+import oodj_project.features.dashboard.enrolled_classes.Enrollment;
 import oodj_project.features.dashboard.user_management.User;
 
 public class EnrollmentFormContent extends JPanel {

@@ -1,4 +1,4 @@
-package oodj_project.features.dashboard.enrollment_management;
+package oodj_project.features.dashboard.enrolled_classes;
 
 import java.util.Date;
 
@@ -29,5 +29,24 @@ public record Enrollment(Integer id, User student, ClassGroup classGroup, Date r
 
     public Enrollment withDropoutDate(Date dropoutDate) {
        return new Enrollment(id, student, classGroup, registerDate, dropoutDate);
+    }
+
+    public Status status() {
+        if (dropoutDate != null) return Status.DROPPED;
+        var now = new Date();
+        if (classGroup.startDate().before(now)) {
+            return Status.UPCOMING;
+        }
+        if (classGroup.endDate().before(now)) {
+            return Status.ONGOING;
+        }
+        return Status.COMPLETED;
+    }
+
+    public enum Status {
+        UPCOMING,
+        ONGOING,
+        COMPLETED,
+        DROPPED
     }
 }

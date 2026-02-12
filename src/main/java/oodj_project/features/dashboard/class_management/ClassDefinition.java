@@ -5,8 +5,9 @@ import java.util.List;
 import oodj_project.core.ui.components.filter_editor.FilterOption;
 import oodj_project.core.ui.components.filter_editor.InputStrategy;
 import oodj_project.core.ui.components.sort_editor.SortOption;
+import oodj_project.core.ui.utils.DataDefinition;
 
-public class ClassDefinition {
+public class ClassDefinition extends DataDefinition {
     public static final SortOption<ClassGroup>
         SORT_ID = SortOption.of("ID", ClassGroup::id),
         SORT_START_DATE = SortOption.of("Start Date", ClassGroup::startDate),

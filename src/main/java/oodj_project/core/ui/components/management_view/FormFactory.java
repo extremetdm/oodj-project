@@ -17,7 +17,7 @@ import oodj_project.core.ui.components.sort_editor.SortEditorPanel;
 import oodj_project.core.ui.components.sort_editor.SortOption;
 
 public abstract class FormFactory<DataT> {
-    private final Component component;
+    protected final Component component;
 
     private final List<FilterOption<DataT, ?, ?>> filterOptions;
     private final List<SortOption<DataT>> sortOptions;

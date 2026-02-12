@@ -213,6 +213,8 @@ public abstract class ManagementView<DataT> extends JPanel implements Navigable 
             sortOptions = state.sortOptions;
             filterOptions = state.filterOptions;
             paginator.goToFirstPage();
+        } else {
+            refreshData();
         }
     }
 

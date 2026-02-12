@@ -7,8 +7,8 @@ import oodj_project.core.data.repository.Query;
 import oodj_project.core.security.Session;
 import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReport;
 import oodj_project.features.dashboard.class_management.ClassRepository;
-import oodj_project.features.dashboard.enrollment_management.Enrollment;
-import oodj_project.features.dashboard.enrollment_management.EnrollmentRepository;
+import oodj_project.features.dashboard.enrolled_classes.Enrollment;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 import oodj_project.features.dashboard.team_management.TeamMemberRepository;
 
 public class LecturerWorkloadController {

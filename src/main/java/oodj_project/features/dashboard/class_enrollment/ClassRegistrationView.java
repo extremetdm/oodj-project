@@ -1,4 +1,4 @@
-package oodj_project.features.dashboard.enrollment_management;
+package oodj_project.features.dashboard.class_enrollment;
 
 import java.awt.Component;
 import java.awt.Insets;
@@ -20,29 +20,30 @@ import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.core.ui.styles.Icons;
 import oodj_project.features.dashboard.class_management.ClassGroup;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentController;
 import oodj_project.features.dashboard.module_management.ModuleGrid;
 import oodj_project.features.dashboard.user_management.UserGrid;
 
-public class EnrollmentView extends ManagementView<ClassGroup> {
+public class ClassRegistrationView extends ManagementView<ClassGroup> {
 
     private static final double[]
         COLUMN_WEIGHTS = { 1, 6, 6, 4, 5, 2 };
 
-    private final EnrollmentFormFactory formFactory;
+    private final ClassRegistrationFormFactory formFactory;
 
     private final DataList<ClassGroup> dataTable;
 
-    public EnrollmentView(
+    public ClassRegistrationView(
         Session session,
         EnrollmentController controller
     ) {
         super(
             "Class Registration",
             controller::upcomingClasses,
-            EnrollmentView::buildSearchLogic
+            ClassRegistrationView::buildSearchLogic
         );
 
-        formFactory = new EnrollmentFormFactory(
+        formFactory = new ClassRegistrationFormFactory(
             this,
             session,
             controller
@@ -149,7 +150,7 @@ public class EnrollmentView extends ManagementView<ClassGroup> {
     }
 
     @Override
-    protected EnrollmentFormFactory getFormFactory() {
+    protected ClassRegistrationFormFactory getFormFactory() {
         return formFactory;
     }
 }

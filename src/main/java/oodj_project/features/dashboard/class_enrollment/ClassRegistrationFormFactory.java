@@ -1,4 +1,4 @@
-package oodj_project.features.dashboard.enrollment_management;
+package oodj_project.features.dashboard.class_enrollment;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;
@@ -12,13 +12,14 @@ import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.management_view.FormFactory;
 import oodj_project.features.dashboard.class_management.ClassDefinition;
 import oodj_project.features.dashboard.class_management.ClassGroup;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentController;
 
-public class EnrollmentFormFactory extends FormFactory<ClassGroup> {
+public class ClassRegistrationFormFactory extends FormFactory<ClassGroup> {
 
     private final Session session;
     private final EnrollmentController controller;
 
-    public EnrollmentFormFactory(
+    public ClassRegistrationFormFactory(
         Component component,
         Session session,
         EnrollmentController controller

@@ -1,4 +1,4 @@
-package oodj_project.features.dashboard.enrollment_management;
+package oodj_project.features.dashboard.enrolled_classes;
 
 import java.io.File;
 import java.io.IOException;

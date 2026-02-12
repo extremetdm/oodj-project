@@ -1,4 +1,4 @@
-package oodj_project.features.dashboard.enrollment_management;
+package oodj_project.features.dashboard.enrolled_classes;
 
 import java.io.IOException;
 import java.util.Date;
@@ -42,7 +42,7 @@ public class EnrollmentController {
         var now = new Date();
         query = query.toBuilder()
             .addFilter(
-                classGroup -> classGroup.startDate().before(now)
+                classGroup -> classGroup.startDate().after(now)
                     && classGroup.lecturer() != null
                     && !enrolledClasses.contains(classGroup)
                     && classGroup.maxCapacity() > classOccupancy.getOrDefault(classGroup, 0l)

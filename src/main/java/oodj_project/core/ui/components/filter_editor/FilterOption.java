@@ -71,5 +71,25 @@ public record FilterOption<DataT, FieldT, ComponentT extends Component>(
             fieldDescriptor
         );
     }
+
+    public <ParentDataT> FilterOption<ParentDataT, FieldT, ComponentT> derive(
+        Function<ParentDataT, DataT> dataExtractor
+    ) {
+        return derive(null, dataExtractor);
+    }
+
+    public <ParentDataT> FilterOption<ParentDataT, FieldT, ComponentT> derive(
+        String label,
+        Function<ParentDataT, DataT> dataExtractor
+    ) {
+        var newLabel = label == null? this.label: label;
+        return new FilterOption<>(
+            newLabel,
+            dataExtractor.andThen(fieldExtractor),
+            operations,
+            inputStrategy,
+            fieldDescriptor
+        );
+    }
 }
 

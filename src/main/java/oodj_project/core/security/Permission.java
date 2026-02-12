@@ -42,5 +42,6 @@ public enum Permission {
 
     READ_LECTURER_WORKLOAD,
 
-    ENROLL_CLASSES
+    ENROLL_CLASSES,
+    UNENROLL_CLASSES
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import oodj_project.core.data.model.Model;
 import oodj_project.features.dashboard.class_management.ClassGroup;
-import oodj_project.features.dashboard.enrollment_management.Enrollment;
+import oodj_project.features.dashboard.enrolled_classes.Enrollment;
 
 public record EnrollmentReport(ClassGroup classGroup, List<Enrollment> enrollments) {
     public EnrollmentReport {

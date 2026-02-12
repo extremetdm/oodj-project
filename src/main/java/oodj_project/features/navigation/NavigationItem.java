@@ -17,14 +17,15 @@ import oodj_project.features.dashboard.assessment_grading.GradeBookService;
 import oodj_project.features.dashboard.assessment_management.AssessmentController;
 import oodj_project.features.dashboard.assessment_management.AssessmentRepository;
 import oodj_project.features.dashboard.assessment_management.AssessmentView;
+import oodj_project.features.dashboard.class_enrollment.ClassRegistrationView;
 import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReportController;
 import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReportView;
 import oodj_project.features.dashboard.class_management.ClassController;
 import oodj_project.features.dashboard.class_management.ClassRepository;
 import oodj_project.features.dashboard.class_management.ClassView;
-import oodj_project.features.dashboard.enrollment_management.EnrollmentController;
-import oodj_project.features.dashboard.enrollment_management.EnrollmentRepository;
-import oodj_project.features.dashboard.enrollment_management.EnrollmentView;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentController;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentView;
 import oodj_project.features.dashboard.grading_system_management.GradeController;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeView;
@@ -165,6 +166,19 @@ public enum NavigationItem {
     ),
     CLASS_ENROLLMENT(
         "Class Registration",
+        null,
+        Permission.ENROLL_CLASSES,
+        (context, session, navigator) -> new ClassRegistrationView(
+            session,
+            new EnrollmentController(
+                session,
+                context.get(EnrollmentRepository.class),
+                context.get(ClassRepository.class)
+            )
+        )
+    ),
+    ENROLLED_CLASSES(
+        "My Classes",
         null,
         Permission.ENROLL_CLASSES,
         (context, session, navigator) -> new EnrollmentView(

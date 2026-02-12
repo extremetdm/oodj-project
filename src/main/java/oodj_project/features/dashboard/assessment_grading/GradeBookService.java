@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import oodj_project.features.dashboard.assessment_management.Assessment;
 import oodj_project.features.dashboard.assessment_management.AssessmentRepository;
 import oodj_project.features.dashboard.class_management.ClassGroup;
-import oodj_project.features.dashboard.enrollment_management.Enrollment;
-import oodj_project.features.dashboard.enrollment_management.EnrollmentRepository;
+import oodj_project.features.dashboard.enrolled_classes.Enrollment;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 
 public class GradeBookService {
     
