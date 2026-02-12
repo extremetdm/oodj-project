@@ -20,14 +20,15 @@ import oodj_project.features.dashboard.team_management.TeamMemberController;
 public class ClassFormFactory extends FormFactory<ClassGroup> {
 
     private static final List<SortOption<ClassGroup>> SORT_OPTIONS = List.of(
-        SortOption.of("ID", ClassGroup::id)
-        // SortOption.text("Description", Module::description)
-    );
+            SortOption.of("ID", ClassGroup::id),
+            SortOption.of("Start Date", ClassGroup::startDate),
+            SortOption.of("End Date", ClassGroup::endDate));
 
     private static final List<FilterOption<ClassGroup, ?, ?>> FILTER_OPTIONS = List.of(
-        FilterOption.compare("Name", ClassGroup::id, InputStrategy.nonNegativeIntegerField())
-        // FilterOption.text("Description", Module::description, InputStrategy.textField())
-    );
+            FilterOption.compare("ID", ClassGroup::id, InputStrategy.nonNegativeIntegerField()),
+            FilterOption.text("Lecturer Name", classGroup -> classGroup.lecturer().name(), InputStrategy.textField()),
+            FilterOption.compare("Start Date", ClassGroup::startDate, InputStrategy.dateField()),
+            FilterOption.compare("End Date", ClassGroup::endDate, InputStrategy.dateField()));
 
     private final Session session;
     private final ClassController classController;
@@ -35,12 +36,11 @@ public class ClassFormFactory extends FormFactory<ClassGroup> {
     private final TeamMemberController teamMemberController;
 
     public ClassFormFactory(
-        Component component,
-        Session session,
-        ClassController classController,
-        ModuleController moduleController,
-        TeamMemberController teamMemberController
-    ) {
+            Component component,
+            Session session,
+            ClassController classController,
+            ModuleController moduleController,
+            TeamMemberController teamMemberController) {
         super(component, SORT_OPTIONS, FILTER_OPTIONS);
         this.session = session;
         this.classController = classController;
@@ -60,19 +60,18 @@ public class ClassFormFactory extends FormFactory<ClassGroup> {
 
     public Form getCreateForm(Runnable onCreate) {
         var content = new ClassEditFormContent(
-            session,
-            moduleController.index(),
-            teamMemberController.getLecturersUnderMe()
-        );
+                session,
+                moduleController.index(),
+                teamMemberController.getLecturersUnderMe());
 
         var form = Form.builder(getParentWindow(), content, handleCreate(content, onCreate))
-            .windowTitle("Create Class")
-            .formTitle("Create Class")
-            .confirmText("Create")
-            .build();
-        
+                .windowTitle("Create Class")
+                .formTitle("Create Class")
+                .confirmText("Create")
+                .build();
+
         form.setVisible(true);
-        
+
         return form;
     }
 
@@ -85,26 +84,26 @@ public class ClassFormFactory extends FormFactory<ClassGroup> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
-                JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating class", JOptionPane.ERROR_MESSAGE);
+            } catch (IllegalArgumentException | IOException e) {
+                JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating class",
+                        JOptionPane.ERROR_MESSAGE);
             }
         };
     }
 
     public Form getEditForm(ClassGroup classGroup, Runnable onUpdate) {
         var content = new ClassEditFormContent(
-            session,
-            moduleController.index(),
-            teamMemberController.getLecturersUnderMe(),
-            classGroup
-        );
+                session,
+                moduleController.index(),
+                teamMemberController.getLecturersUnderMe(),
+                classGroup);
 
         var form = Form.builder(getParentWindow(), content, handleEdit(classGroup, content, onUpdate))
-            .windowTitle("Edit Class")
-            .formTitle("Edit Class")
-            .confirmText("Update")
-            .build();
-            
+                .windowTitle("Edit Class")
+                .formTitle("Edit Class")
+                .confirmText("Update")
+                .build();
+
         form.setVisible(true);
 
         return form;
@@ -119,7 +118,7 @@ public class ClassFormFactory extends FormFactory<ClassGroup> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing class", JOptionPane.ERROR_MESSAGE);
             }
         };
