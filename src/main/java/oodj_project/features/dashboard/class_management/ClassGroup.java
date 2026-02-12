@@ -8,21 +8,19 @@ import oodj_project.features.dashboard.module_management.Module;
 import oodj_project.features.dashboard.user_management.User;
 
 public record ClassGroup(
-    Integer id,
-    Module module,
-    int maxCapacity,
-    User lecturer,
-    Date startDate,
-    Date endDate
-) implements Identifiable<ClassGroup> {
-
-    public ClassGroup(
+        Integer id,
         Module module,
         int maxCapacity,
         User lecturer,
         Date startDate,
-        Date endDate
-    ) {
+        Date endDate) implements Identifiable<ClassGroup> {
+
+    public ClassGroup(
+            Module module,
+            int maxCapacity,
+            User lecturer,
+            Date startDate,
+            Date endDate) {
         this(null, module, maxCapacity, lecturer, startDate, endDate);
     }
 
@@ -30,6 +28,14 @@ public record ClassGroup(
         Model.require(module, "Module");
         Model.require(startDate, "Start date");
         Model.require(endDate, "End date");
+
+        if (maxCapacity <= 1) {
+            throw new IllegalArgumentException("Max capacity must be greater than 1.");
+        }
+
+        if (endDate.before(startDate) || endDate.equals(startDate)) {
+            throw new IllegalArgumentException("End date must be after start date.");
+        }
     }
 
     public Status status() {
