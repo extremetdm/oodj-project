@@ -16,25 +16,25 @@ import oodj_project.core.ui.components.sort_editor.SortOption;
 import oodj_project.features.dashboard.user_management.UserController;
 
 public class TeamMemberFormFactory extends FormFactory<MemberAssignment> {
-    
+
     private static final List<SortOption<MemberAssignment>> SORT_OPTIONS = List.of(
-        SortOption.of("Lecturer ID", relation -> relation.member().id()),
-        SortOption.of("Academic Leader ID", relation -> relation.supervisor().id())
-    );
+            SortOption.of("ID", relation -> relation.member().id()),
+            SortOption.of("Academic Leader ID", relation -> relation.supervisor().id()));
 
     private static final List<FilterOption<MemberAssignment, ?, ?>> FILTER_OPTIONS = List.of(
-        FilterOption.compare("Lecturer ID", relation -> relation.member().id(), InputStrategy.nonNegativeIntegerField()),
-        FilterOption.compare("Academic Leader ID", relation -> relation.supervisor().id(), InputStrategy.nonNegativeIntegerField())
-    );
+            FilterOption.compare("ID", relation -> relation.member().id(), InputStrategy.nonNegativeIntegerField()),
+            FilterOption.compare("Academic Leader ID", relation -> relation.supervisor().id(),
+                    InputStrategy.nonNegativeIntegerField()),
+            FilterOption.text("Academic Leader Name", relation -> relation.supervisor().name(),
+                    InputStrategy.textField()));
 
     private final TeamMemberController relationController;
     private final UserController userController;
-    
+
     public TeamMemberFormFactory(
-        Component component,
-        TeamMemberController relationController,
-        UserController userController
-    ) {
+            Component component,
+            TeamMemberController relationController,
+            UserController userController) {
         super(component, SORT_OPTIONS, FILTER_OPTIONS);
         this.relationController = relationController;
         this.userController = userController;
@@ -42,49 +42,48 @@ public class TeamMemberFormFactory extends FormFactory<MemberAssignment> {
 
     @Override
     protected String getSortWindowTitle() {
-        return "Sort Team Relation";
+        return "Sort Lecturer Assignment";
     }
 
     @Override
     protected String getFilterWindowTitle() {
-        return "Filter Team Relation";
+        return "Filter Lecturer Assignment";
     }
 
     public Form getCreateForm(Runnable onCreate) {
         var content = new TeamMemberEditFormContent(
-            relationController.getUnassigned(),
-            userController.getSupervisors()
-        );
+                relationController.getUnassigned(),
+                userController.getSupervisors());
 
         var form = Form.builder(getParentWindow(), content, handleSubmit(null, content, onCreate))
-            .windowTitle("Create Team Relation")
-            .formTitle("Create Team Relation")
-            .confirmText("Create")
-            .build();
-        
+                .windowTitle("Assign Academic Leader")
+                .formTitle("Assign Academic Leader")
+                .confirmText("Assign")
+                .build();
+
         form.setVisible(true);
-        
+
         return form;
     }
 
     public Form getEditForm(MemberAssignment relation, Runnable onUpdate) {
         var content = new TeamMemberEditFormContent(
-            userController.getSupervisors(),
-            relation
-        );
+                userController.getSupervisors(),
+                relation);
 
         var form = Form.builder(getParentWindow(), content, handleSubmit(relation, content, onUpdate))
-            .windowTitle("Edit Team Relation")
-            .formTitle("Edit Team Relation")
-            .confirmText("Update")
-            .build();
-            
+                .windowTitle("Edit Lecturer Assignment")
+                .formTitle("Edit Lecturer Assignment")
+                .confirmText("Update")
+                .build();
+
         form.setVisible(true);
 
         return form;
     }
 
-    private ActionListener handleSubmit(MemberAssignment relation, TeamMemberEditFormContent content, Runnable onUpdate) {
+    private ActionListener handleSubmit(MemberAssignment relation, TeamMemberEditFormContent content,
+            Runnable onUpdate) {
         return event -> {
             var window = SwingUtilities.getWindowAncestor((Component) event.getSource());
             var isCreate = relation == null || relation.isUnassigned();
@@ -98,9 +97,8 @@ public class TeamMemberFormFactory extends FormFactory<MemberAssignment> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
-                String title = isCreate? "Error creating team relation":
-                    "Error editing team relation";
+            } catch (IllegalArgumentException | IOException e) {
+                String title = isCreate ? "Error assigning academic leader" : "Error editing lecturer assignment";
                 JOptionPane.showMessageDialog(window, e.getMessage(), title, JOptionPane.ERROR_MESSAGE);
             }
         };

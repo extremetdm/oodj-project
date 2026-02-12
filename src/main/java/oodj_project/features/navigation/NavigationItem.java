@@ -95,7 +95,7 @@ public enum NavigationItem {
         )
     ),
     TEAM_MANAGEMENT(
-        "Team Management",
+        "Lecturer Management",
         null,
         Permission.READ_TEAM_MANAGEMENT,
         (context, session, navigator) -> new TeamMemberView(
@@ -103,10 +103,9 @@ public enum NavigationItem {
             new TeamMemberController(
                 session,
                 context.get(TeamMemberRepository.class),
-                context.get(UserPermissionService.class)
-            ),
+                context.get(UserPermissionService.class)),
             new UserController(
-                context.get(UserRepository.class), 
+                context.get(UserRepository.class),
                 context.get(UserPermissionService.class),
                 context.get(EmailService.class)
             )
@@ -189,10 +188,10 @@ public enum NavigationItem {
     public JPanel createView(Context context, Session session, Navigator navigator) {
         return view.create(context, session, navigator);
     }
-    
+
     public static List<NavigationItem> visibleFor(Session session) {
         return Arrays.stream(values())
-            .filter(item -> session.can(item.requiredPermission))
-            .toList();
+                .filter(item -> session.can(item.requiredPermission))
+                .toList();
     }
 }

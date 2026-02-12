@@ -14,18 +14,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.JCheckBox;
+import java.awt.event.ItemEvent;
 
 public class LoginView extends JFrame {
     private final JTextField usernameField;
     private final JPasswordField passwordField;
 
     private final Session session;
-private final Runnable onSuccess;
+    private final Runnable onSuccess;
 
     public LoginView(
-        Session session,
-        Runnable onSuccess
-    ) {
+            Session session,
+            Runnable onSuccess) {
         this.session = session;
         this.onSuccess = onSuccess;
         setLayout(new GridBagLayout());
@@ -58,30 +59,46 @@ private final Runnable onSuccess;
         gbc.gridx = 1;
         add(passwordField, gbc);
 
+        JCheckBox showPassword = new JCheckBox("Show Password");
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        add(showPassword, gbc);
+
+        char defaultEchoChar = passwordField.getEchoChar();
+        showPassword.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                passwordField.setEchoChar((char) 0);
+            } else {
+                passwordField.setEchoChar(defaultEchoChar);
+            }
+        });
+
+        passwordField.addActionListener(e -> performLogin());
+
         JButton loginButton = new JButton("Login");
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 2;
         add(loginButton, gbc);
 
         loginButton.addActionListener(evt -> performLogin());
 
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
     private void performLogin() {
-        
-        String username = usernameField.getText(), 
-            password = new String(passwordField.getPassword());
+
+        String username = usernameField.getText(),
+                password = new String(passwordField.getPassword());
 
         if (!session.login(username, password)) {
             JOptionPane.showMessageDialog(
-                this,
-                "Invalid Username or Password!",
-                "Login Error",
-                JOptionPane.ERROR_MESSAGE
-            );
+                    this,
+                    "Invalid Username or Password!",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
             return;
         }
 

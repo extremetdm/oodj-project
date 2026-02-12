@@ -22,9 +22,8 @@ import oodj_project.features.dashboard.user_management.UserController;
 
 public class TeamMemberView extends ManagementView<MemberAssignment> {
 
-    private static final double[]
-        COLUMN_WEIGHT_WITH_ACTION = { 4, 7, 4, 7, 2 },
-        COLUMN_WEIGHT_WITHOUT_ACTION = { 4, 8, 4, 8 };
+    private static final double[] COLUMN_WEIGHT_WITH_ACTION = { 4, 7, 4, 7, 2 },
+            COLUMN_WEIGHT_WITHOUT_ACTION = { 4, 8, 4, 8 };
 
     private final TeamMemberController controller;
 
@@ -35,15 +34,13 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
     private final DataList<MemberAssignment> dataTable;
 
     public TeamMemberView(
-        Session session,
-        TeamMemberController relationController,
-        UserController userController
-    ) {
+            Session session,
+            TeamMemberController relationController,
+            UserController userController) {
         super(
-            "Team Management",
-            relationController::index,
-            TeamMemberView::buildSearchLogic
-        );
+                "Lecturer Management",
+                relationController::index,
+                TeamMemberView::buildSearchLogic);
 
         controller = relationController;
 
@@ -53,10 +50,9 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
         hasActions = canEdit;
 
         formFactory = new TeamMemberFormFactory(
-            this,
-            controller,
-            userController
-        );
+                this,
+                controller,
+                userController);
 
         if (canAdd) {
             var addButton = new IconLabelButton("Add", Icons.ADD);
@@ -66,15 +62,12 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
             toolbarComponents.add(addButton);
         }
 
-        var columnWeight = hasActions?
-            COLUMN_WEIGHT_WITH_ACTION:
-            COLUMN_WEIGHT_WITHOUT_ACTION;
+        var columnWeight = hasActions ? COLUMN_WEIGHT_WITH_ACTION : COLUMN_WEIGHT_WITHOUT_ACTION;
 
         dataTable = new DataList<>(
-            columnWeight,
-            createTableHeader(),
-            this::createTableRow
-        );
+                columnWeight,
+                createTableHeader(),
+                this::createTableRow);
 
         init();
     }
@@ -84,11 +77,9 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
             var member = relation.member();
             var supervisor = relation.supervisor();
             return member.id().toString().contains(searchQuery)
-                || member.name().toLowerCase().contains(searchQuery)
-                || (supervisor != null && (
-                    supervisor.id().toString().contains(searchQuery)
-                    || supervisor.name().toLowerCase().contains(searchQuery)
-                ));
+                    || member.name().toLowerCase().contains(searchQuery)
+                    || (supervisor != null && (supervisor.id().toString().contains(searchQuery)
+                            || supervisor.name().toLowerCase().contains(searchQuery)));
         };
     }
 
@@ -99,11 +90,10 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
 
     private Component[] createTableHeader() {
         var components = new ArrayList<>(List.<Component>of(
-            DataList.createHeaderText("Lecturer ID"),
-            DataList.createHeaderText("Lecturer Name"),
-            DataList.createHeaderText("Supervisor ID"),
-            DataList.createHeaderText("Supervisor Name")
-        ));
+                DataList.createHeaderText("ID"),
+                DataList.createHeaderText("Lecturer Name"),
+                DataList.createHeaderText("Academic Leader ID"),
+                DataList.createHeaderText("Academic Leader Name")));
 
         if (hasActions) {
             var actionLabel = DataList.createHeaderText("Action");
@@ -128,11 +118,10 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
         }
 
         var components = new ArrayList<>(List.<Component>of(
-            DataList.createText(member.id().toString()),
-            DataList.createText(member.name()),
-            DataList.createText(supervisorId),
-            DataList.createText(supervisorName)
-        ));
+                DataList.createText(member.id().toString()),
+                DataList.createText(member.name()),
+                DataList.createText(supervisorId),
+                DataList.createText(supervisorName)));
 
         if (hasActions) {
             components.add(createActionMenu(relation));
@@ -147,27 +136,26 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
         actionPanel.setOpaque(false);
 
         ArrayList<Component> actionList = new ArrayList<>();
-        
-        if (canEdit) {    
+
+        if (canEdit) {
             actionList.add(createEditButton(relation));
         }
 
         actionPanel.add(Box.createHorizontalGlue());
         for (int x = 0; x < actionList.size(); x++) {
-            if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
+            if (x > 0)
+                actionPanel.add(Box.createHorizontalStrut(5));
             actionPanel.add(actionList.get(x));
         }
         actionPanel.add(Box.createHorizontalGlue());
-        
+
         return actionPanel;
     }
 
     private JButton createEditButton(MemberAssignment relation) {
         var editButton = new IconButton(Icons.EDIT);
         editButton.setToolTipText("Edit Team Relation");
-        editButton.addActionListener(event -> 
-            formFactory.getEditForm(relation, this::refreshData)
-        );
+        editButton.addActionListener(event -> formFactory.getEditForm(relation, this::refreshData));
         return editButton;
     }
 
