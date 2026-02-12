@@ -19,25 +19,24 @@ public class UserSidebarWidget extends JPanel {
     public UserSidebarWidget(Session session, Runnable onProfileClick, Runnable onLogoutClick) {
         setLayout(new BorderLayout(10, 0));
         setOpaque(false); // Match sidebar color
-        
-        setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(200, 200, 200)),
-            BorderFactory.createEmptyBorder(15, 10, 15, 10)
-        ));
 
-        JLabel avatar = new JLabel(Icons.EDIT);
+        setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(200, 200, 200)),
+                BorderFactory.createEmptyBorder(15, 10, 15, 10)));
+
+        JLabel avatar = new JLabel(Icons.PROFILE);
         add(avatar, BorderLayout.WEST);
 
         JPanel textPanel = new JPanel(new GridLayout(2, 1));
         textPanel.setOpaque(false);
-        
+
         JLabel nameLabel = new JLabel(session.currentUser().name());
         nameLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
-        
+
         JLabel roleLabel = new JLabel(session.currentUser().role().name());
         roleLabel.setFont(new Font("SansSerif", Font.PLAIN, 10));
         roleLabel.setForeground(Color.GRAY);
-        
+
         textPanel.add(nameLabel);
         textPanel.add(roleLabel);
         add(textPanel, BorderLayout.CENTER);
@@ -45,17 +44,12 @@ public class UserSidebarWidget extends JPanel {
         JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         actionsPanel.setOpaque(false);
 
-        IconButton profileButton = new IconButton(Icons.ADD);
-        profileButton.setToolTipText("Edit Profile");
-        profileButton.addActionListener(e -> onProfileClick.run());
-
-        IconButton logoutButton = new IconButton(Icons.DELETE);
+        IconButton logoutButton = new IconButton(Icons.LOGOUT);
         logoutButton.setToolTipText("Logout");
         logoutButton.addActionListener(e -> onLogoutClick.run());
 
-        actionsPanel.add(profileButton);
         actionsPanel.add(logoutButton);
-        
+
         add(actionsPanel, BorderLayout.EAST);
     }
 }
