@@ -48,6 +48,9 @@ public class LoginView extends JFrame {
         add(new JLabel("Username:"), gbc);
 
         usernameField = new JTextField(15);
+        if (session.lastUsername() != null) {
+            usernameField.setText(session.lastUsername());
+        }
         gbc.gridx = 1;
         add(usernameField, gbc);
 
@@ -56,6 +59,9 @@ public class LoginView extends JFrame {
         add(new JLabel("Password:"), gbc);
 
         passwordField = new JPasswordField(15);
+        if (session.lastPassword() != null) {
+            passwordField.setText(session.lastPassword());
+        }
         gbc.gridx = 1;
         add(passwordField, gbc);
 
@@ -74,6 +80,7 @@ public class LoginView extends JFrame {
         });
 
         passwordField.addActionListener(e -> performLogin());
+        usernameField.addActionListener(e -> passwordField.requestFocusInWindow());
 
         JButton loginButton = new JButton("Login");
         gbc.gridx = 0;
