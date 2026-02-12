@@ -27,7 +27,13 @@ public class EnrollmentController {
     }
 
     public PaginatedResult<ClassGroup> upcomingClasses(Query<ClassGroup> query) {
-        var enrolledClasses = enrollmentRepository.all()
+        var enrollments = enrollmentRepository.all();
+
+        var classOccupancy = enrollments
+            .stream()
+            .collect(Collectors.groupingBy(Enrollment::classGroup, Collectors.counting()));
+
+        var enrolledClasses = enrollments
             .stream()
             .filter(enrollment -> enrollment.student() == session.currentUser())
             .map(Enrollment::classGroup)
@@ -39,6 +45,7 @@ public class EnrollmentController {
                 classGroup -> classGroup.startDate().before(now)
                     && classGroup.lecturer() != null
                     && !enrolledClasses.contains(classGroup)
+                    && classGroup.maxCapacity() > classOccupancy.getOrDefault(classGroup, 0l)
             )
             .build();
 
