@@ -1,4 +1,12 @@
-1|admin|admin|admin|MALE|1|example-admin@email.com|016-3204998|-27000000
-2|leader|leader|leader|MALE|2|example-leader@email.com|016-3204998|12
-3|lecturer|lecturer|lecturer|FEMALE|3|example-lecturer@email.com|016-3204998|1232
-4|ZH|ZH|FYCrCSLGjg|MALE|2|youngziheng@gmail.com|01133486003|1118799324577
+1|Jay|Lim Jaywen|123|MALE|1|limjay2345@email.com|016-3204998|1114185600000
+2|DM|Tang Dao Mian|123|MALE|2|example-leader@email.com|012-3456789|12
+3|CV|Chong Vincent|123|MALE|4|example-student@email.com|012-3456789|1232
+4|ZH|Young Zi Heng|123|MALE|3|youngziheng@gmail.com|01133486003|1118799324577
+5|Russell|Chua Yi Yan|123|MALE|2|example-leader@email.com|012-3456789|12
+6|Emjay|Loo Mun Jeng|123|MALE|2|example-leader@email.com|012-3456789|1232
+7|Surely|Ong Surely|FYCrCSLGjg|FEMALE|3|example-lecturer@gmail.com|01133486003|1118799324577
+8|Ken|Ng Wei Ren|123|MALE|3|example-lecturer@gmail.com|012-3456789|12
+9|Adrial|Loo Kai Shun|123|MALE|3|example-lecturer@gmail.com|012-3456789|1232
+10|Carrie|Yap Liu Qing|FYCrCSLGjg|FEMALE|3|example-lecturer@gmail.com|01133486003|1118799324577
+11|YY|Loy Yong Yeow|123|MALE|4|example-student@email.com|012-3456789|12
+12|ZMJJKK|Chen Yu Hong|123|MALE|4|example-student@email.com|012-3456789|12

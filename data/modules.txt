@@ -1,91 +1,10 @@
-5|asd|dsasdasdas
-7|Module 6a|Module 6 Description
-8|Module 7|Module 7 Description
-9|Module 8|Module 8 Description
-10|Module 9|Module 9 Description
-12|Module 11|Module 11 Description
-13|Module 11|Module 12 Description
-14|Module 13|Module 13 Description
-15|Module 14|Module 14 Description
-16|Module 15|Module 15 Description
-18|Module 17|Module 17 Description
-19|Module 18|Module 18 Description
-20|Module 19|Module 19 Description
-21|Module 20|Module 20 Description
-22|Module 21|Module 21 Description
-23|Module 22|Module 22 Description
-24|Module 23|Module 23 Description
-25|Module 24|Module 24 Description
-26|Module 25|Module 25 Description
-27|Module 26|Module 26 Description
-28|Module 27|Module 27 Description
-29|Module 28|Module 28 Description
-30|Module 29|Module 29 Description
-31|Module 30|Module 30 Description
-32|Module 31|Module 31 Description
-33|Module 32|Module 32 Description
-34|Module 33|Module 33 Description
-35|Module 34|Module 34 Description
-36|Module 35|Module 35 Description
-37|Module 36|Module 36 Description
-38|Module 37|Module 37 Description
-39|Module 38|Module 38 Description
-40|Module 3|Module 39 Description
-41|Module 40|Module 40 Description
-42|Module 41|Module 41 Description
-43|Module 42|Module 42 Description
-44|Module 43|Module 43 Description
-45|Module 44|Module 44 Description
-46|Module 45|Module 45 Description
-47|Module 46|Module 46 Description
-48|Module 47|Module 47 Description
-49|Module 48|Module 48 Description
-50|Module 49|Module 49 Description
-51|Module 50|Module 50 Description
-52|Module 51|Module 51 Description
-53|Module 52|Module 52 Description
-54|Module 53|Module 53 Description
-55|Module 54|Module 54 Description
-56|Module 55|Module 55 Description
-57|Module 56|Module 56 Description
-58|Module 57|Module 57 Description
-59|Module 58|Module 58 Description
-60|Module 59|Module 59 Description
-61|Module 60|Module 60 Description
-62|Module 61|Module 61 Description
-63|Module 62|Module 62 Description
-64|Module 63|Module 63 Description
-65|Module 64|Module 64 Description
-66|Module 65|Module 65 Description
-67|Module 66|Module 66 Description
-68|Module 67|Module 67 Description
-69|Module 68|Module 68 Description
-70|Module 69|Module 69 Description
-71|Module 70|Module 70 Description
-72|Module 71|Module 71 Description
-73|Module 72|Module 72 Description
-74|Module 73|Module 73 Description
-75|Module 74|Module 74 Description
-76|Module 75|Module 75 Description
-77|Module 76|Module 76 Description
-78|Module 77|Module 77 Description
-79|Module 78|Module 78 Description
-80|Module 79|Module 79 Description
-81|Module 80|Module 80 Description
-82|Module 81|Module 81 Description
-83|Module 82|Module 82 Description
-84|Module 83|Module 83 Description
-85|Module 84|Module 84 Description
-86|Module 85|Module 85 Description
-87|Module 86|Module 86 Description
-88|Module 87|Module 87 Description
-89|Module 88|Module 88 Description
-90|Module 89|Module 89 Description
-91|Module 90|Module 90 Description
-92|Module 91|Module 91 Description
-93|Module 92|Module 92 Description
-94|Module 93|Module 93 Description
-95|Module 94|Module 94 Description
-96|data|wow
-97|asdasd|absjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBDabsjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBDabsjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBDabsjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBDabsjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBDabsjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBDabsjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBDabsjdhakdbdbndbnasbdjkasbdjkasbdjasjkdbKBDSKABDJKBDJKASBDKJBD
-99|Sa|
+1|Java|Module 1 Description
+2|Python|Module 2 Description
+3|Network Security|Module 3 Description
+4|Financial Management|Module 4 Description
+5|Data Analysis|Module 5 Description
+6|Switching & Routing|Module 6 Description
+7|CTF|Module 7 Description
+8|Cybersecurity|Module 8 Description
+9|UIUX|Module 9 Description
+10|Game Development|Module 10 Description

@@ -1,1 +1,11 @@
-1|A+|0|0|Distinction
+1|A+|80|100|Distinction
+2|A|75|79|Distinction
+3|B+|70|74|Credit
+4|B|65|69|Credit
+5|C+|60|64|Pass
+6|C|55|59|Pass
+7|C-|50|54|Pass
+8|D|40|49|Fail
+9|F+|30|39|Fail
+10|F|20|29|Fail
+11|F-|0|19|Fail
