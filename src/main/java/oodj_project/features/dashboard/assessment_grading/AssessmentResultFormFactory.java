@@ -3,17 +3,12 @@ package oodj_project.features.dashboard.assessment_grading;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import oodj_project.core.ui.components.filter_editor.FilterOption;
-import oodj_project.core.ui.components.filter_editor.InputStrategy;
 import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.management_view.FormFactory;
-import oodj_project.core.ui.components.sort_editor.SortOption;
-import oodj_project.features.dashboard.user_management.UserController;
 
 public class AssessmentResultFormFactory extends FormFactory<GradeBook> {
 

@@ -44,7 +44,7 @@ public class LecturerWorkloadController {
         
         var workloadList = teamMemberRepository.all()            
             .stream()
-            .filter(model -> model.supervisor() == session.currentUser())
+            .filter(model -> model.supervisor().equals(session.currentUser()))
             .map(team -> new LecturerWorkload(team.member(), classList.get(team.member())))
             .toList();
     

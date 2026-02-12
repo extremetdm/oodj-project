@@ -1,13 +1,17 @@
 package oodj_project.features.dashboard.class_management;
 
+import java.util.Date;
 import java.util.List;
+
+import com.toedter.calendar.JDateChooser;
 
 import oodj_project.core.ui.components.filter_editor.FilterOption;
 import oodj_project.core.ui.components.filter_editor.InputStrategy;
+import oodj_project.core.ui.components.form.FormSpinner;
+import oodj_project.core.ui.components.form.FormTextField;
 import oodj_project.core.ui.components.sort_editor.SortOption;
-import oodj_project.core.ui.utils.DataDefinition;
 
-public class ClassDefinition extends DataDefinition {
+public class ClassDefinition {
     public static final SortOption<ClassGroup>
         SORT_ID = SortOption.of("ID", ClassGroup::id),
         SORT_START_DATE = SortOption.of("Start Date", ClassGroup::startDate),
@@ -19,9 +23,11 @@ public class ClassDefinition extends DataDefinition {
         SORT_END_DATE
     );
 
-    public static final FilterOption<ClassGroup, ?, ?>
-        FILTER_ID = FilterOption.compare("ID", ClassGroup::id, InputStrategy.nonNegativeIntegerField()),
-        FILTER_LECTURER_NAME = FilterOption.text("Lecturer Name", classGroup -> classGroup.lecturer().name(), InputStrategy.textField()),
+    public static final FilterOption<ClassGroup, Integer, FormSpinner<Integer>>
+        FILTER_ID = FilterOption.compare("ID", ClassGroup::id, InputStrategy.nonNegativeIntegerField());
+    public static final FilterOption<ClassGroup, String, FormTextField>
+        FILTER_LECTURER_NAME = FilterOption.text("Lecturer Name", classGroup -> classGroup.lecturer().name(), InputStrategy.textField());
+    public static final FilterOption<ClassGroup, Date, JDateChooser>
         FILTER_START_DATE = FilterOption.compare("Start Date", ClassGroup::startDate, InputStrategy.dateField()),
         FILTER_END_DATE = FilterOption.compare("End Date", ClassGroup::endDate, InputStrategy.dateField());
 

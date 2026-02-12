@@ -12,17 +12,17 @@ import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.management_view.FormFactory;
 import oodj_project.features.dashboard.class_management.ClassDefinition;
 import oodj_project.features.dashboard.class_management.ClassGroup;
-import oodj_project.features.dashboard.enrolled_classes.EnrollmentController;
+import oodj_project.features.dashboard.enrolled_classes.EnrolledClassController;
 
 public class ClassRegistrationFormFactory extends FormFactory<ClassGroup> {
 
     private final Session session;
-    private final EnrollmentController controller;
+    private final EnrolledClassController controller;
 
     public ClassRegistrationFormFactory(
         Component component,
         Session session,
-        EnrollmentController controller
+        EnrolledClassController controller
     ) {
         super(
             component,

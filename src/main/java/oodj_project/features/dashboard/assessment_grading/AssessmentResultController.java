@@ -36,7 +36,9 @@ public class AssessmentResultController {
 
         if (!session.can(Permission.READ_ALL_ASSESSMENTS)) {
             classes = classes.stream()
-                .filter(classGroup -> classGroup.lecturer() == session.currentUser())
+                .filter(classGroup -> classGroup.lecturer() != null
+                    && classGroup.lecturer().equals(session.currentUser())
+                )
                 .toList();
         }
 
@@ -58,7 +60,7 @@ public class AssessmentResultController {
         var gradeBooks = getUnmarked();
 
         if (student != null) 
-            gradeBooks = gradeBooks.filter(gradeBook -> gradeBook.student() == student);
+            gradeBooks = gradeBooks.filter(gradeBook -> gradeBook.student().equals(student));
 
         return gradeBooks
             .map(GradeBook::assessment)
@@ -74,7 +76,7 @@ public class AssessmentResultController {
         var gradeBooks = getUnmarked();
 
         if (assessment != null) 
-            gradeBooks = gradeBooks.filter(gradeBook -> gradeBook.assessment() == assessment);
+            gradeBooks = gradeBooks.filter(gradeBook -> gradeBook.assessment().equals(assessment));
 
         return gradeBooks
             .map(GradeBook::student)

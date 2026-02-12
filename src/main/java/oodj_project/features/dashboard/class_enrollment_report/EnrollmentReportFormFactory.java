@@ -43,4 +43,14 @@ public class EnrollmentReportFormFactory extends FormFactory<EnrollmentReport> {
     public EnrollmentReportFormFactory(Component component) {
         super(component, SORT_OPTIONS, FILTER_OPTIONS);
     }
+
+    @Override
+    protected String getSortWindowTitle() {
+        return "Sort Enrollment Report";
+    }
+
+    @Override
+    protected String getFilterWindowTitle() {
+        return "Filter Enrollment Report";
+    }
 }

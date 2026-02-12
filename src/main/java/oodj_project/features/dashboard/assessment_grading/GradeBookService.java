@@ -2,6 +2,7 @@ package oodj_project.features.dashboard.assessment_grading;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import oodj_project.features.dashboard.assessment_management.Assessment;
@@ -9,6 +10,7 @@ import oodj_project.features.dashboard.assessment_management.AssessmentRepositor
 import oodj_project.features.dashboard.class_management.ClassGroup;
 import oodj_project.features.dashboard.enrolled_classes.Enrollment;
 import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
+import oodj_project.features.dashboard.user_management.User;
 
 public class GradeBookService {
     
@@ -62,6 +64,44 @@ public class GradeBookService {
                     })
                 );
             })
+            .toList();
+    }
+
+    public List<GradeBook> getForStudent(User student) {
+        var enrollments = enrollmentRepository.all()
+            .stream()
+            .filter(enrollment -> enrollment.student().equals(student))
+            .collect(Collectors.toMap(
+                Enrollment::classGroup,
+                enrollment -> enrollment.dropoutDate() != null
+            ));
+        
+        var assessments = assessmentRepository.all()
+            .stream()
+            .filter(assessment -> enrollments.containsKey(assessment.classGroup()))
+            .collect(Collectors.toSet());
+
+        var results = resultRepository.all()
+            .stream()
+            .filter(
+                result -> result.student().equals(student)
+                    && assessments.contains(result.assessment())
+            )
+            .collect(Collectors.toMap(
+                AssessmentResult::assessment,
+                result -> result
+            ));
+
+        return assessments.stream()
+            .map(assessment -> {
+                var hasDropped = enrollments.get(assessment.classGroup());
+                var result = results.get(assessment);
+                if (result == null && hasDropped) {
+                    return null;
+                }
+                return new GradeBook(assessment, student, result);
+            })
+            .filter(Objects::nonNull)
             .toList();
     }
 }

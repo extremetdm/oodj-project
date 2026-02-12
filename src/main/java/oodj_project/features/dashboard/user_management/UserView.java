@@ -138,7 +138,7 @@ public class UserView extends ManagementView<User> {
     }
 
     private JMenuItem createUpdateOption(User user) {
-        var editOption = new JMenuItem("Edit user");
+        var editOption = new JMenuItem("Edit user", Icons.EDIT);
         editOption.addActionListener(event -> formFactory.getEditForm(user, this::refreshData));
         return editOption;
     }
@@ -168,7 +168,7 @@ public class UserView extends ManagementView<User> {
     }
 
     private JMenuItem createDeleteOption(User user) {
-        var deleteOption = new JMenuItem("Delete user");
+        var deleteOption = new JMenuItem("Delete user", Icons.DELETE);
         deleteOption.addActionListener(event -> {
             var action = JOptionPane.showConfirmDialog(
                     this,

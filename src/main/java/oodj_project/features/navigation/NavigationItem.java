@@ -23,12 +23,13 @@ import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReportV
 import oodj_project.features.dashboard.class_management.ClassController;
 import oodj_project.features.dashboard.class_management.ClassRepository;
 import oodj_project.features.dashboard.class_management.ClassView;
-import oodj_project.features.dashboard.enrolled_classes.EnrollmentController;
+import oodj_project.features.dashboard.enrolled_classes.EnrolledClassController;
 import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
-import oodj_project.features.dashboard.enrolled_classes.EnrollmentView;
+import oodj_project.features.dashboard.enrolled_classes.EnrolledClassView;
 import oodj_project.features.dashboard.grading_system_management.GradeController;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeView;
+import oodj_project.features.dashboard.grading_system_management.GradingService;
 import oodj_project.features.dashboard.lecturer_workload_report.LecturerWorkloadController;
 import oodj_project.features.dashboard.lecturer_workload_report.LecturerWorkloadView;
 import oodj_project.features.dashboard.module_management.ModuleController;
@@ -38,6 +39,8 @@ import oodj_project.features.dashboard.permission_management.RolePermissionContr
 import oodj_project.features.dashboard.permission_management.RolePermissionRepository;
 import oodj_project.features.dashboard.role_management.RoleController;
 import oodj_project.features.dashboard.role_management.RoleRepository;
+import oodj_project.features.dashboard.student_assessment_result.StudentResultController;
+import oodj_project.features.dashboard.student_assessment_result.StudentResultView;
 import oodj_project.features.dashboard.team_management.TeamMemberController;
 import oodj_project.features.dashboard.team_management.TeamMemberRepository;
 import oodj_project.features.dashboard.team_management.TeamMemberView;
@@ -170,7 +173,7 @@ public enum NavigationItem {
         Permission.ENROLL_CLASSES,
         (context, session, navigator) -> new ClassRegistrationView(
             session,
-            new EnrollmentController(
+            new EnrolledClassController(
                 session,
                 context.get(EnrollmentRepository.class),
                 context.get(ClassRepository.class)
@@ -181,12 +184,26 @@ public enum NavigationItem {
         "My Classes",
         null,
         Permission.ENROLL_CLASSES,
-        (context, session, navigator) -> new EnrollmentView(
+        (context, session, navigator) -> new EnrolledClassView(
             session,
-            new EnrollmentController(
+            navigator,
+            new EnrolledClassController(
                 session,
                 context.get(EnrollmentRepository.class),
                 context.get(ClassRepository.class)
+            )
+        )
+    ),
+    STUDENT_ASSESSMENT_RESULTS(
+        "My Assessment Results",
+        null,
+        Permission.ENROLL_CLASSES,
+        (context, session, navigator) -> new StudentResultView(
+            session,
+            new StudentResultController(
+                session,
+                context.get(GradeBookService.class),
+                context.get(GradingService.class)
             )
         )
     );

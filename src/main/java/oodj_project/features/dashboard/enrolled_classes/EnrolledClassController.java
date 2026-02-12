@@ -10,13 +10,13 @@ import oodj_project.core.security.Session;
 import oodj_project.features.dashboard.class_management.ClassGroup;
 import oodj_project.features.dashboard.class_management.ClassRepository;
 
-public class EnrollmentController {
+public class EnrolledClassController {
 
     private final Session session;
     private final EnrollmentRepository enrollmentRepository;
     private final ClassRepository classRepository;
 
-    public EnrollmentController(
+    public EnrolledClassController(
         Session session,
         EnrollmentRepository enrollmentRepository,
         ClassRepository classRepository
@@ -35,7 +35,7 @@ public class EnrollmentController {
 
         var enrolledClasses = enrollments
             .stream()
-            .filter(enrollment -> enrollment.student() == session.currentUser())
+            .filter(enrollment -> enrollment.student().equals(session.currentUser()))
             .map(Enrollment::classGroup)
             .collect(Collectors.toSet());
 
@@ -54,7 +54,7 @@ public class EnrollmentController {
 
     public PaginatedResult<Enrollment> index(Query<Enrollment> query) {
         query = query.toBuilder()
-            .addFilter(enrollment -> enrollment.student() == session.currentUser())
+            .addFilter(enrollment -> enrollment.student().equals(session.currentUser()))
             .build();
 
         return enrollmentRepository.get(query);
@@ -65,15 +65,11 @@ public class EnrollmentController {
     }
 
     public synchronized void unenroll(Enrollment enrollment) throws IOException {
-        var now = new Date();
-        var classGroup = enrollment.classGroup();
-
-        if (classGroup.startDate().before(now)) {
-            enrollmentRepository.delete(enrollment);
-        } else if (classGroup.endDate().before(now)) {
-            enrollmentRepository.update(enrollment.id(), enrollment.withDropoutDate(now));
-        } else {
-            throw new IllegalArgumentException("Cannot unenroll completed classes.");
+        switch (enrollment.status()) {
+            case UPCOMING -> enrollmentRepository.delete(enrollment);
+            case ONGOING -> enrollmentRepository.update(enrollment.id(), enrollment.withDropoutDate(new Date()));
+            case DROPPED -> throw new IllegalArgumentException("Already unenrolled from class.");
+            case COMPLETED -> throw new IllegalArgumentException("Cannot unenroll completed classes.");
         }
     }
 }

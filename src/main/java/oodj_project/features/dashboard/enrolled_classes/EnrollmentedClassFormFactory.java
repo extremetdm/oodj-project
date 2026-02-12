@@ -8,13 +8,13 @@ import javax.swing.JOptionPane;
 
 import oodj_project.core.ui.components.management_view.FormFactory;
 
-public class EnrollmentFormFactory extends FormFactory<Enrollment> {
+public class EnrollmentedClassFormFactory extends FormFactory<Enrollment> {
 
-    private final EnrollmentController controller;
+    private final EnrolledClassController controller;
 
-    public EnrollmentFormFactory(
+    public EnrollmentedClassFormFactory(
         Component component,
-        EnrollmentController controller
+        EnrolledClassController controller
     ) {
         super(
             component,

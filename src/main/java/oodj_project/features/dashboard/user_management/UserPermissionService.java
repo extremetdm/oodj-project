@@ -22,7 +22,7 @@ public class UserPermissionService {
     public List<User> findUserByPermission(Permission permission) {
         var roles = permissionRepository.all()
             .stream()
-            .filter(rolePermission -> rolePermission.permission() == permission)
+            .filter(rolePermission -> rolePermission.permission().equals(permission))
             .map(RolePermission::role)
             .collect(Collectors.toSet());
         

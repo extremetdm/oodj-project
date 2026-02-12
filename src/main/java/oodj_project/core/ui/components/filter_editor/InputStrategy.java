@@ -8,6 +8,8 @@ import java.util.function.Supplier;
 
 import javax.swing.SpinnerNumberModel;
 
+import com.toedter.calendar.JDateChooser;
+
 import oodj_project.core.ui.components.form.FormComboBox;
 import oodj_project.core.ui.components.form.FormSpinner;
 import oodj_project.core.ui.components.form.FormTextField;
@@ -73,23 +75,31 @@ public interface InputStrategy<ComponentT extends Component, FieldT> {
 
     public static InputStrategy<FormSpinner<Double>, Double> percentageField() {
         return of(
-                () -> new FormSpinner<Double>(new SpinnerNumberModel(0, 0, 1, 0.001), "##0.0%"),
-                FormSpinner::getValue,
-                FormSpinner::setValue);
+            () -> new FormSpinner<Double>(new SpinnerNumberModel(0, 0, 1, 0.001), "##0.0%"),
+            FormSpinner::getValue,
+            FormSpinner::setValue
+        );
     }
 
     public static <FieldT> InputStrategy<FormComboBox<FieldT>, FieldT> selectField(
-            Function<FieldT, String> fieldDescriptor, List<FieldT> options) {
+    Function<FieldT, String> fieldDescriptor, List<FieldT> options) {
+        return selectField(fieldDescriptor, () -> options);
+    }
+
+    public static <FieldT> InputStrategy<FormComboBox<FieldT>, FieldT> selectField(
+    Function<FieldT, String> fieldDescriptor, Supplier<List<FieldT>> optionsSupplier) {
         return of(
-                () -> new FormComboBox<>(fieldDescriptor, options),
-                FormComboBox::getSelectedItem,
-                FormComboBox::setSelectedItem);
+            () -> new FormComboBox<>(fieldDescriptor, optionsSupplier.get()),
+            FormComboBox::getSelectedItem,
+            FormComboBox::setSelectedItem
+        );
     }
 
     public static InputStrategy<com.toedter.calendar.JDateChooser, java.util.Date> dateField() {
         return of(
-                com.toedter.calendar.JDateChooser::new,
-                com.toedter.calendar.JDateChooser::getDate,
-                com.toedter.calendar.JDateChooser::setDate);
+            JDateChooser::new,
+            JDateChooser::getDate,
+            JDateChooser::setDate
+        );
     }
 }

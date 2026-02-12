@@ -1,52 +1,63 @@
 package oodj_project.features.dashboard.enrolled_classes;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
+import javax.swing.BorderFactory;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
 
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
 import oodj_project.core.ui.components.buttons.IconButton;
+import oodj_project.core.ui.components.filter_editor.FilterOperator;
+import oodj_project.core.ui.components.filter_editor.SelectedFilterOption;
 import oodj_project.core.ui.components.management_view.DataList;
 import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.styles.Icons;
+import oodj_project.features.dashboard.class_management.ClassGroup;
 import oodj_project.features.dashboard.module_management.ModuleGrid;
+import oodj_project.features.dashboard.student_assessment_result.StudentResultDefinition;
 import oodj_project.features.dashboard.user_management.UserGrid;
+import oodj_project.features.navigation.NavigationItem;
+import oodj_project.features.navigation.Navigator;
 
-public class EnrollmentView extends ManagementView<Enrollment> {
+public class EnrolledClassView extends ManagementView<Enrollment> {
 
     private static final double[]
         COLUMN_WEIGHTS_WITH_ACTION = { 1, 6, 6, 4, 5, 2 },
         COLUMN_WEIGHTS_WITHOUT_ACTION = { 1, 7, 7, 4, 5 };
 
-    private final EnrollmentFormFactory formFactory;
+    private final EnrollmentedClassFormFactory formFactory;
 
     private final boolean hasActions, canUnenroll;
 
     private final DataList<Enrollment> dataTable;
 
-    public EnrollmentView(
+    private final Navigator navigator;
+
+    public EnrolledClassView(
         Session session,
-        EnrollmentController controller
+        Navigator navigator,
+        EnrolledClassController controller
     ) {
         super(
             "My Classes",
             controller::index,
-            EnrollmentView::buildSearchLogic
+            EnrolledClassView::buildSearchLogic
         );
+
+        this.navigator = navigator;
 
         canUnenroll = session.can(Permission.UNENROLL_CLASSES);
 
         hasActions = canUnenroll;
 
-        formFactory = new EnrollmentFormFactory(
+        formFactory = new EnrollmentedClassFormFactory(
             this,
             controller
         );
@@ -132,37 +143,52 @@ public class EnrollmentView extends ManagementView<Enrollment> {
     //         .build();
     // }
 
-    private JPanel createActionMenu(Enrollment Enrollment) {
-        var actionPanel = new JPanel();
-        actionPanel.setLayout(new BoxLayout(actionPanel, BoxLayout.X_AXIS));
-        actionPanel.setOpaque(false);
+    private IconButton createActionMenu(Enrollment enrollment) {
+        var actionMenu = new JPopupMenu();
+        actionMenu.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-        ArrayList<Component> actionList = new ArrayList<>();
+        actionMenu.add(createViewResultOption(enrollment.classGroup()));
 
-        if (canUnenroll)
-            actionList.add(createUnenrollButton(Enrollment));
-
-        actionPanel.add(Box.createHorizontalGlue());
-        for (int x = 0; x < actionList.size(); x++) {
-            if (x > 0)
-                actionPanel.add(Box.createHorizontalStrut(5));
-            actionPanel.add(actionList.get(x));
+        if (canUnenroll) {
+            switch (enrollment.status()) {
+                case UPCOMING, ONGOING -> 
+                    actionMenu.add(createUnenrollOption(enrollment));
+                default -> {}
+            }
         }
-        actionPanel.add(Box.createHorizontalGlue());
 
-        return actionPanel;
+        var menuButton = new IconButton(Icons.EDIT);
+        menuButton.setToolTipText("Show actions");
+        menuButton.addActionListener(event -> {
+            actionMenu.show(menuButton, menuButton.getWidth() / 2, menuButton.getHeight() / 2);
+        });
+
+        return menuButton;
     }
 
-
-    private JButton createUnenrollButton(Enrollment enrollment) {
-        var unenrollButton = new IconButton(Icons.DELETE);
-        unenrollButton.setToolTipText("Unenroll Class");
-        unenrollButton.addActionListener(event -> formFactory.getUnenrollForm(enrollment, this::refreshData));
-        return unenrollButton;
+    private JMenuItem createViewResultOption(ClassGroup classGroup) {
+        var viewResultOption = new JMenuItem("View Assessment Results");
+        viewResultOption.addActionListener(event -> navigator.goTo(
+            NavigationItem.STUDENT_ASSESSMENT_RESULTS,
+            new ManagementView.State<>(null, List.of(
+                new SelectedFilterOption<>(
+                    StudentResultDefinition.FILTER_CLASS_ID,
+                    FilterOperator.getCompareEqual(),
+                    classGroup.id()                    
+                )
+            ))
+        ));
+        return viewResultOption;
     }
+
+    private JMenuItem createUnenrollOption(Enrollment enrollment) {
+        var unenrollOption = new JMenuItem("Unenroll Class");
+        unenrollOption.addActionListener(event -> formFactory.getUnenrollForm(enrollment, this::refreshData));
+        return unenrollOption;
+    }    
 
     @Override
-    protected EnrollmentFormFactory getFormFactory() {
+    protected EnrollmentedClassFormFactory getFormFactory() {
         return formFactory;
     }
 }

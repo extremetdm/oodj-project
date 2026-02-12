@@ -52,8 +52,8 @@ public class RolePermissionRepository extends Repository<RolePermission> {
 
     public boolean roleHasPermission(Role role, Permission permission) {
         return findFirst(
-            model -> model.role() == role
-                && model.permission() == permission
+            model -> model.role().equals(role)
+                && model.permission().equals(permission)
         )   .isPresent();
     }
 }

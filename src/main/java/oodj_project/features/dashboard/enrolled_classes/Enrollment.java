@@ -34,10 +34,10 @@ public record Enrollment(Integer id, User student, ClassGroup classGroup, Date r
     public Status status() {
         if (dropoutDate != null) return Status.DROPPED;
         var now = new Date();
-        if (classGroup.startDate().before(now)) {
+        if (classGroup.startDate().after(now)) {
             return Status.UPCOMING;
         }
-        if (classGroup.endDate().before(now)) {
+        if (classGroup.endDate().after(now)) {
             return Status.ONGOING;
         }
         return Status.COMPLETED;

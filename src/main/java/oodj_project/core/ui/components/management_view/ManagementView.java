@@ -43,6 +43,10 @@ public abstract class ManagementView<DataT> extends JPanel implements Navigable 
 
     private final Function<String, Predicate<DataT>> searchLogicGenerator;
     private final Function<Query<DataT>, PaginatedResult<DataT>> dataProvider;
+    
+    private final IconLabelButton
+        sortButton = new IconLabelButton("Sort", SORT_ICON),
+        filterButton = new IconLabelButton("Filter", FILTER_ICON);
 
     public ManagementView(
         String title,
@@ -60,10 +64,18 @@ public abstract class ManagementView<DataT> extends JPanel implements Navigable 
         paginator = new Paginator(this::refreshData);
         searchBar = new SearchBar(paginator::goToFirstPage);
 
+        sortButton.addActionListener(event -> {
+            getFormFactory().getSortForm(sortOptions, this::applySort);
+        });
+
+        filterButton.addActionListener(event -> {
+            getFormFactory().getFilterForm(filterOptions, this::applyFilter);
+        });
+
         toolbarComponents = new ArrayList<>(List.of(
             searchBar,
-            createFilterButton(),
-            createSortButton()
+            filterButton,
+            sortButton
         ));
     }
 
@@ -133,67 +145,53 @@ public abstract class ManagementView<DataT> extends JPanel implements Navigable 
 
     protected abstract FormFactory<DataT> getFormFactory();
 
-    private IconLabelButton createSortButton() {
-        var sortButton = new IconLabelButton("Sort", SORT_ICON);
-        sortButton.addActionListener(event -> {
-            getFormFactory().getSortForm(sortOptions, appliedSortOption -> {
-                sortOptions = appliedSortOption;
-                if (sortOptions.isEmpty()) {
-                    sortButton.setBackground(null);
-                    sortButton.setForeground(null);
-                    sortButton.setText("Sort");
-                    sortButton.setToolTipText(null);
-                } else {
-                    sortButton.setBackground(new Color(225, 240, 255));
-                    sortButton.setForeground(new Color(50, 100, 200));
-                    sortButton.setText("Sort (" + sortOptions.size() + ")");
-                    String sortSummary = "<html><b>Active Sorts:</b><br>" + sortOptions.stream()
-                        .map(sortOption -> String.format(
-                            "- %s (%s)",
-                            escapeHTML(sortOption.option().label()),
-                            escapeHTML(sortOption.isDescending()? "Descending": "Ascending")
-                        ))
-                        .collect(Collectors.joining("<br>"))
-                        + "</html>";
-                    sortButton.setToolTipText(sortSummary);
-                }
-                paginator.goToFirstPage();
-            });
-        });
-
-        return sortButton;
+    private void applySort(List<SelectedSortOption<DataT>> appliedSortOption) {
+        sortOptions = appliedSortOption;
+        if (sortOptions.isEmpty()) {
+            sortButton.setBackground(null);
+            sortButton.setForeground(null);
+            sortButton.setText("Sort");
+            sortButton.setToolTipText(null);
+        } else {
+            sortButton.setBackground(new Color(225, 240, 255));
+            sortButton.setForeground(new Color(50, 100, 200));
+            sortButton.setText("Sort (" + sortOptions.size() + ")");
+            String sortSummary = "<html><b>Active Sorts:</b><br>" + sortOptions.stream()
+                .map(sortOption -> String.format(
+                    "- %s (%s)",
+                    escapeHTML(sortOption.option().label()),
+                    escapeHTML(sortOption.isDescending()? "Descending": "Ascending")
+                ))
+                .collect(Collectors.joining("<br>"))
+                + "</html>";
+            sortButton.setToolTipText(sortSummary);
+        }
+        paginator.goToFirstPage();
     }
 
-    private IconLabelButton createFilterButton() {
-        var filterButton = new IconLabelButton("Filter", FILTER_ICON);
-        filterButton.addActionListener(event -> {
-            getFormFactory().getFilterForm(filterOptions, appliedFilters -> {
-                filterOptions = appliedFilters;
-                if (filterOptions.isEmpty()) {
-                    filterButton.setBackground(null);
-                    filterButton.setForeground(null);
-                    filterButton.setText("Filter");
-                    filterButton.setToolTipText(null);
-                } else {
-                    filterButton.setBackground(new Color(225, 240, 255));
-                    filterButton.setForeground(new Color(50, 100, 200));
-                    filterButton.setText("Filter (" + filterOptions.size() + ")");
-                    String sortSummary = "<html><b>Active Filters:</b><br>" + filterOptions.stream()
-                        .map(filterOption -> String.format(
-                            "- %s %s %s",
-                            escapeHTML(filterOption.option().label()),
-                            escapeHTML(filterOption.operation().briefLabel()),
-                            escapeHTML(filterOption.criteriaLabel())
-                        ))
-                        .collect(Collectors.joining("<br>"))
-                        + "</html>";
-                    filterButton.setToolTipText(sortSummary);
-                }
-                paginator.goToFirstPage();
-            });
-        });
-
-        return filterButton;
+    private void applyFilter(List<SelectedFilterOption<DataT, ?, ?>> appliedFilters) {
+        filterOptions = appliedFilters;
+        if (filterOptions.isEmpty()) {
+            filterButton.setBackground(null);
+            filterButton.setForeground(null);
+            filterButton.setText("Filter");
+            filterButton.setToolTipText(null);
+        } else {
+            filterButton.setBackground(new Color(225, 240, 255));
+            filterButton.setForeground(new Color(50, 100, 200));
+            filterButton.setText("Filter (" + filterOptions.size() + ")");
+            String sortSummary = "<html><b>Active Filters:</b><br>" + filterOptions.stream()
+                .map(filterOption -> String.format(
+                    "- %s %s %s",
+                    escapeHTML(filterOption.option().label()),
+                    escapeHTML(filterOption.operation().briefLabel()),
+                    escapeHTML(filterOption.criteriaLabel())
+                ))
+                .collect(Collectors.joining("<br>"))
+                + "</html>";
+            filterButton.setToolTipText(sortSummary);
+        }
+        paginator.goToFirstPage();
     }
 
     public static String escapeHTML(String str) {
@@ -210,9 +208,8 @@ public abstract class ManagementView<DataT> extends JPanel implements Navigable 
     public void onNavigate(Object payload) {
         if (payload instanceof State) {
             var state = (State<DataT>) payload;
-            sortOptions = state.sortOptions;
-            filterOptions = state.filterOptions;
-            paginator.goToFirstPage();
+            applySort(state.sortOptions);
+            applyFilter(state.filterOptions);
         } else {
             refreshData();
         }

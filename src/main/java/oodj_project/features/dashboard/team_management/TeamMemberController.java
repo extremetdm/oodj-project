@@ -30,7 +30,7 @@ public class TeamMemberController {
     public List<User> getLecturersUnderMe() {
         return repository.all()
             .stream()
-            .filter(teamMember -> teamMember.supervisor() == session.currentUser())
+            .filter(teamMember -> teamMember.supervisor().equals(session.currentUser()))
             .map(TeamMember::member)
             .toList();
     }

@@ -24,11 +24,16 @@ public record FilterOperator<FieldT>(
     );
 
     public static <FieldT extends Comparable<? super FieldT>>
+    FilterOperator<FieldT> getCompareEqual() {
+        return new FilterOperator<>("= (Is equal to)", (value, criteria) -> value.compareTo(criteria) == 0, "=");
+    }
+
+    public static <FieldT extends Comparable<? super FieldT>>
     List<FilterOperator<FieldT>> getCompareOperators() {
         return List.of(
             new FilterOperator<>("< (Is less than)", (value, criteria) -> value.compareTo(criteria) < 0, "<"),
             new FilterOperator<>("≤ (Is less than or equal to)", (value, criteria) -> value.compareTo(criteria) <= 0, "≤"),
-            new FilterOperator<>("= (Is equal to)", (value, criteria) -> value.compareTo(criteria) == 0, "="),
+            getCompareEqual(),
             new FilterOperator<>("> (Is more than)", (value, criteria) -> value.compareTo(criteria) > 0, ">"),
             new FilterOperator<>("≥ (Is more than or equal to)", (value, criteria) -> value.compareTo(criteria) >= 0, "≥")
         );

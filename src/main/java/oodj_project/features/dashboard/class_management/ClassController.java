@@ -27,9 +27,11 @@ public class ClassController {
 
     public List<ClassGroup> getMyClasses() {
         return repository.all()
-                .stream()
-                .filter(classGroup -> classGroup.lecturer() == session.currentUser())
-                .toList();
+            .stream()
+            .filter(classGroup -> classGroup.lecturer() != null 
+                && classGroup.lecturer().equals(session.currentUser())
+            )
+            .toList();
     }
 
     public synchronized void create(ClassGroup classGroup) throws IOException {

@@ -20,7 +20,7 @@ import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.core.ui.styles.Icons;
 import oodj_project.features.dashboard.class_management.ClassGroup;
-import oodj_project.features.dashboard.enrolled_classes.EnrollmentController;
+import oodj_project.features.dashboard.enrolled_classes.EnrolledClassController;
 import oodj_project.features.dashboard.module_management.ModuleGrid;
 import oodj_project.features.dashboard.user_management.UserGrid;
 
@@ -35,7 +35,7 @@ public class ClassRegistrationView extends ManagementView<ClassGroup> {
 
     public ClassRegistrationView(
         Session session,
-        EnrollmentController controller
+        EnrolledClassController controller
     ) {
         super(
             "Class Registration",

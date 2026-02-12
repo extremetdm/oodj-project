@@ -12,6 +12,7 @@ import oodj_project.features.dashboard.assessment_management.AssessmentRepositor
 import oodj_project.features.dashboard.class_management.ClassRepository;
 import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
+import oodj_project.features.dashboard.grading_system_management.GradingService;
 import oodj_project.features.dashboard.module_management.ModuleRepository;
 import oodj_project.features.dashboard.permission_management.RolePermissionRepository;
 import oodj_project.features.dashboard.role_management.RoleRepository;
@@ -134,6 +135,9 @@ public class Context {
 
         var gradeBookService = new GradeBookService(results, assessments, enrollments);
         register(gradeBookService);
+
+        var gradingService = new GradingService(grades);
+        register(gradingService);
     }
 
     private File checkFile(String filePath) throws IOException {
