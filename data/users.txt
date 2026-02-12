@@ -10,3 +10,4 @@
 10|Carrie|Yap Liu Qing|FYCrCSLGjg|FEMALE|3|example-lecturer@gmail.com|01133486003|1118799324577
 11|YY|Loy Yong Yeow|123|MALE|4|example-student@email.com|012-3456789|12
 12|ZMJJKK|Chen Yu Hong|123|MALE|4|example-student@email.com|012-3456789|12
+13|Ivan|Chin Li Ming|9Z42QibMyw|MALE|4|ivanclm10@gmail.com|0124926506|-17825400000
