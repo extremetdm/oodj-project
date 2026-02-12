@@ -14,7 +14,6 @@ import javax.swing.SwingConstants;
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
 import oodj_project.core.ui.components.buttons.IconButton;
-import oodj_project.core.ui.components.buttons.IconLabelButton;
 import oodj_project.core.ui.components.management_view.DataList;
 import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.styles.Icons;
@@ -45,7 +44,6 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
         controller = relationController;
 
         canEdit = session.can(Permission.ASSIGN_SUPERVISOR);
-        var canAdd = session.can(Permission.ASSIGN_SUPERVISOR);
 
         hasActions = canEdit;
 
@@ -53,14 +51,6 @@ public class TeamMemberView extends ManagementView<MemberAssignment> {
                 this,
                 controller,
                 userController);
-
-        if (canAdd) {
-            var addButton = new IconLabelButton("Add", Icons.ADD);
-            addButton.addActionListener(event -> {
-                formFactory.getCreateForm(this::refreshData);
-            });
-            toolbarComponents.add(addButton);
-        }
 
         var columnWeight = hasActions ? COLUMN_WEIGHT_WITH_ACTION : COLUMN_WEIGHT_WITHOUT_ACTION;
 

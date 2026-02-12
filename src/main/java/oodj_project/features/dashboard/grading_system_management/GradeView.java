@@ -23,9 +23,8 @@ import oodj_project.core.ui.styles.Icons;
 
 public class GradeView extends ManagementView<Grade> {
 
-    private static final double[]
-        COLUMN_WEIGHTS_WITH_ACTION = { 7, 5, 5, 7, 2 },
-        COLUMN_WEIGHTS_WITHOUT_ACTION = { 6, 6, 6, 6 };
+    private static final double[] COLUMN_WEIGHTS_WITH_ACTION = { 7, 5, 5, 7, 2 },
+            COLUMN_WEIGHTS_WITHOUT_ACTION = { 6, 6, 6, 6 };
 
     private final Session session;
     private final GradeController controller;
@@ -34,46 +33,41 @@ public class GradeView extends ManagementView<Grade> {
     private final GradeFormFactory formFactory;
 
     private final boolean hasActions;
-    
+
     public GradeView(
-        Session session,
-        GradeController controller
-    ) {
+            Session session,
+            GradeController controller) {
         super(
-            "Grading System Management",
-            controller::index,
-            GradeView::buildSearchLogic
-        );
+                "Grading System Management",
+                controller::index,
+                GradeView::buildSearchLogic);
 
         this.session = session;
         this.controller = controller;
 
         hasActions = session.can(Permission.UPDATE_GRADES)
-            || session.can(Permission.DELETE_GRADES);
+                || session.can(Permission.DELETE_GRADES);
 
-        var columnWeight = hasActions?
-            COLUMN_WEIGHTS_WITH_ACTION:
-            COLUMN_WEIGHTS_WITHOUT_ACTION;
+        var columnWeight = hasActions ? COLUMN_WEIGHTS_WITH_ACTION : COLUMN_WEIGHTS_WITHOUT_ACTION;
 
         dataTable = new DataList<>(
-            columnWeight,
-            createTableHeader(),
-            this::createTableRow
-        );
+                columnWeight,
+                createTableHeader(),
+                this::createTableRow);
 
         formFactory = new GradeFormFactory(this, controller);
-    
+
         if (session.can(Permission.CREATE_GRADES)) {
             var addButton = new IconLabelButton("Add", Icons.ADD);
             addButton.addActionListener(event -> {
                 formFactory.getCreateForm(this::refreshData);
             });
             toolbarComponents.add(addButton);
-        }    
+        }
 
         init();
     }
-    
+
     private static Predicate<Grade> buildSearchLogic(String searchQuery) {
         return grade -> {
             return grade.name().toLowerCase().contains(searchQuery);
@@ -82,28 +76,26 @@ public class GradeView extends ManagementView<Grade> {
 
     private Component[] createTableHeader() {
         var components = new ArrayList<>(List.<Component>of(
-            DataList.createHeaderText("Name"),
-            DataList.createHeaderText("Min Mark"),
-            DataList.createHeaderText("Max Mark"),
-            DataList.createHeaderText("Classification")
-        ));
+                DataList.createHeaderText("Grade"),
+                DataList.createHeaderText("Min Mark"),
+                DataList.createHeaderText("Max Mark"),
+                DataList.createHeaderText("Classification")));
 
         if (hasActions) {
             var actionLabel = DataList.createHeaderText("Action");
             actionLabel.setHorizontalAlignment(SwingConstants.CENTER);
             components.add(actionLabel);
         }
-        
+
         return components.toArray(Component[]::new);
     }
 
     private Component[] createTableRow(Grade grade) {
         var components = new ArrayList<>(List.<Component>of(
-            DataList.createText(grade.name()),
-            DataList.createText(String.valueOf(grade.min())),
-            DataList.createText(String.valueOf(grade.max())),
-            DataList.createText(grade.classification().name())
-        ));
+                DataList.createText(grade.name()),
+                DataList.createText(String.valueOf(grade.min())),
+                DataList.createText(String.valueOf(grade.max())),
+                DataList.createText(grade.classification().name())));
 
         if (hasActions) {
             components.add(createActionMenu(grade));
@@ -118,8 +110,8 @@ public class GradeView extends ManagementView<Grade> {
         actionPanel.setOpaque(false);
 
         ArrayList<Component> actionList = new ArrayList<>();
-        
-        if (session.can(Permission.UPDATE_GRADES)) {    
+
+        if (session.can(Permission.UPDATE_GRADES)) {
             actionList.add(createEditOption(grade));
         }
 
@@ -129,7 +121,8 @@ public class GradeView extends ManagementView<Grade> {
 
         actionPanel.add(Box.createHorizontalGlue());
         for (int x = 0; x < actionList.size(); x++) {
-            if (x > 0) actionPanel.add(Box.createHorizontalStrut(5));
+            if (x > 0)
+                actionPanel.add(Box.createHorizontalStrut(5));
             actionPanel.add(actionList.get(x));
         }
         actionPanel.add(Box.createHorizontalGlue());
@@ -140,9 +133,7 @@ public class GradeView extends ManagementView<Grade> {
     private IconButton createEditOption(Grade grade) {
         var editOption = new IconButton(Icons.EDIT);
         editOption.setToolTipText("Edit grade");
-        editOption.addActionListener(event -> 
-            formFactory.getEditForm(grade, this::refreshData)
-        );
+        editOption.addActionListener(event -> formFactory.getEditForm(grade, this::refreshData));
         return editOption;
     }
 
@@ -151,16 +142,15 @@ public class GradeView extends ManagementView<Grade> {
         deleteOption.setToolTipText("Delete grade");
         deleteOption.addActionListener(event -> {
             var action = JOptionPane.showConfirmDialog(
-                this,
-                "Are you sure you want to delete grade \"" + grade.name() + "\"?",
-                "Confirm delete grade",
-                JOptionPane.YES_NO_OPTION
-            );
+                    this,
+                    "Are you sure you want to delete grade \"" + grade.name() + "\"?",
+                    "Confirm delete grade",
+                    JOptionPane.YES_NO_OPTION);
 
             if (action == JOptionPane.YES_OPTION) {
                 try {
                     controller.delete(grade);
-                    refreshData();                
+                    refreshData();
                 } catch (IOException | NoSuchElementException e) {
                     String message = switch (e) {
                         case IOException _ -> "Failed to save changes.";
@@ -179,6 +169,7 @@ public class GradeView extends ManagementView<Grade> {
     protected DataList<Grade> getContent() {
         return dataTable;
     }
+
     @Override
     protected GradeFormFactory getFormFactory() {
         return formFactory;
