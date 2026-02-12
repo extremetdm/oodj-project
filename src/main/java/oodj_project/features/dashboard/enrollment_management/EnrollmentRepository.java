@@ -39,7 +39,7 @@ public class EnrollmentRepository extends IdentifiableRepository<Enrollment> {
         );
     }
 
-private static LineParser<Enrollment> getParser(UserRepository userRepository, ClassRepository classRepository) {
+    private static LineParser<Enrollment> getParser(UserRepository userRepository, ClassRepository classRepository) {
         return args -> {
             LineParser.checkArgCount(args, 5);
             int i = 0;

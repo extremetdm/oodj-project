@@ -26,4 +26,8 @@ public record Enrollment(Integer id, User student, ClassGroup classGroup, Date r
     public Enrollment withId(int id) {
        return new Enrollment(id, student, classGroup, registerDate, dropoutDate);
     }
+
+    public Enrollment withDropoutDate(Date dropoutDate) {
+       return new Enrollment(id, student, classGroup, registerDate, dropoutDate);
+    }
 }

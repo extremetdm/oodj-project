@@ -27,6 +27,10 @@ public class Query<DataT> {
         return sorter;
     }
 
+    public Builder<DataT> toBuilder() {
+        return new Builder<>(this);
+    }
+
     public PaginatedResult<DataT> apply(Collection<DataT> data) {
         int totalItems = (int) createFilteredStream(data).count(),
             perPage = totalItems;
@@ -54,7 +58,15 @@ public class Query<DataT> {
     }
 
     public static class Builder<DataT> {
-        private final Query<DataT> query = new Query<>();
+        private final Query<DataT> query;
+
+        public Builder() {
+            this(new Query<>());
+        }
+
+        public Builder(Query<DataT> query) {
+            this.query = query;
+        }
 
         public Builder<DataT> page(int page) {
             if (page < 1) page = 1;
@@ -73,8 +85,26 @@ public class Query<DataT> {
             return this;
         }
 
+        public Builder<DataT> addFilter(Predicate<DataT> filter) {
+            query.filter = query.filter == null? filter:
+                query.filter.and(filter);
+            return this;
+        }
+
         public Builder<DataT> sortBy(Comparator<DataT> sorter) {
             query.sorter = sorter;
+            return this;
+        }
+
+        public Builder<DataT> prependSort(Comparator<DataT> sorter) {
+            query.sorter = query.sorter == null? sorter:
+                sorter.thenComparing(query.sorter);
+            return this;
+        }
+
+        public Builder<DataT> appendSort(Comparator<DataT> sorter) {
+            query.sorter = query.sorter == null? sorter:
+                query.sorter.thenComparing(sorter);
             return this;
         }
 

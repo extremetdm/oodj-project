@@ -22,7 +22,9 @@ import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReportV
 import oodj_project.features.dashboard.class_management.ClassController;
 import oodj_project.features.dashboard.class_management.ClassRepository;
 import oodj_project.features.dashboard.class_management.ClassView;
+import oodj_project.features.dashboard.enrollment_management.EnrollmentController;
 import oodj_project.features.dashboard.enrollment_management.EnrollmentRepository;
+import oodj_project.features.dashboard.enrollment_management.EnrollmentView;
 import oodj_project.features.dashboard.grading_system_management.GradeController;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeView;
@@ -156,6 +158,19 @@ public enum NavigationItem {
         (context, session, navigator) -> new EnrollmentReportView(
             session,
             new EnrollmentReportController(
+                context.get(EnrollmentRepository.class),
+                context.get(ClassRepository.class)
+            )
+        )
+    ),
+    CLASS_ENROLLMENT(
+        "Class Registration",
+        null,
+        Permission.ENROLL_CLASSES,
+        (context, session, navigator) -> new EnrollmentView(
+            session,
+            new EnrollmentController(
+                session,
                 context.get(EnrollmentRepository.class),
                 context.get(ClassRepository.class)
             )

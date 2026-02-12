@@ -3,32 +3,17 @@ package oodj_project.features.dashboard.class_management;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import oodj_project.core.security.Session;
-import oodj_project.core.ui.components.filter_editor.FilterOption;
-import oodj_project.core.ui.components.filter_editor.InputStrategy;
 import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.management_view.FormFactory;
-import oodj_project.core.ui.components.sort_editor.SortOption;
 import oodj_project.features.dashboard.module_management.ModuleController;
 import oodj_project.features.dashboard.team_management.TeamMemberController;
 
 public class ClassFormFactory extends FormFactory<ClassGroup> {
-
-    private static final List<SortOption<ClassGroup>> SORT_OPTIONS = List.of(
-            SortOption.of("ID", ClassGroup::id),
-            SortOption.of("Start Date", ClassGroup::startDate),
-            SortOption.of("End Date", ClassGroup::endDate));
-
-    private static final List<FilterOption<ClassGroup, ?, ?>> FILTER_OPTIONS = List.of(
-            FilterOption.compare("ID", ClassGroup::id, InputStrategy.nonNegativeIntegerField()),
-            FilterOption.text("Lecturer Name", classGroup -> classGroup.lecturer().name(), InputStrategy.textField()),
-            FilterOption.compare("Start Date", ClassGroup::startDate, InputStrategy.dateField()),
-            FilterOption.compare("End Date", ClassGroup::endDate, InputStrategy.dateField()));
 
     private final Session session;
     private final ClassController classController;
@@ -41,7 +26,11 @@ public class ClassFormFactory extends FormFactory<ClassGroup> {
             ClassController classController,
             ModuleController moduleController,
             TeamMemberController teamMemberController) {
-        super(component, SORT_OPTIONS, FILTER_OPTIONS);
+        super(
+            component,
+            ClassDefinition.SORT_OPTIONS,
+            ClassDefinition.FILTER_OPTIONS
+        );
         this.session = session;
         this.classController = classController;
         this.moduleController = moduleController;
