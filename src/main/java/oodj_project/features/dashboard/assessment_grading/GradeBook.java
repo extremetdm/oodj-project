@@ -2,7 +2,6 @@ package oodj_project.features.dashboard.assessment_grading;
 
 import oodj_project.features.dashboard.assessment_management.Assessment;
 import oodj_project.features.dashboard.enrolled_classes.Enrollment;
-import oodj_project.features.dashboard.user_management.User;
 
 public record GradeBook(
     Assessment assessment,

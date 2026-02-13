@@ -43,52 +43,10 @@ public class AssessmentResultEditFormContent extends JPanel {
         super();
 
         var assessmentModel = new DefaultComboBoxModel<Assessment>();
-        assessmentModel.addAll(controller.getUnmarkedAssessments());
         var studentModel = new DefaultComboBoxModel<Enrollment>();
-        studentModel.addAll(controller.getUnmarkedStudents());
 
         assessmentField = new FormComboBox<>(Assessment::name, assessmentModel);
         studentField = new FormComboBox<>(enrollment -> enrollment.student().name(), studentModel);
-
-        assessmentField.addActionListener(evt -> {
-            if (isUpdating) return;
-
-            isUpdating = true;
-
-            var selectedStudent = studentField.getSelectedItem();
-            var selectedAssessment = assessmentField.getSelectedItem();
-            studentModel.removeAllElements();
-
-            var students = controller.getUnmarkedStudents(selectedAssessment);
-            studentModel.addAll(students);
-
-            if (students.contains(selectedStudent))
-                studentModel.setSelectedItem(selectedStudent);
-
-            marksModel.setMaximum(selectedAssessment == null? null: selectedAssessment.marks());
-
-            isUpdating = false;
-        });
-
-        studentField.addActionListener(evt -> {
-            if (isUpdating) return;
-
-            isUpdating = true;
-
-            var selectedAssessment = assessmentField.getSelectedItem();
-            assessmentModel.removeAllElements();
-
-            var assessments = controller.getUnmarkedAssessments(studentField.getSelectedItem().student());
-            assessmentModel.addAll(assessments);
-
-            if (assessments.contains(selectedAssessment))
-                assessmentModel.setSelectedItem(selectedAssessment);
-            else {
-                marksModel.setMaximum(null);
-            }
-            
-            isUpdating = false;
-        });
 
         var builder = new FlexibleGridBuilder(this, 2)
             .setInsets(new Insets(5, 5, 5, 5));
@@ -104,18 +62,64 @@ public class AssessmentResultEditFormContent extends JPanel {
             //     new FormTextField(classGroup.id().toString(), false)
             // );
 
-            assessmentField.setSelectedItem(gradeBook.assessment());
-            studentField.setSelectedItem(gradeBook.enrollment());
-
             var result = gradeBook.result();
 
             if (result != null) {
                 marksField.setValue(result.marks());
                 feedbackField.setText(result.feedback());
             }
+            
+            assessmentModel.addElement(gradeBook.assessment());
+            studentModel.addElement(gradeBook.enrollment());
+            assessmentField.setSelectedItem(gradeBook.assessment());
+            studentField.setSelectedItem(gradeBook.enrollment());
 
             assessmentFieldComponent = new FormTextField(gradeBook.assessment().name(), false);
             studentFieldComponent = new FormTextField(gradeBook.enrollment().student().name(), false);
+            
+        } else {
+            assessmentModel.addAll(controller.getUnmarkedAssessments());
+            studentModel.addAll(controller.getUnmarkedStudents());
+
+            assessmentField.addActionListener(evt -> {
+                if (isUpdating) return;
+
+                isUpdating = true;
+
+                var selectedStudent = studentField.getSelectedItem();
+                var selectedAssessment = assessmentField.getSelectedItem();
+                studentModel.removeAllElements();
+
+                var students = controller.getUnmarkedStudents(selectedAssessment);
+                studentModel.addAll(students);
+
+                if (students.contains(selectedStudent))
+                    studentModel.setSelectedItem(selectedStudent);
+
+                marksModel.setMaximum(selectedAssessment == null? null: selectedAssessment.marks());
+
+                isUpdating = false;
+            });
+
+            studentField.addActionListener(evt -> {
+                if (isUpdating) return;
+
+                isUpdating = true;
+
+                var selectedAssessment = assessmentField.getSelectedItem();
+                assessmentModel.removeAllElements();
+
+                var assessments = controller.getUnmarkedAssessments(studentField.getSelectedItem().student());
+                assessmentModel.addAll(assessments);
+
+                if (assessments.contains(selectedAssessment))
+                    assessmentModel.setSelectedItem(selectedAssessment);
+                else {
+                    marksModel.setMaximum(null);
+                }
+                
+                isUpdating = false;
+            });
         }
 
         builder.add(
