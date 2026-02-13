@@ -26,6 +26,7 @@ import oodj_project.features.dashboard.class_management.ClassView;
 import oodj_project.features.dashboard.enrolled_classes.EnrolledClassController;
 import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 import oodj_project.features.dashboard.enrolled_classes.EnrolledClassView;
+import oodj_project.features.dashboard.feedback_management.FeedbackRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeController;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeView;
@@ -41,6 +42,8 @@ import oodj_project.features.dashboard.role_management.RoleController;
 import oodj_project.features.dashboard.role_management.RoleRepository;
 import oodj_project.features.dashboard.student_assessment_result.StudentResultController;
 import oodj_project.features.dashboard.student_assessment_result.StudentResultView;
+import oodj_project.features.dashboard.student_feedback.StudentFeedbackController;
+import oodj_project.features.dashboard.student_feedback.StudentFeedbackView;
 import oodj_project.features.dashboard.team_management.TeamMemberController;
 import oodj_project.features.dashboard.team_management.TeamMemberRepository;
 import oodj_project.features.dashboard.team_management.TeamMemberView;
@@ -204,6 +207,18 @@ public enum NavigationItem {
                 session,
                 context.get(GradeBookService.class),
                 context.get(GradingService.class)
+            )
+        )
+    ),
+    STUDENT_FEEDBACKS(
+        "My Feedbacks",
+        null,
+        Permission.GIVE_FEEDBACKS,
+        (context, session, navigator) -> new StudentFeedbackView(
+            new StudentFeedbackController(
+                session,
+                context.get(FeedbackRepository.class),
+                context.get(EnrollmentRepository.class)
             )
         )
     );

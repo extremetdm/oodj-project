@@ -17,12 +17,14 @@ public class GradeEditFormContent extends JPanel {
     private static final double[] COLUMN_WEIGHTS = { 0, 1 };
 
     private final FormTextField nameField = new FormTextField();
-    private final FormSpinner<Integer> minField = new FormSpinner<>(
-        new SpinnerNumberModel(0, 0, 100, 1)
-    );
-    private final FormSpinner<Integer> maxField = new FormSpinner<>(
-        new SpinnerNumberModel(0, 0, 100, 1)
-    );
+    private final FormSpinner<Integer> 
+        minField = new FormSpinner<>(
+            new SpinnerNumberModel(0, 0, 100, 1)
+        ),
+        maxField = new FormSpinner<>(
+            new SpinnerNumberModel(0, 0, 100, 1)
+        );
+        
     private final FormComboBox<Grade.Classification> classificationField = new FormComboBox<>(
         Grade.Classification::name, Grade.Classification.values()
     );

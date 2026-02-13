@@ -11,6 +11,7 @@ import oodj_project.features.dashboard.assessment_grading.GradeBookService;
 import oodj_project.features.dashboard.assessment_management.AssessmentRepository;
 import oodj_project.features.dashboard.class_management.ClassRepository;
 import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
+import oodj_project.features.dashboard.feedback_management.FeedbackRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
 import oodj_project.features.dashboard.grading_system_management.GradingService;
 import oodj_project.features.dashboard.module_management.ModuleRepository;
@@ -103,11 +104,17 @@ public class Context {
         register(assessments);
 
         var results = new AssessmentResultRepository(
-            checkFile("assessment-results"),
+            checkFile("assessment-results.txt"),
             assessments,
             users
         );
         register(results);
+
+        var feedbacks = new FeedbackRepository(
+            checkFile("feedbacks.txt"),
+            enrollments
+        );
+        register(feedbacks);
 
         // teamMembers.create(new TeamMember(users.findFirst(a -> true).get(), users.findFirst(a -> true).get()));
 

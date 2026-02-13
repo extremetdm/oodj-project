@@ -2,7 +2,6 @@ package oodj_project.features.dashboard.enrolled_classes;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -28,13 +27,11 @@ import oodj_project.features.navigation.Navigator;
 
 public class EnrolledClassView extends ManagementView<Enrollment> {
 
-    private static final double[]
-        COLUMN_WEIGHTS_WITH_ACTION = { 1, 6, 6, 4, 5, 2 },
-        COLUMN_WEIGHTS_WITHOUT_ACTION = { 1, 7, 7, 4, 5 };
+    private static final double[] COLUMN_WEIGHTS = { 1, 6, 6, 4, 5, 2 };
 
     private final EnrollmentedClassFormFactory formFactory;
 
-    private final boolean hasActions, canUnenroll;
+    private final boolean canUnenroll;
 
     private final DataList<Enrollment> dataTable;
 
@@ -55,18 +52,13 @@ public class EnrolledClassView extends ManagementView<Enrollment> {
 
         canUnenroll = session.can(Permission.UNENROLL_CLASSES);
 
-        hasActions = canUnenroll;
-
         formFactory = new EnrollmentedClassFormFactory(
             this,
             controller
         );
 
-        var columnWeight = hasActions ? 
-            COLUMN_WEIGHTS_WITH_ACTION : COLUMN_WEIGHTS_WITHOUT_ACTION;
-
         dataTable = new DataList<>(
-            columnWeight,
+            COLUMN_WEIGHTS,
             createTableHeader(),
             this::createTableRow
         );
@@ -94,36 +86,29 @@ public class EnrolledClassView extends ManagementView<Enrollment> {
     }
 
     private Component[] createTableHeader() {
-        var components = new ArrayList<>(List.<Component>of(
+        
+        var actionLabel = DataList.createHeaderText("Action");
+        actionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        return new Component[] {
             DataList.createHeaderText("Class"),
             DataList.createHeaderText("Module"),
             DataList.createHeaderText("Lecturer"),
-            DataList.createHeaderText("Status")
-        ));
-
-        if (hasActions) {
-            var actionLabel = DataList.createHeaderText("Action");
-            actionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            components.add(actionLabel);
-        }
-
-        return components.toArray(Component[]::new);
+            DataList.createHeaderText("Status"),
+            actionLabel
+        };
     }
 
     private Component[] createTableRow(Enrollment enrollment) {
         var classGroup = enrollment.classGroup();
-        var components = new ArrayList<>(List.<Component>of(
+
+        return new Component[] {
             DataList.createText(classGroup.id().toString()),
             new ModuleGrid(classGroup.module()),
             new UserGrid(classGroup.lecturer()),
-            DataList.createText(enrollment.status().name())
-        ));
-
-        if (hasActions) {
-            components.add(createActionMenu(enrollment));
-        }
-
-        return components.toArray(Component[]::new);
+            DataList.createText(enrollment.status().name()),
+            createActionMenu(enrollment)
+        };
     }
 
     // private JPanel createPeriodSection(Date startDate, Date endDate) {
