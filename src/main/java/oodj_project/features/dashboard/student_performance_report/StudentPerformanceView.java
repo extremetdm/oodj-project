@@ -17,6 +17,7 @@ import oodj_project.features.dashboard.user_management.UserGrid;
 public class StudentPerformanceView extends ManagementView<StudentPerformance> {
 
     private static final double[] COLUMN_WEIGHTS = { 6, 2, 6, 6, 4 };
+    private static final double[] COLUMN_WEIGHTS_WITH_LECTURER = { 6, 2, 6, 6, 4 };
 
     private final StudentPerformanceFormFactory formFactory;
     private final DataList<StudentPerformance> dataTable;
@@ -37,13 +38,17 @@ public class StudentPerformanceView extends ManagementView<StudentPerformance> {
 
     private static Predicate<StudentPerformance> buildSearchLogic(String searchQuery) {
         return report -> {
-            var classGroup = report.enrollment().classGroup();
+            var enrollment = report.enrollment();
+            var classGroup = enrollment.classGroup();
             var module = classGroup.module();
+            var student = enrollment.student();
             // var lecturer = classGroup.lecturer();
 
-            return classGroup.id().toString().contains(searchQuery) ||
-                module.id().toString().contains(searchQuery) ||
-                module.name().toLowerCase().contains(searchQuery);
+            return classGroup.id().toString().contains(searchQuery)
+                || module.id().toString().contains(searchQuery)
+                || module.name().toLowerCase().contains(searchQuery)
+                || student.id().toString().contains(searchQuery)
+                || student.name().toLowerCase().contains(searchQuery);
                 // lecturer.id().toString().contains(searchQuery) || 
                 // lecturer.name().toLowerCase().contains(searchQuery);
         };

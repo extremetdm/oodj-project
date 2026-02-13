@@ -8,3 +8,4 @@
 8|Cybersecurity|Module 8 Description
 9|UIUX|Module 9 Description
 10|Game Development|Module 10 Description
+11|Digital Thinking|Think digitally

@@ -52,9 +52,9 @@ public class ClassPerformanceView extends ManagementView<ClassPerformance> {
             var classGroup = report.classGroup();
             var module = classGroup.module();
 
-            return classGroup.id().toString().contains(searchQuery) ||
-                module.id().toString().contains(searchQuery) ||
-                module.name().toLowerCase().contains(searchQuery);
+            return classGroup.id().toString().contains(searchQuery)
+                || module.id().toString().contains(searchQuery)
+                || module.name().toLowerCase().contains(searchQuery);
         };
     }
 
