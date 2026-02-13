@@ -15,14 +15,14 @@ import oodj_project.core.ui.components.form.FormTextArea;
 import oodj_project.core.ui.components.form.FormTextField;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.features.dashboard.assessment_management.Assessment;
-import oodj_project.features.dashboard.user_management.User;
+import oodj_project.features.dashboard.enrolled_classes.Enrollment;
 
 public class AssessmentResultEditFormContent extends JPanel {
 
     private static final double[] COLUMN_WEIGHTS = { 0, 1 };
 
     private final FormComboBox<Assessment> assessmentField;
-    private final FormComboBox<User> studentField;
+    private final FormComboBox<Enrollment> studentField;
 
     private final SpinnerNumberModel marksModel = new SpinnerNumberModel(0, 0, null, 1);
     private final FormSpinner<Integer> marksField = new FormSpinner<>(marksModel);
@@ -44,11 +44,11 @@ public class AssessmentResultEditFormContent extends JPanel {
 
         var assessmentModel = new DefaultComboBoxModel<Assessment>();
         assessmentModel.addAll(controller.getUnmarkedAssessments());
-        var studentModel = new DefaultComboBoxModel<User>();
+        var studentModel = new DefaultComboBoxModel<Enrollment>();
         studentModel.addAll(controller.getUnmarkedStudents());
 
         assessmentField = new FormComboBox<>(Assessment::name, assessmentModel);
-        studentField = new FormComboBox<>(User::name, studentModel);
+        studentField = new FormComboBox<>(enrollment -> enrollment.student().name(), studentModel);
 
         assessmentField.addActionListener(evt -> {
             if (isUpdating) return;
@@ -78,7 +78,7 @@ public class AssessmentResultEditFormContent extends JPanel {
             var selectedAssessment = assessmentField.getSelectedItem();
             assessmentModel.removeAllElements();
 
-            var assessments = controller.getUnmarkedAssessments(studentField.getSelectedItem());
+            var assessments = controller.getUnmarkedAssessments(studentField.getSelectedItem().student());
             assessmentModel.addAll(assessments);
 
             if (assessments.contains(selectedAssessment))
@@ -105,7 +105,7 @@ public class AssessmentResultEditFormContent extends JPanel {
             // );
 
             assessmentField.setSelectedItem(gradeBook.assessment());
-            studentField.setSelectedItem(gradeBook.student());
+            studentField.setSelectedItem(gradeBook.enrollment());
 
             var result = gradeBook.result();
 
@@ -115,7 +115,7 @@ public class AssessmentResultEditFormContent extends JPanel {
             }
 
             assessmentFieldComponent = new FormTextField(gradeBook.assessment().name(), false);
-            studentFieldComponent = new FormTextField(gradeBook.student().name(), false);
+            studentFieldComponent = new FormTextField(gradeBook.enrollment().student().name(), false);
         }
 
         builder.add(

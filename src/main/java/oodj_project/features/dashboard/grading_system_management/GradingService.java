@@ -10,7 +10,11 @@ public class GradingService {
         this.repository = repository;
     }
 
-    public Grade calculate(int marks, int maxMarks) {
+    public Grade calculate(Number marks, Number maxMarks) {
+        return calculate(100d * marks.doubleValue() / maxMarks.doubleValue());
+    }
+
+    public Grade calculate(double percentage) {
         var grades = repository.all()
             .stream()
             .sorted(
@@ -20,7 +24,6 @@ public class GradingService {
             )
             .toList();
 
-        var percentage = 100d * marks / maxMarks;
         for (var grade : grades) {
             if (percentage <= grade.max() && percentage >= grade.min()) {
                 return grade;

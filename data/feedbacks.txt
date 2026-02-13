@@ -1,1 +1,2 @@
-0|4|9|Lecturer explains concept clearly, assessments are relevant to industry
+1|4|9|Lecturer explains concept clearly, assessments are relevant to industry
+2|5|1|Lecturer horrible

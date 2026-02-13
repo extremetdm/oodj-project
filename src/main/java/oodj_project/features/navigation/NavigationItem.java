@@ -23,9 +23,11 @@ import oodj_project.features.dashboard.class_enrollment_report.EnrollmentReportV
 import oodj_project.features.dashboard.class_management.ClassController;
 import oodj_project.features.dashboard.class_management.ClassRepository;
 import oodj_project.features.dashboard.class_management.ClassView;
+import oodj_project.features.dashboard.class_performance_report.ClassPerformanceController;
+import oodj_project.features.dashboard.class_performance_report.ClassPerformanceView;
 import oodj_project.features.dashboard.enrolled_classes.EnrolledClassController;
-import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 import oodj_project.features.dashboard.enrolled_classes.EnrolledClassView;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 import oodj_project.features.dashboard.feedback_management.FeedbackController;
 import oodj_project.features.dashboard.feedback_management.FeedbackRepository;
 import oodj_project.features.dashboard.feedback_management.FeedbackView;
@@ -46,6 +48,9 @@ import oodj_project.features.dashboard.student_assessment_result.StudentResultCo
 import oodj_project.features.dashboard.student_assessment_result.StudentResultView;
 import oodj_project.features.dashboard.student_feedback.StudentFeedbackController;
 import oodj_project.features.dashboard.student_feedback.StudentFeedbackView;
+import oodj_project.features.dashboard.student_performance_report.StudentPerformanceController;
+import oodj_project.features.dashboard.student_performance_report.StudentPerformanceService;
+import oodj_project.features.dashboard.student_performance_report.StudentPerformanceView;
 import oodj_project.features.dashboard.team_management.TeamMemberController;
 import oodj_project.features.dashboard.team_management.TeamMemberRepository;
 import oodj_project.features.dashboard.team_management.TeamMemberView;
@@ -233,6 +238,33 @@ public enum NavigationItem {
             new FeedbackController(
                 session,
                 context.get(FeedbackRepository.class)
+            )
+        )
+    ),
+    STUDENT_PERFORMANCE_REPORT(
+        "Student Performance Report",
+        null,
+        Permission.READ_STUDENT_PERFORMANCE,
+        (context, session, navigator) -> new StudentPerformanceView(
+            session,
+            new StudentPerformanceController(
+                session,
+                context.get(EnrollmentRepository.class),
+                context.get(StudentPerformanceService.class)
+            )
+        )
+    ),
+    CLASS_PERFORMANCE_REPORT(
+        "Class Performance Report",
+        null,
+        Permission.READ_CLASS_PERFORMANCE,
+        (context, session, navigator) -> new ClassPerformanceView(
+            session,
+            new ClassPerformanceController(
+                session,
+                context.get(EnrollmentRepository.class),
+                context.get(StudentPerformanceService.class),
+                context.get(GradingService.class)
             )
         )
     );

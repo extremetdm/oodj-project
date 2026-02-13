@@ -8,17 +8,17 @@ import oodj_project.core.data.repository.LineFormatter;
 import oodj_project.core.data.repository.LineParser;
 import oodj_project.core.data.validation.Rule;
 import oodj_project.features.dashboard.assessment_management.AssessmentRepository;
-import oodj_project.features.dashboard.user_management.UserRepository;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 
 public class AssessmentResultRepository extends IdentifiableRepository<AssessmentResult> {
     public AssessmentResultRepository(
         File file,
         AssessmentRepository assessmentRepository,
-        UserRepository userRepository
+        EnrollmentRepository enrollmentRepository
     ) throws IOException {
         super(
             file,
-            getParser(assessmentRepository, userRepository),
+            getParser(assessmentRepository, enrollmentRepository),
             AssessmentResultRepository::format,
             Rule.unique(
                 AssessmentResult::id,
@@ -29,7 +29,7 @@ public class AssessmentResultRepository extends IdentifiableRepository<Assessmen
 
     private static LineParser<AssessmentResult> getParser(
         AssessmentRepository assessmentRepository,
-        UserRepository userRepository
+        EnrollmentRepository enrollmentRepository
     ) {
         return args -> {
             LineParser.checkArgCount(args, 5);
@@ -37,7 +37,7 @@ public class AssessmentResultRepository extends IdentifiableRepository<Assessmen
             return new AssessmentResult(
                 LineParser.parseInt(args[i++], "ID"),
                 LineParser.parseField(args[i++], "Assessment", assessmentRepository),
-                LineParser.parseField(args[i++], "Student", userRepository),
+                LineParser.parseField(args[i++], "Enrollment", enrollmentRepository),
                 LineParser.parseInt(args[i++], "Marks"),
                 args[i++]
             );
@@ -48,7 +48,7 @@ public class AssessmentResultRepository extends IdentifiableRepository<Assessmen
         return new String[] {
             LineFormatter.formatField(result),
             LineFormatter.formatField(result.assessment()),
-            LineFormatter.formatField(result.student()),
+            LineFormatter.formatField(result.enrollment()),
             String.valueOf(result.marks()), 
             result.feedback()
         };

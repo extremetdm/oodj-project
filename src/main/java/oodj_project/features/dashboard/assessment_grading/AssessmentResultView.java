@@ -79,7 +79,7 @@ public class AssessmentResultView extends ManagementView<GradeBook> {
     private static Predicate<GradeBook> buildSearchLogic(String searchQuery) {
         return gradeBook -> {
             var assessment = gradeBook.assessment();
-            var student = gradeBook.student();
+            var student = gradeBook.enrollment().student();
             return student.id().toString().contains(searchQuery)
                 || student.name().toLowerCase().contains(searchQuery)
                 || assessment.id().toString().contains(searchQuery)
@@ -117,7 +117,7 @@ public class AssessmentResultView extends ManagementView<GradeBook> {
 
     private Component[] createTableRow(GradeBook gradeBook) {
         var assessment = gradeBook.assessment();
-        var student = gradeBook.student();
+        var student = gradeBook.enrollment().student();
         var result = gradeBook.result();
 
         String marks, feedback;

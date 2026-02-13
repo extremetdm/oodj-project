@@ -31,16 +31,13 @@ public class GradeBookService {
     public List<GradeBook> getForClasses(List<ClassGroup> classes) {
         var classSet = new HashSet<>(classes);
 
-        var classStudents = enrollmentRepository.all()
+        var classEnrollments = enrollmentRepository.all()
             .stream()
             .filter(enrollment -> 
                 classSet.contains(enrollment.classGroup())
                    && enrollment.dropoutDate() == null
             )
-            .collect(Collectors.groupingBy(
-                Enrollment::classGroup,
-                Collectors.mapping(Enrollment::student, Collectors.toList())
-            ));
+            .collect(Collectors.groupingBy(Enrollment::classGroup));
 
         var classAssessments = assessmentRepository.all()
             .stream()
@@ -54,12 +51,12 @@ public class GradeBookService {
 
         return classes.stream()
             .flatMap(classGroup -> {
-                var students = classStudents.getOrDefault(classGroup, List.of());
+                var enrollments = classEnrollments.getOrDefault(classGroup, List.of());
                 var assessments = classAssessments.getOrDefault(classGroup, List.of());
                 
                 return assessments.stream().flatMap(assessment ->
-                    students.stream().map(student -> {
-                        var key = new GradeBook.Key(assessment, student);
+                    enrollments.stream().map(enrollment -> {
+                        var key = new GradeBook.Key(assessment, enrollment);
                         return new GradeBook(key, assessmentResults.getOrDefault(key, null));
                     })
                 );
@@ -73,7 +70,7 @@ public class GradeBookService {
             .filter(enrollment -> enrollment.student().equals(student))
             .collect(Collectors.toMap(
                 Enrollment::classGroup,
-                enrollment -> enrollment.dropoutDate() != null
+                enrollment -> enrollment
             ));
         
         var assessments = assessmentRepository.all()
@@ -84,7 +81,7 @@ public class GradeBookService {
         var results = resultRepository.all()
             .stream()
             .filter(
-                result -> result.student().equals(student)
+                result -> result.enrollment().student().equals(student)
                     && assessments.contains(result.assessment())
             )
             .collect(Collectors.toMap(
@@ -94,12 +91,12 @@ public class GradeBookService {
 
         return assessments.stream()
             .map(assessment -> {
-                var hasDropped = enrollments.get(assessment.classGroup());
+                var enrollment = enrollments.get(assessment.classGroup());
                 var result = results.get(assessment);
-                if (result == null && hasDropped) {
+                if (result == null && enrollment.dropoutDate() != null) {
                     return null;
                 }
-                return new GradeBook(assessment, student, result);
+                return new GradeBook(assessment, enrollment, result);
             })
             .filter(Objects::nonNull)
             .toList();

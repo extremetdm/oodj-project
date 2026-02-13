@@ -17,6 +17,7 @@ import oodj_project.features.dashboard.grading_system_management.GradingService;
 import oodj_project.features.dashboard.module_management.ModuleRepository;
 import oodj_project.features.dashboard.permission_management.RolePermissionRepository;
 import oodj_project.features.dashboard.role_management.RoleRepository;
+import oodj_project.features.dashboard.student_performance_report.StudentPerformanceService;
 import oodj_project.features.dashboard.team_management.TeamMemberRepository;
 import oodj_project.features.dashboard.user_management.UserPermissionService;
 import oodj_project.features.dashboard.user_management.UserRepository;
@@ -106,7 +107,7 @@ public class Context {
         var results = new AssessmentResultRepository(
             checkFile("assessment-results.txt"),
             assessments,
-            users
+            enrollments
         );
         register(results);
 
@@ -145,6 +146,9 @@ public class Context {
 
         var gradingService = new GradingService(grades);
         register(gradingService);
+
+        var performanceService = new StudentPerformanceService(results, gradingService);
+        register(performanceService);
     }
 
     private File checkFile(String filePath) throws IOException {

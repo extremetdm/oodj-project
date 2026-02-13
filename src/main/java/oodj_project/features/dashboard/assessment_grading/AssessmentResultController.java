@@ -10,6 +10,7 @@ import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
 import oodj_project.features.dashboard.assessment_management.Assessment;
 import oodj_project.features.dashboard.class_management.ClassRepository;
+import oodj_project.features.dashboard.enrolled_classes.Enrollment;
 import oodj_project.features.dashboard.user_management.User;
 
 public class AssessmentResultController {
@@ -60,7 +61,7 @@ public class AssessmentResultController {
         var gradeBooks = getUnmarked();
 
         if (student != null) 
-            gradeBooks = gradeBooks.filter(gradeBook -> gradeBook.student().equals(student));
+            gradeBooks = gradeBooks.filter(gradeBook -> gradeBook.enrollment().student().equals(student));
 
         return gradeBooks
             .map(GradeBook::assessment)
@@ -68,18 +69,18 @@ public class AssessmentResultController {
             .toList();
     }
 
-    public List<User> getUnmarkedStudents() {
+    public List<Enrollment> getUnmarkedStudents() {
         return getUnmarkedStudents(null);
     }
 
-    public List<User> getUnmarkedStudents(Assessment assessment) {
+    public List<Enrollment> getUnmarkedStudents(Assessment assessment) {
         var gradeBooks = getUnmarked();
 
         if (assessment != null) 
             gradeBooks = gradeBooks.filter(gradeBook -> gradeBook.assessment().equals(assessment));
 
         return gradeBooks
-            .map(GradeBook::student)
+            .map(GradeBook::enrollment)
             .distinct()
             .toList();
     }
