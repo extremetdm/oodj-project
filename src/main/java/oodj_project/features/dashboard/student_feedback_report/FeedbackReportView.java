@@ -12,7 +12,6 @@ import oodj_project.core.ui.components.management_view.DataList;
 import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.features.dashboard.module_management.ModuleGrid;
-import oodj_project.features.dashboard.user_management.UserGrid;
 
 public class FeedbackReportView extends ManagementView<FeedbackReport> {
 
@@ -22,7 +21,7 @@ public class FeedbackReportView extends ManagementView<FeedbackReport> {
     private final DataList<FeedbackReport> dataTable;
     
     public FeedbackReportView(Session session, FeedbackReportController controller) {
-        super("Enrollment Report", controller::index, FeedbackReportView::buildSearchLogic);
+        super("Student Feedback Report", controller::index, FeedbackReportView::buildSearchLogic);
 
         dataTable = new DataList<>(
             COLUMN_WEIGHT,

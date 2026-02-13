@@ -22,7 +22,7 @@ public class ClassPerformanceView extends ManagementView<ClassPerformance> {
     private final DataList<ClassPerformance> dataTable;
     
     public ClassPerformanceView(Session session, ClassPerformanceController controller) {
-        super("Enrollment Report", controller::index, ClassPerformanceView::buildSearchLogic);
+        super("Class Performance Report", controller::index, ClassPerformanceView::buildSearchLogic);
 
         dataTable = new DataList<>(
             COLUMN_WEIGHTS,
