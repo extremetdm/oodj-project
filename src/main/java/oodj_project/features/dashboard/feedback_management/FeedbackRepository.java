@@ -29,7 +29,7 @@ public class FeedbackRepository extends IdentifiableRepository<Feedback> {
         EnrollmentRepository enrollmentRepository
     ) {
         return args -> {
-            LineParser.checkArgCount(args, 5);
+            LineParser.checkArgCount(args, 4);
             int i = 0;
             return new Feedback(
                 LineParser.parseInt(args[i++], "ID"),

@@ -1,24 +1,35 @@
 package oodj_project.features.dashboard.feedback_management;
 
 import java.io.IOException;
-import java.util.List;
 
 import oodj_project.core.data.repository.PaginatedResult;
 import oodj_project.core.data.repository.Query;
+import oodj_project.core.security.Permission;
+import oodj_project.core.security.Session;
 
 public class FeedbackController {
 
+    private final Session session;
     private final FeedbackRepository repository;
 
-    public FeedbackController(FeedbackRepository repository) {
+    public FeedbackController(
+        Session session,
+        FeedbackRepository repository
+    ) {
+        this.session = session;
         this.repository = repository;
     }
 
-    public List<Feedback> index() {
-        return repository.all();
-    }
+    // public List<Feedback> index() {
+    //     return repository.all();
+    // }
 
     public PaginatedResult<Feedback> index(Query<Feedback> query) {
+        if (!session.can(Permission.READ_ALL_FEEDBACKS)) {
+            query = query.toBuilder()
+                .addFilter(feedback -> feedback.enrollment().classGroup().lecturer().equals(session.currentUser()))
+                .build();
+        }
         return repository.get(query);
     }
 

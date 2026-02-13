@@ -5,13 +5,12 @@ import java.util.List;
 import oodj_project.core.ui.components.filter_editor.FilterOption;
 import oodj_project.core.ui.components.form.FormSpinner;
 import oodj_project.core.ui.components.sort_editor.SortOption;
-import oodj_project.features.dashboard.class_management.ClassDefinition;
+import oodj_project.features.dashboard.enrolled_classes.EnrollmentDefinition;
 
 public class StudentFeedbackDefinition {
     
     public static final SortOption<StudentFeedback>
-        SORT_CLASS_ID = ClassDefinition.SORT_ID.derive("Class ID", studentFeedback -> studentFeedback.enrollment().classGroup());
-
+        SORT_CLASS_ID = EnrollmentDefinition.SORT_CLASS_ID.derive(StudentFeedback::enrollment);
     public static final List<SortOption<StudentFeedback>> SORT_OPTIONS = List.of(
         SORT_CLASS_ID
         // SortOption.of("Class ID", studentFeedback -> studentFeedback.classGroup().id()),
@@ -29,7 +28,7 @@ public class StudentFeedbackDefinition {
     );
 
     public static final FilterOption<StudentFeedback, Integer, FormSpinner<Integer>>
-        FILTER_CLASS_ID = ClassDefinition.FILTER_ID.derive("Class ID", studentFeedback -> studentFeedback.enrollment().classGroup());
+        FILTER_CLASS_ID = EnrollmentDefinition.FILTER_CLASS_ID.derive(StudentFeedback::enrollment);
 
     public static final List<FilterOption<StudentFeedback, ?, ?>> FILTER_OPTIONS = List.of(
         FILTER_CLASS_ID

@@ -26,7 +26,9 @@ import oodj_project.features.dashboard.class_management.ClassView;
 import oodj_project.features.dashboard.enrolled_classes.EnrolledClassController;
 import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 import oodj_project.features.dashboard.enrolled_classes.EnrolledClassView;
+import oodj_project.features.dashboard.feedback_management.FeedbackController;
 import oodj_project.features.dashboard.feedback_management.FeedbackRepository;
+import oodj_project.features.dashboard.feedback_management.FeedbackView;
 import oodj_project.features.dashboard.grading_system_management.GradeController;
 import oodj_project.features.dashboard.grading_system_management.GradeRepository;
 import oodj_project.features.dashboard.grading_system_management.GradeView;
@@ -219,6 +221,18 @@ public enum NavigationItem {
                 session,
                 context.get(FeedbackRepository.class),
                 context.get(EnrollmentRepository.class)
+            )
+        )
+    ),
+    FEEDBACK_MANAGEMENT(
+        "Feedback Management",
+        null,
+        Permission.READ_FEEDBACKS,
+        (context, session, navigator) -> new FeedbackView(
+            session,
+            new FeedbackController(
+                session,
+                context.get(FeedbackRepository.class)
             )
         )
     );
