@@ -26,7 +26,6 @@ import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.core.ui.styles.Icons;
 import oodj_project.features.dashboard.module_management.ModuleController;
-import oodj_project.features.dashboard.module_management.ModuleGrid;
 import oodj_project.features.dashboard.team_management.TeamMemberController;
 import oodj_project.features.dashboard.user_management.User;
 import oodj_project.features.dashboard.user_management.UserGrid;
@@ -45,30 +44,33 @@ public class ClassView extends ManagementView<ClassGroup> {
     private final DataList<ClassGroup> dataTable;
 
     public ClassView(
-            Session session,
-            ClassController classController,
-            ModuleController moduleController,
-            TeamMemberController teamMemberController) {
+        Session session,
+        ClassController classController,
+        ModuleController moduleController,
+        TeamMemberController teamMemberController
+    ) {
         super(
-                "Class Management",
-                classController::index,
-                ClassView::buildSearchLogic);
+            "Class Management",
+            classController::index,
+            ClassView::buildSearchLogic
+        );
 
         controller = classController;
 
         canUpdate = session.can(Permission.UPDATE_CLASSES)
-                || session.can(Permission.ASSIGN_TEACHER);
+            || session.can(Permission.ASSIGN_TEACHER);
 
         canDelete = session.can(Permission.DELETE_CLASSES);
 
         hasActions = canUpdate || canDelete;
 
         formFactory = new ClassFormFactory(
-                this,
-                session,
-                classController,
-                moduleController,
-                teamMemberController);
+            this,
+            session,
+            classController,
+            moduleController,
+            teamMemberController
+        );
 
         if (session.can(Permission.CREATE_CLASSES)) {
             var addButton = new IconLabelButton("Add", Icons.ADD);

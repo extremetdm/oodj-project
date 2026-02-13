@@ -158,9 +158,7 @@ public abstract class Repository<DataT extends Record> {
         if (query != null) {
             return query.apply(models);
         }
-
-        int totalItems = models.size();
-        return new PaginatedResult<>(List.copyOf(models), 1, totalItems, totalItems);
+        return PaginatedResult.singlePage(List.copyOf(models));
     }
 
     /**
