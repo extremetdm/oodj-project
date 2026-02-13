@@ -48,6 +48,8 @@ import oodj_project.features.dashboard.student_assessment_result.StudentResultCo
 import oodj_project.features.dashboard.student_assessment_result.StudentResultView;
 import oodj_project.features.dashboard.student_feedback.StudentFeedbackController;
 import oodj_project.features.dashboard.student_feedback.StudentFeedbackView;
+import oodj_project.features.dashboard.student_feedback_report.FeedbackReportController;
+import oodj_project.features.dashboard.student_feedback_report.FeedbackReportView;
 import oodj_project.features.dashboard.student_performance_report.StudentPerformanceController;
 import oodj_project.features.dashboard.student_performance_report.StudentPerformanceService;
 import oodj_project.features.dashboard.student_performance_report.StudentPerformanceView;
@@ -265,6 +267,19 @@ public enum NavigationItem {
                 context.get(EnrollmentRepository.class),
                 context.get(StudentPerformanceService.class),
                 context.get(GradingService.class)
+            )
+        )
+    ),
+    STUDENT_FEEDBACK_REPORT(
+        "Student Feedback Report",
+        null,
+        Permission.READ_FEEDBACK_REPORT,
+        (context, session, navigator) -> new FeedbackReportView(
+            session,
+            new FeedbackReportController(
+                session,
+                context.get(FeedbackRepository.class),
+                context.get(EnrollmentRepository.class)
             )
         )
     );

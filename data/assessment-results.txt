@@ -1,1 +1,2 @@
 1|2|4|20|No bugs
+2|2|5|10|A lot of bugs, missing functionalities
