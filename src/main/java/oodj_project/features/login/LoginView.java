@@ -1,25 +1,25 @@
 package oodj_project.features.login;
 
-import oodj_project.core.data.Context;
-import oodj_project.features.dashboard.user_management.User;
-import oodj_project.features.dashboard.user_management.UserController;
-import oodj_project.features.dashboard.user_management.UserRepository;
-import oodj_project.core.security.Session;
-
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ItemEvent;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.JCheckBox;
-import java.awt.event.ItemEvent;
+
+import oodj_project.core.data.Context;
+import oodj_project.core.security.Session;
+import oodj_project.features.dashboard.user_management.User;
+import oodj_project.features.dashboard.user_management.UserController;
+import oodj_project.features.dashboard.user_management.UserRepository;
 
 public class LoginView extends JFrame {
     private final JTextField usernameField;
@@ -152,9 +152,11 @@ public class LoginView extends JFrame {
             }
 
             var userController = new UserController(
-                    userRepository,
-                    context.get(oodj_project.features.dashboard.user_management.UserPermissionService.class),
-                    context.get(oodj_project.features.services.EmailService.class));
+                session,
+                userRepository,
+                context.get(oodj_project.features.dashboard.user_management.UserPermissionService.class),
+                context.get(oodj_project.features.services.EmailService.class)
+            );
 
             userController.resetPassword(user);
             JOptionPane.showMessageDialog(this, "A new password has been sent to your email.", "Success",

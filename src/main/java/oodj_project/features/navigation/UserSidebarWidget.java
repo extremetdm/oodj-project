@@ -10,13 +10,21 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import oodj_project.core.data.Context;
 import oodj_project.core.security.Session;
 import oodj_project.core.ui.components.buttons.IconButton;
 import oodj_project.core.ui.styles.Icons;
+import oodj_project.features.dashboard.user_management.UserController;
+import oodj_project.features.dashboard.user_management.UserPermissionService;
+import oodj_project.features.dashboard.user_management.UserRepository;
+import oodj_project.features.edit_profile.EditProfileFormFactory;
+import oodj_project.features.services.EmailService;
 
 public class UserSidebarWidget extends JPanel {
 
-    public UserSidebarWidget(Session session, Runnable onProfileClick, Runnable onLogoutClick) {
+    public UserSidebarWidget(
+        Context context, Session session, Runnable onLogoutClick
+    ) {
         setLayout(new BorderLayout(10, 0));
         setOpaque(false); // Match sidebar color
 
@@ -44,10 +52,29 @@ public class UserSidebarWidget extends JPanel {
         JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         actionsPanel.setOpaque(false);
 
+        var editProfile = new EditProfileFormFactory(
+            this,
+            new UserController(
+                session,
+                context.get(UserRepository.class), 
+                context.get(UserPermissionService.class),
+                context.get(EmailService.class)
+            )
+        );
+
+        var editProfileButton = new IconButton(Icons.EDIT);
+        editProfileButton.setToolTipText("Edit Profile");
+        editProfileButton.addActionListener(event -> 
+            editProfile.getEditForm(session.currentUser(), () -> {
+                repaint();
+                revalidate();
+            })
+        );
+        actionsPanel.add(editProfileButton);
+
         IconButton logoutButton = new IconButton(Icons.LOGOUT);
         logoutButton.setToolTipText("Logout");
         logoutButton.addActionListener(e -> onLogoutClick.run());
-
         actionsPanel.add(logoutButton);
 
         add(actionsPanel, BorderLayout.EAST);

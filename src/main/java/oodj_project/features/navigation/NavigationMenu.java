@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import oodj_project.core.data.Context;
 import oodj_project.core.security.Session;
 
 public class NavigationMenu extends JPanel {
@@ -22,7 +23,7 @@ public class NavigationMenu extends JPanel {
 
     private final JPanel listPanel = new JPanel();
 
-    public NavigationMenu(Session session, Navigator navigator, Runnable onLogout) {
+    public NavigationMenu(Context context, Session session, Navigator navigator, Runnable onLogout) {
         super(new BorderLayout());
 
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
@@ -36,7 +37,9 @@ public class NavigationMenu extends JPanel {
 
         add(listPanel, BorderLayout.CENTER);
 
-        add(new UserSidebarWidget(session, null, onLogout), BorderLayout.SOUTH);
+        add(new UserSidebarWidget(
+            context, session, onLogout
+        ), BorderLayout.SOUTH);
     }
 
     private void addButton(String label, Icon icon, ActionListener action) {

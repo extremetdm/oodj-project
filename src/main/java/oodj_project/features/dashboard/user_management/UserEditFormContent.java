@@ -6,6 +6,7 @@ import java.util.function.BiPredicate;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 
 import com.toedter.calendar.JDateChooser;
 
@@ -20,11 +21,13 @@ public class UserEditFormContent extends JPanel {
 
     private static final double[] COLUMN_WEIGHTS = { 0, 1 };
 
+    private final JPasswordField passwordField = new JPasswordField(PasswordGenerator.generate(10));
+
     private final FormTextField usernameField = new FormTextField(),
-            passwordField = new FormTextField(PasswordGenerator.generate(10)),
-            nameField = new FormTextField(),
-            emailField = new FormTextField(),
-            phoneField = new FormTextField();
+        // passwordField = new FormTextField(PasswordGenerator.generate(10)),
+        nameField = new FormTextField(),
+        emailField = new FormTextField(),
+        phoneField = new FormTextField();
 
     private final FormComboBox<Role> roleField;
     private final FormComboBox<Gender> genderField = new FormComboBox<>(Gender::name, Gender.values());
@@ -33,9 +36,10 @@ public class UserEditFormContent extends JPanel {
     private final JDateChooser dateOfBirthField = new JDateChooser();
 
     public UserEditFormContent(
-            List<Role> roles,
-            List<User> supervisors,
-            BiPredicate<Role, Permission> permissionChecker) {
+        List<Role> roles,
+        List<User> supervisors,
+        BiPredicate<Role, Permission> permissionChecker
+    ) {
         this(roles, supervisors, permissionChecker, null);
     }
 
@@ -131,13 +135,14 @@ public class UserEditFormContent extends JPanel {
 
     public User getFormData() {
         return new User(
-                usernameField.getText(),
-                nameField.getText(),
-                passwordField.getText(),
-                genderField.getSelectedItem(),
-                roleField.getSelectedItem(),
-                emailField.getText(),
-                phoneField.getText(),
-                dateOfBirthField.getDate());
+            usernameField.getText(),
+            nameField.getText(),
+            new String(passwordField.getPassword()),
+            genderField.getSelectedItem(),
+            roleField.getSelectedItem(),
+            emailField.getText(),
+            phoneField.getText(),
+            dateOfBirthField.getDate()
+        );
     }
 }

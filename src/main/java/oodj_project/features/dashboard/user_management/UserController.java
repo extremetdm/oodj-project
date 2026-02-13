@@ -5,17 +5,22 @@ import java.util.List;
 
 import oodj_project.core.data.repository.PaginatedResult;
 import oodj_project.core.data.repository.Query;
+import oodj_project.core.security.Session;
 import oodj_project.features.services.EmailService;
 
 public class UserController {
+    private final Session session;
     private final UserRepository repository;
     private final UserPermissionService permissionService;
     private final EmailService emailService;
 
     public UserController(
-            UserRepository repository,
-            UserPermissionService permissionService,
-            EmailService emailService) {
+        Session session,
+        UserRepository repository,
+        UserPermissionService permissionService,
+        EmailService emailService
+    ) {
+        this.session = session;
         this.repository = repository;
         this.permissionService = permissionService;
         this.emailService = emailService;
@@ -42,6 +47,8 @@ public class UserController {
     public synchronized void update(int id, User user) throws IOException {
         validate(user);
         repository.update(id, user);
+        if (session.currentUser().id() == id)
+            session.login(user.username(), user.password());
     }
 
     public synchronized void resetPassword(User user) throws IOException {

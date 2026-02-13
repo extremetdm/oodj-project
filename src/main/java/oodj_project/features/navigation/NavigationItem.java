@@ -70,6 +70,7 @@ public enum NavigationItem {
         (context, session, navigator) -> new UserView(
             session,
             new UserController(
+                session,
                 context.get(UserRepository.class), 
                 context.get(UserPermissionService.class),
                 context.get(EmailService.class)
@@ -123,6 +124,7 @@ public enum NavigationItem {
                 context.get(TeamMemberRepository.class),
                 context.get(UserPermissionService.class)),
             new UserController(
+                session,
                 context.get(UserRepository.class),
                 context.get(UserPermissionService.class),
                 context.get(EmailService.class)

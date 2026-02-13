@@ -1,9 +1,12 @@
 package oodj_project.features.dashboard.student_performance_report;
 
+import java.util.List;
+
 import oodj_project.core.data.repository.PaginatedResult;
 import oodj_project.core.data.repository.Query;
 import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
+import oodj_project.features.dashboard.enrolled_classes.Enrollment;
 import oodj_project.features.dashboard.enrolled_classes.EnrollmentRepository;
 
 public class StudentPerformanceController {
@@ -22,17 +25,23 @@ public class StudentPerformanceController {
         this.performanceService = performanceService;
     }
 
-    public PaginatedResult<StudentPerformance> index(Query<StudentPerformance> query) {
+    private List<Enrollment> getEnrollments() {
         var enrollments = enrollmentRepository.all();
 
-        if (!session.can(Permission.READ_ALL_STUDENT_PERFORMANCE)) {
-            enrollments = enrollments.stream()
-                .filter(enrollment -> {
-                    var lecturer = enrollment.classGroup().lecturer();
-                    return lecturer != null && lecturer.equals(session.currentUser());
-                })
-                .toList();
+        if (session.can(Permission.READ_ALL_STUDENT_PERFORMANCE)) {
+            return enrollments;
         }
+
+        return enrollments.stream()
+            .filter(enrollment -> {
+                var lecturer = enrollment.classGroup().lecturer();
+                return lecturer != null && lecturer.equals(session.currentUser());
+            })
+            .toList();
+    }
+
+    public PaginatedResult<StudentPerformance> index(Query<StudentPerformance> query) {
+        var enrollments = getEnrollments();
 
         var performanceList = performanceService.getForEnrollments(enrollments);
     

@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
 
         var navigator = new Navigator(context, session, contentLayout, contentPanel);
         
-        var menu = new NavigationMenu(session, navigator, () -> {
+        var menu = new NavigationMenu(context, session, navigator, () -> {
             dispose();
             session.logout();
             onLogout.run();
