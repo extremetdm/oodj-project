@@ -5,6 +5,7 @@ import java.awt.Insets;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import javax.swing.SpinnerNumberModel;
 
@@ -43,7 +44,9 @@ public class ClassEditFormContent extends JPanel {
         super();
 
         moduleField = new FormComboBox<>(Module::name, modules);
-        lecturerField = new FormComboBox<>(User::name, lecturers);
+        var lecturerModel = new DefaultComboBoxModel<User>();
+        lecturerModel.addAll(lecturers);
+        lecturerField = new FormComboBox<>(User::name, lecturerModel);
 
         var builder = new FlexibleGridBuilder(this, 4)
             .setInsets(new Insets(5, 5, 5, 5));
@@ -64,12 +67,6 @@ public class ClassEditFormContent extends JPanel {
                 new FormLabel("ID"),
                 new FormTextField(classGroup.id().toString(), false)
             );
-
-            capacityField.setValue(classGroup.maxCapacity());
-            moduleField.setSelectedItem(classGroup.module());
-            lecturerField.setSelectedItem(classGroup.lecturer());
-            startDateField.setDate(classGroup.startDate());
-            endDateField.setDate(classGroup.endDate());
 
             if (!canUpdate) {
                 moduleFieldComponent = new FormTextField(
@@ -95,7 +92,15 @@ public class ClassEditFormContent extends JPanel {
                     "(unassigned)":
                     classGroup.lecturer().name();
                 lecturerFieldComponent = new FormTextField(lecturerName, false);
+                
+                lecturerModel.addElement(classGroup.lecturer());
             }
+
+            capacityField.setValue(classGroup.maxCapacity());
+            moduleField.setSelectedItem(classGroup.module());
+            lecturerField.setSelectedItem(classGroup.lecturer());
+            startDateField.setDate(classGroup.startDate());
+            endDateField.setDate(classGroup.endDate());
         }
 
         builder.add(
