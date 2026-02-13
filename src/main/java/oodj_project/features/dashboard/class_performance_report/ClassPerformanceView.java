@@ -2,30 +2,42 @@ package oodj_project.features.dashboard.class_performance_report;
 
 import java.awt.Component;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import oodj_project.core.security.Permission;
 import oodj_project.core.security.Session;
 import oodj_project.core.ui.components.management_view.DataList;
 import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.features.dashboard.grading_system_management.Grade;
 import oodj_project.features.dashboard.module_management.ModuleGrid;
+import oodj_project.features.dashboard.user_management.UserGrid;
 
 public class ClassPerformanceView extends ManagementView<ClassPerformance> {
 
-    private static final double[] COLUMN_WEIGHTS = { 1, 3, 5, 5, 5, 5 };
+    private static final double[] COLUMN_WEIGHTS = { 1, 4, 5, 5, 5, 4 };
+    private static final double[] COLUMN_WEIGHTS_WITH_LECTURER = { 1, 4, 4, 4, 4, 4, 3 };
 
     private final ClassPerformanceFormFactory formFactory;
     private final DataList<ClassPerformance> dataTable;
+
+    private final boolean showLecturer;
     
     public ClassPerformanceView(Session session, ClassPerformanceController controller) {
         super("Class Performance Report", controller::index, ClassPerformanceView::buildSearchLogic);
 
+        showLecturer = session.can(Permission.READ_ALL_CLASS_PERFORMANCE)
+            || session.can(Permission.READ_TEAM_CLASS_PERFORMANCE);
+
+        var columnWeights = showLecturer? COLUMN_WEIGHTS_WITH_LECTURER: COLUMN_WEIGHTS;
+
         dataTable = new DataList<>(
-            COLUMN_WEIGHTS,
+            columnWeights,
             createTableHeader(),
             this::createTableRow,
             70
@@ -47,14 +59,23 @@ public class ClassPerformanceView extends ManagementView<ClassPerformance> {
     }
 
     private Component[] createTableHeader() {
-        return new Component[] {
+        var components = new ArrayList<>(List.<Component>of(
             DataList.createHeaderText("Class"),
-            DataList.createHeaderText("Module"),
+            DataList.createHeaderText("Module")
+        ));
+
+        if (showLecturer) {
+            components.add(DataList.createHeaderText("Lecturer"));
+        }
+
+        components.addAll(List.of(
             DataList.createHeaderText("Min. Marks"),
             DataList.createHeaderText("Avg. Marks"),
             DataList.createHeaderText("Max. Marks"),
-            DataList.createHeaderText("Pass Rate"),            
-        };
+            DataList.createHeaderText("Pass Rate")
+        ));
+        
+        return components.toArray(Component[]::new);
     }
 
     private Component[] createTableRow(ClassPerformance report) {
@@ -62,14 +83,23 @@ public class ClassPerformanceView extends ManagementView<ClassPerformance> {
         var summary = report.summary();
         var maxMarks = report.maxMarks();
 
-        return new Component[] {
+        var components = new ArrayList<>(List.<Component>of(
             DataList.createText(classGroup.id().toString()),
-            new ModuleGrid(classGroup.module()),
+            new ModuleGrid(classGroup.module())
+        ));
+
+        if (showLecturer) {
+            components.add(new UserGrid(classGroup.lecturer()));
+        }
+
+        components.addAll(List.of(
             createMarksSection(summary.getMin(), maxMarks, report.minGrade()),
             createMarksSection((int) summary.getAverage(), maxMarks, report.avgGrade()),
             createMarksSection(summary.getMax(), maxMarks, report.maxGrade()),
             createPassRateSection(report)
-        };
+        ));
+
+        return components.toArray(Component[]::new);
     }
 
     private JPanel createMarksSection(int marks, int maxMarks, Grade grade) {        
