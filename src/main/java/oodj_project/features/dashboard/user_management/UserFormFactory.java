@@ -79,7 +79,7 @@ public class UserFormFactory extends FormFactory<User> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating user", JOptionPane.ERROR_MESSAGE);
             }
         };
@@ -112,7 +112,7 @@ public class UserFormFactory extends FormFactory<User> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing user", JOptionPane.ERROR_MESSAGE);
             }
         };

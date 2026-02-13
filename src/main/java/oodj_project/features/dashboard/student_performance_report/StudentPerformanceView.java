@@ -16,7 +16,7 @@ import oodj_project.features.dashboard.user_management.UserGrid;
 
 public class StudentPerformanceView extends ManagementView<StudentPerformance> {
 
-    private static final double[] COLUMN_WEIGHTS = { 6, 6, 6, 4, 2 };
+    private static final double[] COLUMN_WEIGHTS = { 6, 2, 6, 6, 4 };
 
     private final StudentPerformanceFormFactory formFactory;
     private final DataList<StudentPerformance> dataTable;

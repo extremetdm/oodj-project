@@ -73,7 +73,7 @@ public class ClassFormFactory extends FormFactory<ClassGroup> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating class",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -107,7 +107,7 @@ public class ClassFormFactory extends FormFactory<ClassGroup> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing class", JOptionPane.ERROR_MESSAGE);
             }
         };

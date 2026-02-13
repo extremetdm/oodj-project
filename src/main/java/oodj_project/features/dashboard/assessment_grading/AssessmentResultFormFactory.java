@@ -78,7 +78,7 @@ public class AssessmentResultFormFactory extends FormFactory<GradeBook> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalStateException|IllegalArgumentException|IOException e) {
                 String title = isCreate? "Error creating assessment result":
                     "Error editing assessment result";
                 JOptionPane.showMessageDialog(window, e.getMessage(), title, JOptionPane.ERROR_MESSAGE);

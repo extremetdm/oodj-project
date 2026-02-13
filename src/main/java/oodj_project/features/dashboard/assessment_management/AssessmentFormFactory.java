@@ -74,7 +74,7 @@ public class AssessmentFormFactory extends FormFactory<Assessment> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalStateException|IllegalArgumentException|IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating assessment", JOptionPane.ERROR_MESSAGE);
             }
         };
@@ -104,7 +104,7 @@ public class AssessmentFormFactory extends FormFactory<Assessment> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalStateException|IllegalArgumentException|IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing assessment", JOptionPane.ERROR_MESSAGE);
             }
         };

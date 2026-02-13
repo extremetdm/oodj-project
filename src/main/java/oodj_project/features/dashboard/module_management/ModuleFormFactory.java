@@ -69,7 +69,7 @@ public class ModuleFormFactory extends FormFactory<Module> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalStateException|IllegalArgumentException|IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating module", JOptionPane.ERROR_MESSAGE);
             }
         };
@@ -98,7 +98,7 @@ public class ModuleFormFactory extends FormFactory<Module> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalStateException|IllegalArgumentException|IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing module", JOptionPane.ERROR_MESSAGE);
             }
         };

@@ -71,7 +71,7 @@ public class GradeFormFactory extends FormFactory<Grade> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating grade",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -101,7 +101,7 @@ public class GradeFormFactory extends FormFactory<Grade> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing grade", JOptionPane.ERROR_MESSAGE);
             }
         };

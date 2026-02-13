@@ -15,9 +15,15 @@ public class UserRepository extends IdentifiableRepository<User> {
             file,
             getParser(roleRepository),
             UserRepository::format,
-            Rule.unique(
-                User::id,
-                new IllegalStateException("dupe")
+            Rule.compose(
+                Rule.unique(
+                    User::id,
+                    model -> new IllegalStateException("Duplicate User ID: " + model.id())
+                ),
+                Rule.unique(
+                    User::username,
+                    model -> new IllegalStateException("Duplicate Username: " + model.username())
+                )
             )
         );
     }

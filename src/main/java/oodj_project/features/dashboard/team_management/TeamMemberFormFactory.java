@@ -97,7 +97,7 @@ public class TeamMemberFormFactory extends FormFactory<MemberAssignment> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 String title = isCreate ? "Error assigning academic leader" : "Error editing lecturer assignment";
                 JOptionPane.showMessageDialog(window, e.getMessage(), title, JOptionPane.ERROR_MESSAGE);
             }

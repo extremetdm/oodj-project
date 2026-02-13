@@ -70,7 +70,7 @@ public class StudentFeedbackFormFactory extends FormFactory<StudentFeedback> {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException|IOException e) {
+            } catch (IllegalStateException|IllegalArgumentException|IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing feedback", JOptionPane.ERROR_MESSAGE);
             }
         };

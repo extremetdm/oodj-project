@@ -66,7 +66,7 @@ public class ClassRegistrationFormFactory extends FormFactory<ClassGroup> {
                     onCreate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error creating user", JOptionPane.ERROR_MESSAGE);
             }
         };

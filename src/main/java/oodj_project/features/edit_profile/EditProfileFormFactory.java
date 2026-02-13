@@ -52,7 +52,7 @@ public class EditProfileFormFactory {
                     onUpdate.run();
                 window.dispose();
 
-            } catch (IllegalArgumentException | IOException e) {
+            } catch (IllegalStateException | IllegalArgumentException | IOException e) {
                 JOptionPane.showMessageDialog(window, e.getMessage(), "Error editing user", JOptionPane.ERROR_MESSAGE);
             }
         };

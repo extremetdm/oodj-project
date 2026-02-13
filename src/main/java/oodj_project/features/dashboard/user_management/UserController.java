@@ -65,12 +65,6 @@ public class UserController {
     private void validate(User user) throws IllegalArgumentException {
         validateString(user.name(), "Name");
         validateString(user.username(), "Username");
-
-        var existingUser = repository.findFirst(existing -> existing.username().equalsIgnoreCase(user.username()));
-
-        if (existingUser.isPresent() && !existingUser.get().id().equals(user.id())) {
-            throw new IllegalArgumentException("Username already exists!");
-        }
     }
 
     private void validateString(String string, String fieldName) throws IllegalArgumentException {
