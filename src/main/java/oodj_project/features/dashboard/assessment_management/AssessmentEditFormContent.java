@@ -38,7 +38,7 @@ public class AssessmentEditFormContent extends JPanel {
     ) {
         super();
 
-        classField = new FormComboBox<>(classGroup -> classGroup.id().toString(), classes);
+        classField = new FormComboBox<>(classGroup -> classGroup.id() + " - " + classGroup.module().name(), classes);
 
         var builder = new FlexibleGridBuilder(this, 2)
             .setInsets(new Insets(5, 5, 5, 5));

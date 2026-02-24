@@ -137,7 +137,10 @@ public enum NavigationItem {
         Permission.READ_ASSESSMENTS,
         (context, session, navigator) -> new AssessmentView(
             session,
-            new AssessmentController(context.get(AssessmentRepository.class)),
+            new AssessmentController(
+                session,
+                context.get(AssessmentRepository.class)
+            ),
             new ClassController(session, context.get(ClassRepository.class))
         )
     ),
