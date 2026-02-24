@@ -23,7 +23,10 @@ public class FeedbackReportDefinition {
         SORT_CLASS_ID,
         SORT_MODULE_ID,
         SORT_MODULE_NAME,
-        SORT_FEEDBACK_RATE
+        SORT_FEEDBACK_RATE,
+        SORT_MIN_SCORE,
+        SORT_AVG_SCORE,
+        SORT_MAX_SCORE
     );
 
     public static final FilterOption<FeedbackReport, Integer, FormSpinner<Integer>>
