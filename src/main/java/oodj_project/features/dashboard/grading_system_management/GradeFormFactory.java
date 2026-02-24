@@ -17,19 +17,23 @@ import oodj_project.core.ui.components.sort_editor.SortOption;
 public class GradeFormFactory extends FormFactory<Grade> {
 
     private static final List<SortOption<Grade>> SORT_OPTIONS = List.of(
-            SortOption.text("Name", Grade::name)
-    // SortOption.text("Description", Module::description)
+        SortOption.text("Grade", Grade::name),
+        SortOption.of("Min marks", Grade::min),
+        SortOption.of("Max marks", Grade::max)
     );
 
     private static final List<FilterOption<Grade, ?, ?>> FILTER_OPTIONS = List.of(
-            FilterOption.text("Name", Grade::name, InputStrategy.textField()),
-            FilterOption.sameAs(
-                    "Classification",
-                    Grade::classification,
-                    InputStrategy.selectField(
-                            Grade.Classification::name,
-                            List.of(Grade.Classification.values())),
-                    Grade.Classification::name));
+        FilterOption.text("Grade", Grade::name, InputStrategy.textField()),
+        FilterOption.sameAs(
+            "Classification",
+            Grade::classification,
+            InputStrategy.selectField(
+                Grade.Classification::name,
+                List.of(Grade.Classification.values())
+            ),
+            Grade.Classification::name
+        )
+    );
 
     private final GradeController controller;
 

@@ -17,7 +17,11 @@ public record SelectedFilterOption<DataT, FieldT, ComponentT extends Component>(
     }
 
     public boolean test(DataT data) {
-        return operation.operation()
-            .test(option.fieldExtractor().apply(data), criteria);
+        try {
+            return operation.operation()
+                .test(option.fieldExtractor().apply(data), criteria);
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }

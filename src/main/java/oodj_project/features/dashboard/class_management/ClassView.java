@@ -26,6 +26,7 @@ import oodj_project.core.ui.components.management_view.ManagementView;
 import oodj_project.core.ui.layout.FlexibleGridBuilder;
 import oodj_project.core.ui.styles.Icons;
 import oodj_project.features.dashboard.module_management.ModuleController;
+import oodj_project.features.dashboard.module_management.ModuleGrid;
 import oodj_project.features.dashboard.team_management.TeamMemberController;
 import oodj_project.features.dashboard.user_management.User;
 import oodj_project.features.dashboard.user_management.UserGrid;
@@ -128,7 +129,7 @@ public class ClassView extends ManagementView<ClassGroup> {
     private Component[] createTableRow(ClassGroup classGroup) {
         var components = new ArrayList<>(List.<Component>of(
                 DataList.createText(classGroup.id().toString()),
-                DataList.createText(classGroup.module().name()),
+                new ModuleGrid(classGroup.module()),
                 createLecturerSection(classGroup.lecturer()),
                 DataList.createText(String.valueOf(classGroup.maxCapacity())),
                 createPeriodSection(classGroup.startDate(), classGroup.endDate())));

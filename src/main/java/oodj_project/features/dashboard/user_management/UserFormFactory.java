@@ -12,16 +12,11 @@ import oodj_project.core.ui.components.filter_editor.FilterOption;
 import oodj_project.core.ui.components.filter_editor.InputStrategy;
 import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.management_view.FormFactory;
-import oodj_project.core.ui.components.sort_editor.SortOption;
 import oodj_project.features.dashboard.permission_management.RolePermissionController;
 import oodj_project.features.dashboard.role_management.Role;
 import oodj_project.features.dashboard.role_management.RoleController;
 
 public class UserFormFactory extends FormFactory<User> {
-
-    private static final List<SortOption<User>> SORT_OPTIONS = List.of(
-            SortOption.of("User ID", User::id));
-
     private final UserController userController;
     private final RoleController roleController;
     private final RolePermissionController permissionController;
@@ -31,13 +26,15 @@ public class UserFormFactory extends FormFactory<User> {
             UserController userController,
             RoleController roleController,
             RolePermissionController permissionController) {
-        super(component, SORT_OPTIONS, List.of(
-                FilterOption.compare("User ID", User::id, InputStrategy.nonNegativeIntegerField()),
-                FilterOption.sameAs(
-                        "Role",
-                        User::role,
-                        InputStrategy.selectField(Role::name, roleController.index()),
-                        Role::name)));
+        super(component, UserDefinition.SORT_OPTIONS, List.of(
+            UserDefinition.FILTER_ID,
+            FilterOption.sameAs(
+                "Role",
+                User::role,
+                InputStrategy.selectField(Role::name, roleController::index),
+                Role::name
+            )
+        ));
         this.userController = userController;
         this.roleController = roleController;
         this.permissionController = permissionController;

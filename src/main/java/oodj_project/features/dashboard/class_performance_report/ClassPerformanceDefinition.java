@@ -9,7 +9,9 @@ import oodj_project.features.dashboard.class_management.ClassDefinition;
 
 public class ClassPerformanceDefinition {
     public static final SortOption<ClassPerformance>
-        SORT_CLASS_ID = ClassDefinition.SORT_ID.derive("Class ID", ClassPerformance::classGroup);
+        SORT_CLASS_ID = ClassDefinition.SORT_ID.derive("Class ID", ClassPerformance::classGroup),
+        SORT_MODULE_ID = ClassDefinition.SORT_MODULE_ID.derive(ClassPerformance::classGroup),
+        SORT_MODULE_NAME = ClassDefinition.SORT_MODULE_NAME.derive(ClassPerformance::classGroup);
     
     public static final List<SortOption<ClassPerformance>> SORT_OPTIONS = List.of(
         SORT_CLASS_ID      

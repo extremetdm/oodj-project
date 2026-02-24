@@ -3,36 +3,19 @@ package oodj_project.features.dashboard.module_management;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import oodj_project.core.ui.components.filter_editor.FilterOption;
-import oodj_project.core.ui.components.filter_editor.InputStrategy;
 import oodj_project.core.ui.components.form.Form;
 import oodj_project.core.ui.components.management_view.FormFactory;
-import oodj_project.core.ui.components.sort_editor.SortOption;
 
-public class ModuleFormFactory extends FormFactory<Module> {
-
-    private static final List<SortOption<Module>> SORT_OPTIONS = List.of(
-        SortOption.of("ID", Module::id),
-        SortOption.text("Name", Module::name),
-        SortOption.text("Description", Module::description)
-    );
-
-    private static final List<FilterOption<Module, ?, ?>> FILTER_OPTIONS = List.of(
-        FilterOption.compare("ID", Module::id, InputStrategy.positiveIntegerField()),
-        FilterOption.text("Name", Module::name, InputStrategy.textField()),
-        FilterOption.text("Description", Module::description, InputStrategy.textField())
-    );
-    
+public class ModuleFormFactory extends FormFactory<Module> {    
 
     private final ModuleController controller;
 
     public ModuleFormFactory(Component component, ModuleController controller) {
-        super(component, SORT_OPTIONS, FILTER_OPTIONS);
+        super(component, ModuleDefinition.SORT_OPTIONS, ModuleDefinition.FILTER_OPTIONS);
         this.controller = controller;
     }
 

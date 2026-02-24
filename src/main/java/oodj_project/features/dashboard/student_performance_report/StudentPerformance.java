@@ -23,7 +23,7 @@ public record StudentPerformance(
     }
 
     public double percentage() {
-        return 100d * marks() / maxMarks();
+        return (double) marks() / maxMarks();
     }
 
     public StudentPerformance withGrade(Grade grade) {
