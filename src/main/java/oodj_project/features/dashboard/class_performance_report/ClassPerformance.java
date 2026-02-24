@@ -51,6 +51,10 @@ public record ClassPerformance(
             .count();
     }
 
+    public double passRate() {
+        return (double) passCount() / totalStudents();
+    }
+
     public int totalStudents() {
         return studentPerformances.size();
     }
@@ -79,5 +83,17 @@ public record ClassPerformance(
                 performance -> performance.grade(),
                 Collectors.counting()
             ));
+    }
+
+    public double minMarkPercentage() {
+        return ((double) summary().getMin()) / maxMarks();
+    }
+
+    public double avgMarkPercentage() {
+        return summary().getAverage() / maxMarks();
+    }
+
+    public double maxMarkPercentage() {
+        return ((double) summary().getMax()) / maxMarks();
     }
 }

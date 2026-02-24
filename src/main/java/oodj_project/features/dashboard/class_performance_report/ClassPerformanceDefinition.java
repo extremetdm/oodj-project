@@ -3,7 +3,9 @@ package oodj_project.features.dashboard.class_performance_report;
 import java.util.List;
 
 import oodj_project.core.ui.components.filter_editor.FilterOption;
+import oodj_project.core.ui.components.filter_editor.InputStrategy;
 import oodj_project.core.ui.components.form.FormSpinner;
+import oodj_project.core.ui.components.form.FormTextField;
 import oodj_project.core.ui.components.sort_editor.SortOption;
 import oodj_project.features.dashboard.class_management.ClassDefinition;
 
@@ -11,40 +13,42 @@ public class ClassPerformanceDefinition {
     public static final SortOption<ClassPerformance>
         SORT_CLASS_ID = ClassDefinition.SORT_ID.derive("Class ID", ClassPerformance::classGroup),
         SORT_MODULE_ID = ClassDefinition.SORT_MODULE_ID.derive(ClassPerformance::classGroup),
-        SORT_MODULE_NAME = ClassDefinition.SORT_MODULE_NAME.derive(ClassPerformance::classGroup);
+        SORT_MODULE_NAME = ClassDefinition.SORT_MODULE_NAME.derive(ClassPerformance::classGroup),
+        SORT_MIN_MARK = SortOption.of("Min. marks (%)", ClassPerformance::minMarkPercentage),
+        SORT_AVG_MARK = SortOption.of("Avg. marks (%)", ClassPerformance::avgMarkPercentage),
+        SORT_MAX_MARK = SortOption.of("Max. marks (%)", ClassPerformance::maxMarkPercentage),
+        SORT_PASS_RATE = SortOption.of("Pass Rate (%)", ClassPerformance::passRate);
     
     public static final List<SortOption<ClassPerformance>> SORT_OPTIONS = List.of(
-        SORT_CLASS_ID      
-        // SortOption.of("Class ID", report -> report.classGroup().id()),
-        // SortOption.of("Module ID", report -> report.classGroup().module().id()),
-        // SortOption.text("Module name", report -> report.classGroup().module().name()),
-        // SortOption.of("Lecturer ID", report -> report.classGroup().lecturer().id()),
-        // SortOption.text("Lecturer name", report -> report.classGroup().lecturer().name()),
-        // SortOption.of("Occupancy rate (%)", EnrollmentReport::occupancyRate),
-        // SortOption.of("Total occupants", EnrollmentReport::totalOccupants),
-        // SortOption.of("Total vacancies", EnrollmentReport::totalVacancies),
-        // SortOption.of("Max class capacity", report -> report.classGroup().maxCapacity()),
-        // SortOption.of("Dropout rate (%)", EnrollmentReport::dropoutRate),
-        // SortOption.of("Total dropouts", EnrollmentReport::totalDropouts),
-        // SortOption.of("Total enrollments", report -> report.enrollments().size())
+        SORT_CLASS_ID,
+        SORT_MODULE_ID,
+        SORT_MODULE_NAME,
+        SORT_MIN_MARK,
+        SORT_AVG_MARK,
+        SORT_MAX_MARK,
+        SORT_PASS_RATE
     );
 
     public static final FilterOption<ClassPerformance, Integer, FormSpinner<Integer>>
-        FILTER_CLASS_ID = ClassDefinition.FILTER_ID.derive("Class ID", ClassPerformance::classGroup);
+        FILTER_CLASS_ID = ClassDefinition.FILTER_ID.derive("Class ID", ClassPerformance::classGroup),
+        FILTER_MODULE_ID = ClassDefinition.FILTER_MODULE_ID.derive(ClassPerformance::classGroup);
+
+    public static final FilterOption<ClassPerformance, String, FormTextField>    
+        FILTER_MODULE_NAME = ClassDefinition.FILTER_MODULE_NAME.derive(ClassPerformance::classGroup);
+
+    public static final FilterOption<ClassPerformance, Double, FormSpinner<Double>>
+        FILTER_MIN_MARK = FilterOption.compare("Min. marks (%)", ClassPerformance::minMarkPercentage, InputStrategy.percentageField()),
+        FILTER_AVG_MARK = FilterOption.compare("Avg. marks (%)", ClassPerformance::avgMarkPercentage, InputStrategy.percentageField()),
+        FILTER_MAX_MARK = FilterOption.compare("Max. marks (%)", ClassPerformance::maxMarkPercentage, InputStrategy.percentageField()),
+        FILTER_PASS_RATE = FilterOption.compare("Pass Rate (%)", ClassPerformance::passRate, InputStrategy.percentageField());
 
     public static final List<FilterOption<ClassPerformance, ?, ?>> FILTER_OPTIONS = List.of(
-        FILTER_CLASS_ID
-        // FilterOption.compare("Class ID", report -> report.classGroup().id(), InputStrategy.positiveIntegerField()),
-        // FilterOption.compare("Module ID", report -> report.classGroup().module().id(), InputStrategy.positiveIntegerField()),
-        // FilterOption.text("Module name", report -> report.classGroup().module().name(), InputStrategy.textField()),
-        // FilterOption.compare("Lecturer ID", report -> report.classGroup().lecturer().id(), InputStrategy.positiveIntegerField()),
-        // FilterOption.text("Lecturer name", report -> report.classGroup().lecturer().name(), InputStrategy.textField()),
-        // FilterOption.compare("Occupancy rate (%)", EnrollmentReport::occupancyRate, InputStrategy.percentageField()),
-        // FilterOption.compare("Total occupants", EnrollmentReport::totalOccupants, InputStrategy.nonNegativeIntegerField()),
-        // FilterOption.compare("Total vacancies", EnrollmentReport::totalVacancies, InputStrategy.nonNegativeIntegerField()),
-        // FilterOption.compare("Max class capacity", report -> report.classGroup().maxCapacity(), InputStrategy.positiveIntegerField()),
-        // FilterOption.compare("Dropout rate (%)", EnrollmentReport::dropoutRate, InputStrategy.percentageField()),
-        // FilterOption.compare("Total dropouts", EnrollmentReport::totalDropouts, InputStrategy.nonNegativeIntegerField()),
-        // FilterOption.compare("Total enrollments", report -> report.enrollments().size(), InputStrategy.nonNegativeIntegerField())
+        FILTER_CLASS_ID,
+        FILTER_MODULE_ID,
+        FILTER_MODULE_NAME,
+        FILTER_MIN_MARK,
+        FILTER_AVG_MARK,
+        FILTER_MAX_MARK,
+        FILTER_PASS_RATE
     );
 }

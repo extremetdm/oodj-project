@@ -20,4 +20,24 @@ public record FeedbackReport(
         return feedbacks.stream()
             .collect(Collectors.summarizingInt(Feedback::score));
     }
+
+    public int minScore() {
+        return summary().getMin();
+    }
+
+    public double avgScore() {
+        return summary().getAverage();
+    }
+
+    public int roundedAvgScore() {
+        return (int) avgScore();
+    }
+
+    public int maxScore() {
+        return summary().getMax();
+    }
+
+    public double feedbackRate() {
+        return (double) feedbackCount() / totalStudents;
+    }
 }
